@@ -1,6 +1,14 @@
-CREATE OR REPLACE PACKAGE BODY parser_grammar_generator IS
+CREATE OR REPLACE PACKAGE parser_grammar_gen IS
 
-   PROCEDURE generate_parser(p_package_name VARCHAR2) 
+   FUNCTION get_parser_code_v1 
+      (p_package_name   VARCHAR2
+      ,p_type           VARCHAR2 DEFAULT 'ALL'
+      ) 
+   RETURN CLOB
+   ;
+   --
+   FUNCTION get_parser_code
+   RETURN CLOB
    ;
 END;
 /

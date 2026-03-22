@@ -1,0 +1,5 @@
+2026.03.22:
+	gen_parser_code output ...symbols... when encountering for exampe 
+		<declaration> {<declaration>}*
+	Need to ask AI to output a procedure which handles this with recursor and terminals!
+

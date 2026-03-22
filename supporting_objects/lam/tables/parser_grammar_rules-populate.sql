@@ -16,9 +16,10 @@ INSERT INTO parser_grammar_rules
 ( '<declaration_section>', '<declaration> {<declaration>}*'
 );
 
- ::= 
-' )
-;
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<variable_declaration>', '<identifier> ["," <identifier>]* <datatype> ["NOT NULL"] [":=" <expression>] ";"'
+);
 INSERT INTO parser_grammar_rules
 ( lhs,			rhs ) VALUES 
 ( '<declaration>', '<variable_declaration>
@@ -27,31 +28,64 @@ INSERT INTO parser_grammar_rules
                 | <type_declaration>
                 | <subprogram_declaration>' )
 ;
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<datatype>', '<scalar_type> | <composite_type> | <ref_cursor_type> | <user_defined_type>'
+);
 
-<variable_declaration> ::= <identifier> ["," <identifier>]* <datatype> ["NOT NULL"] [":=" <expression>] ";"
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<scalar_type>', '"NUMBER" | "VARCHAR2" | "CHAR" | "DATE" | "BOOLEAN" | "BINARY_INTEGER" | "PLS_INTEGER" | ...'
+);
 
-<datatype> ::= <scalar_type> | <composite_type> | <ref_cursor_type> | <user_defined_type>
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<composite_type>', '"RECORD" | "TABLE OF" <datatype> | "VARRAY" | ...'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<cursor_declaration>', '"CURSOR" <identifier> ["IS" <select_statement>];'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<exception_declaration>', '"EXCEPTION" <identifier> ";"'
+);
 
-<scalar_type> ::= "NUMBER" | "VARCHAR2" | "CHAR" | "DATE" | "BOOLEAN" | "BINARY_INTEGER" | "PLS_INTEGER" | ...
+-- 
 
-<composite_type> ::= "RECORD" | "TABLE OF" <datatype> | "VARRAY" | ...
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<type_declaration>', '"TYPE" <identifier> "IS" <datatype> ";"'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<subprogram_declaration>', '<procedure_spec> ";"
+                           | <function_spec> ";"'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<procedure_spec>', '"PROCEDURE" <identifier> ["(" <parameter_list> ")"]
+<function_spec> ::= "FUNCTION" <identifier> ["(" <parameter_list> ")"] "RETURN" <datatype>'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<parameter_list>', '<parameter> {"," <parameter>}*'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<parameter>', '<identifier> <in_out_mode> <datatype>'
+);
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( '<in_out_mode>', '"IN" | "OUT" | "IN OUT"'
+);
 
-<cursor_declaration> ::= "CURSOR" <identifier> ["IS" <select_statement>];
+INSERT INTO parser_grammar_rules
+( lhs,			rhs ) VALUES 
+( 'xx', 'xx'
+);
 
-<exception_declaration> ::= "EXCEPTION" <identifier> ";"
-
-<type_declaration> ::= "TYPE" <identifier> "IS" <datatype> ";"
-
-<subprogram_declaration> ::= <procedure_spec> ";"
-                           | <function_spec> ";"
-
-<procedure_spec> ::= "PROCEDURE" <identifier> ["(" <parameter_list> ")"]
-<function_spec> ::= "FUNCTION" <identifier> ["(" <parameter_list> ")"] "RETURN" <datatype>
-
-<parameter_list> ::= <parameter> {"," <parameter>}*
-<parameter> ::= <identifier> <in_out_mode> <datatype>
-<in_out_mode> ::= "IN" | "OUT" | "IN OUT"
-
+/*
 <procedure_body> ::= <procedure_spec> "IS" <declaration_section> "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" <identifier> ";"
 <function_body> ::= <function_spec> "IS" <declaration_section> "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" <identifier> ";"
 
@@ -135,4 +169,8 @@ INSERT INTO parser_grammar_rules
 <dynamic_sql_statement> ::= "EXECUTE IMMEDIATE" <string_literal> ["INTO" <variable_reference>];
 
 <other_sql_statement> ::= placeholder for SELECT / INSERT / UPDATE / DELETE / MERGE
+*/ 
+
+
+COMMIT;
 
