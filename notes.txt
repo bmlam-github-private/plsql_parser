@@ -3,3 +3,8 @@
 		<declaration> {<declaration>}*
 	Need to ask AI to output a procedure which handles this with recursor and terminals!
 
+2026.03.23:
+	As of today, version 2 appears to be the most viable option with some manual corrections:
+	* the parse-procedures should be converted to functions return boolean so that the alternatives can be tested until one alternative returns true. 
+	* the parse functions are then OR concatinated in the higher level parse function 
+

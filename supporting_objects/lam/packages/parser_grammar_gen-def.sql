@@ -6,8 +6,10 @@ CREATE OR REPLACE PACKAGE parser_grammar_gen IS
       ) 
    RETURN CLOB
    ;
+   FUNCTION first_condition(p_rhs VARCHAR2) RETURN VARCHAR2
+   ;
    --
-   FUNCTION get_parser_code
+   FUNCTION get_parser_code_v2 
    RETURN CLOB
    ;
 END;
