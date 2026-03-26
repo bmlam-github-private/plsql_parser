@@ -1,17 +1,29 @@
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_token.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_grammar_rules.sql"
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_grammar_rules-populate.sql"
+sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/types/parser_rule_token_col.sql"
+sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
-
-select * from dual
+select parser_grammar_gen.get_parser_code_v2  from dual
 ;
+select
+-- r.*, 
+t.*
+from parser_grammar_rules r
+CROSS JOIN 
+table ( parser_grammar_gen.tokenize_rhs ( r.rhs ) ) t
+where r.lhs = '<block>'
+;
+select *
+from parser_grammar_rules 
+where 1=1
+  and instr ( lower(lhs), 'block' ) > 0
+--  and instr ( lower(rhs), 'block' ) > 0
+  ;
 select *
 from user_constraints 
 where table_name = 'PARSER_TOKEN'
 ;
-
 SELECT *
 from table ( f_extract_tokens ( 
 q'{

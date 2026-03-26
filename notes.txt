@@ -8,3 +8,5 @@
 	* the parse-procedures should be converted to functions return boolean so that the alternatives can be tested until one alternative returns true. 
 	* the parse functions are then OR concatinated in the higher level parse function 
 
+2026.03.24:
+	Manually fixed generator not to generate nonsense for the tokens " ; ". 
