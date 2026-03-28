@@ -18,7 +18,7 @@ INSERT INTO parser_grammar_rules
 
 INSERT INTO parser_grammar_rules
 ( lhs,			rhs ) VALUES 
-( '<variable_declaration>', '<identifier> ["," <identifier>]* <datatype> ["NOT NULL"] [":=" <expression>] ";"'
+( '<variable_declaration>', '<identifier> ["," <identifier>]* <datatype> ["NOT NULL"] [":=" <expression>] ";"'  -- comma is wrong !? should be dot as qualifier operator! 
 );
 INSERT INTO parser_grammar_rules
 ( lhs,			rhs ) VALUES 
@@ -44,7 +44,7 @@ INSERT INTO parser_grammar_rules
 );
 INSERT INTO parser_grammar_rules
 ( lhs,			rhs ) VALUES 
-( '<cursor_declaration>', '"CURSOR" <identifier> ["IS" <select_statement>];'
+( '<cursor_declaration>', '"CURSOR" <identifier> ["IS" <select_statement>];'   --   cursor parameter list is MISSING 
 );
 INSERT INTO parser_grammar_rules
 ( lhs,			rhs ) VALUES 

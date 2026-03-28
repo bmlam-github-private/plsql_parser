@@ -10,3 +10,32 @@
 
 2026.03.24:
 	Manually fixed generator not to generate nonsense for the tokens " ; ". 
+
+2026.03.25:
+	Alternatives can be expressed as: 
+		parse_rule_a parse_d 	or	parse_rule_b 
+	HOW ABOUT optional?
+		parse_rule_a
+		AND 
+			( look_ahead = X1 	AND parse_x1  AND parse_X1_END)
+		AND parse_c 
+		
+2026.03.28:
+-- an solution example for 
+--lhs: <declaration_section>
+--rhs:	<declaration> {<declaration>}*
+PROCEDURE parse_declaration_section IS
+BEGIN
+   -- mandatory first occurrence
+   parse_declaration;
+
+   -- repetition: { <declaration> }*
+   WHILE is_start_of_declaration(lookahead) LOOP
+      parse_declaration;
+      -- for more robustness
+      if NOT is_valid_token (lookahead ) THEN 
+      	RAISE error
+      end ifM
+   END LOOP;
+END;
+		
