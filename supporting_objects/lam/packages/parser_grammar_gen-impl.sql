@@ -184,8 +184,6 @@ FUNCTION get_parser_code_v2      -- sequence of procedures , does not  consider 
 RETURN CLOB
 IS
   co_state_initial      CONSTANT VARCHAR2( 10 ) := 'initial';
-  CURSOR c_rules IS
-      SELECT lhs, rhs FROM parser_grammar_rules ORDER BY lhs;
 
   v_lhs  parser_grammar_rules.lhs%TYPE;
   v_rhs  parser_grammar_rules.rhs%TYPE;
@@ -305,7 +303,12 @@ dbms_output.put_line ( 'Ln'||$$plsql_line||' v_tok_rec.content: ' ||v_tok_rec.co
   END rhs_to_code;
 
 BEGIN
-  FOR r IN c_rules LOOP
+  FOR r IN (
+      SELECT lhs, rhs 
+      FROM parser_grammar_rules 
+      ORDER BY lhs
+    ) 
+  LOOP
       v_lhs := clean_name(r.lhs);
       v_rhs := r.rhs;
       v_proc_name := LOWER( 'parse_'||v_lhs );

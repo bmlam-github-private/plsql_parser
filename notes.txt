@@ -35,7 +35,196 @@ BEGIN
       -- for more robustness
       if NOT is_valid_token (lookahead ) THEN 
       	RAISE error
-      end ifM
+      end if
    END LOOP;
 END;
 		
+
+2026.04.10:
+
+Idea ( improved by chatgpt)
+
+break down each rhs into alternatives , within each alternative normalize / order the tokens 
+
+Example this rule 
+
+	A ::= B C | SELECT
+
+creates the rows in table sequenced_alt_tokens 
+
+	A	alt	pos	symbol
+	A	1	1	B
+	A	1	2	C
+	A	2	1	SELECT
+
+From there we can populate a table looking like:
+
+CREATE TABLE first_sets (
+  symbol VARCHAR2(100),
+  token  VARCHAR2(100),
+  CONSTRAINT pk_first PRIMARY KEY (symbol, token)
+);
+
+
+Code to recursively compute first sets:
+
+CREATE OR REPLACE PROCEDURE compute_first_sets IS
+
+  v_changed BOOLEAN := TRUE;
+
+  -- helper: check if symbol is terminal
+  FUNCTION is_terminal(p_symbol VARCHAR2) RETURN BOOLEAN IS
+    v_count NUMBER;
+  BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM sequenced_alt_tokens
+    WHERE rule_name = p_symbol;
+
+    RETURN v_count = 0;
+  END;
+
+  -- helper: check if symbol can derive epsilon
+  FUNCTION can_be_epsilon(p_symbol VARCHAR2) RETURN BOOLEAN IS
+    v_dummy NUMBER;
+  BEGIN
+    SELECT 1 INTO v_dummy
+    FROM first_sets
+    WHERE symbol = p_symbol
+      AND token = 'ε';
+
+    RETURN TRUE;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RETURN FALSE;
+  END;
+
+BEGIN
+  ------------------------------------------------------------------
+  -- STEP 1: initialize terminals
+  ------------------------------------------------------------------
+  INSERT INTO first_sets(symbol, token)
+  SELECT DISTINCT symbol, symbol
+  FROM sequenced_alt_tokens
+  WHERE is_terminal(symbol) = TRUE;
+
+  COMMIT;
+
+  ------------------------------------------------------------------
+  -- STEP 2: fixed-point iteration
+  ------------------------------------------------------------------
+  WHILE v_changed LOOP
+    v_changed := FALSE;
+
+    ----------------------------------------------------------------
+    -- iterate all rules
+    ----------------------------------------------------------------
+    FOR r IN (
+      SELECT DISTINCT rule_name
+      FROM sequenced_alt_tokens
+    ) LOOP
+
+      ----------------------------------------------------------------
+      -- iterate alternatives of this rule
+      ----------------------------------------------------------------
+      FOR alt IN (
+        SELECT DISTINCT alt_no
+        FROM sequenced_alt_tokens
+        WHERE rule_name = r.rule_name
+      ) LOOP
+
+        DECLARE
+          v_all_can_be_empty BOOLEAN := TRUE;
+        BEGIN
+
+          ----------------------------------------------------------------
+          -- scan symbols left-to-right in this alternative
+          ----------------------------------------------------------------
+          FOR s IN (
+            SELECT symbol, position
+            FROM sequenced_alt_tokens
+            WHERE rule_name = r.rule_name
+              AND alt_no = alt.alt_no
+            ORDER BY position
+          ) LOOP
+
+            ----------------------------------------------------------------
+            -- case 1: terminal symbol
+            ----------------------------------------------------------------
+            IF is_terminal(s.symbol) THEN
+
+              BEGIN
+                INSERT INTO first_sets(symbol, token)
+                VALUES (r.rule_name, s.symbol);
+
+                v_changed := TRUE;
+              EXCEPTION
+                WHEN DUP_VAL_ON_INDEX THEN NULL;
+              END;
+
+              v_all_can_be_empty := FALSE;
+              EXIT;
+
+            ELSE
+              ----------------------------------------------------------------
+              -- case 2: non-terminal → propagate FIRST(symbol)
+              ----------------------------------------------------------------
+              FOR f IN (
+                SELECT token
+                FROM first_sets
+                WHERE symbol = s.symbol
+              ) LOOP
+
+                IF f.token <> 'ε' THEN
+                  BEGIN
+                    INSERT INTO first_sets(symbol, token)
+                    VALUES (r.rule_name, f.token);
+
+                    v_changed := TRUE;
+                  EXCEPTION
+                    WHEN DUP_VAL_ON_INDEX THEN NULL;
+                  END;
+                END IF;
+
+              END LOOP;
+
+              ----------------------------------------------------------------
+              -- if symbol cannot produce ε → stop
+              ----------------------------------------------------------------
+              IF NOT can_be_epsilon(s.symbol) THEN
+                v_all_can_be_empty := FALSE;
+                EXIT;
+              END IF;
+
+            END IF;
+
+          END LOOP;
+
+          ----------------------------------------------------------------
+          -- if all symbols can be ε → add ε
+          ----------------------------------------------------------------
+          IF v_all_can_be_empty THEN
+            BEGIN
+              INSERT INTO first_sets(symbol, token)
+              VALUES (r.rule_name, 'ε');
+
+              v_changed := TRUE;
+            EXCEPTION
+              WHEN DUP_VAL_ON_INDEX THEN NULL;
+            END;
+          END IF;
+
+        END;
+
+      END LOOP;
+
+    END LOOP;
+
+  END LOOP;
+
+END;
+/
+
+With the first sets computed, we can more efficiently parse the alternatives one by one until one succeeds. Back track if one alternative fails. Always try the most distinctive alternative with priority.
+
+

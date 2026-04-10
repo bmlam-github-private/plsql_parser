@@ -1,24 +1,40 @@
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_grammar_rules-populate.sql"
+
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/types/parser_rule_token_col.sql"
+
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
+sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/functions/bnf_to_insert_stmts.sql" 
+
+set serveroutput on
 select parser_grammar_gen.get_parser_code_v2  from dual
 ;
+select parser_grammar_gen.get_parser_package_code( 'XXX')  from dual
+;
+select content
+, bnf_to_insert_stmts ( content )
+from test_clob 
+where id = 1
+;
 select
--- r.*, 
+ r.lhs, 
 t.*
+, length( t.content ) len 
+--, dump( t.content ) dump 
 from parser_grammar_rules r
 CROSS JOIN 
-table ( parser_grammar_gen.tokenize_rhs ( r.rhs ) ) t
-where r.lhs = '<block>'
+table ( parser_grammar_gen.tokenize_rhs_refined ( r.rhs ) ) t
+--where r.lhs = '<block>'
 ;
-select *
-from parser_grammar_rules 
+select 
+ length( t.rhs ) len_rhs
+,t.*
+from parser_grammar_rules t
 where 1=1
-  and instr ( lower(lhs), 'block' ) > 0
---  and instr ( lower(rhs), 'block' ) > 0
+--  and instr ( lower(lhs), 'block' ) > 0
+  and instr ( lower(rhs), '{' ) > 0
   ;
 select *
 from user_constraints 
