@@ -50,12 +50,19 @@ Example this rule
 
 	A ::= B C | SELECT
 
-creates the rows in table sequenced_alt_tokens 
+creates the rows in table sequenced_alt_tokens ( lhs, alt_no, position, symbol )
 
 	A	alt	pos	symbol
 	A	1	1	B
 	A	1	2	C
 	A	2	1	SELECT
+
+The optional ORDER BY clause would be stored as 
+
+  order_by_clause 1 1 ORDER
+  order_by_clause 1 2 BY
+  order_by_clause 1 3 sort_list
+  order_by_clause 2 1 ε
 
 From there we can populate a table looking like:
 
@@ -227,4 +234,6 @@ END;
 
 With the first sets computed, we can more efficiently parse the alternatives one by one until one succeeds. Back track if one alternative fails. Always try the most distinctive alternative with priority.
 
-
+2026.04.17:
+  created table parser_alt_token and pr_parser_add_alt_tokens to populate table. basic test script worked.
+  

@@ -1,8 +1,8 @@
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_grammar_rules-populate.sql"
+sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/procedures/pr_parser_add_alt_tokens.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/types/parser_rule_token_col.sql"
+sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_alt_tokens.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
@@ -34,7 +34,7 @@ select
 from parser_grammar_rules t
 where 1=1
 --  and instr ( lower(lhs), 'block' ) > 0
-  and instr ( lower(rhs), '{' ) > 0
+  and instr ( lower(rhs), '|' ) > 0
   ;
 select *
 from user_constraints 
@@ -61,4 +61,17 @@ IS
 ) )
 order by tok_seq
 ;
-select text from user_source 
+select * 
+from table ( parser_grammar_gen.tokenize_rhs_refined ( 'SELECT * | update table foo' ) )
+;
+declare 
+    v_tokens parser_rule_token_col;
+    c_rhs VARCHAR2( 1000 ) := 
+        '"DECLARE" <declaration_section> "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" [<identifier>] ";"
+          | "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" [<identifier>] ";"' 
+          ;
+begin 
+    v_tokens := parser_grammar_gen.tokenize_rhs_refined ( c_rhs );
+    pr_parser_add_alt_tokens ( p_lhs=> 'BLOCK', p_tokens  => v_tokens);
+end;
+/
