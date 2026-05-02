@@ -237,3 +237,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.04.17:
   created table parser_alt_token and pr_parser_add_alt_tokens to populate table. basic test script worked.
   
+2026.05.02:
+  Created procedure pr_convert_clob_to_rules.sql to convert oracle SELECT grammar rules into grammar table. need to compile and test!
+  

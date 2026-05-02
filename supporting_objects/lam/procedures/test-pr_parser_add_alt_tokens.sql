@@ -6,6 +6,6 @@ declare
           ;
 begin 
     v_tokens := parser_grammar_gen.tokenize_rhs_refined ( c_rhs );
-    pr_parser_add_alt_tokens ( p_lhs=> 'BLOCK', p_tokens  => v_tokens);
+    pr_parser_add_alt_tokens ( p_lhs=> 'BLOCK', p_tokens  => v_tokens, p_purge_old => true );
 end;
 /
