@@ -6,7 +6,7 @@ begin
 	FROM temp_clob
 	WHERE remarks = 'oracle-SELECT-grammar'
 	;
-	pr_convert_clob_to_rules( v_text );
+	pr_convert_clob_to_rules( v_text, 'oracle-SELECT-grammar' );
 END;
 / 
 

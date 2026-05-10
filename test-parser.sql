@@ -1,7 +1,7 @@
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/procedures/pr_parser_add_alt_tokens.sql"
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/procedures/test-pr_parser_add_alt_tokens.sql" 
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_convert_clob_to_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql" 
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_alt_tokens.sql"
 
@@ -28,6 +28,7 @@ from parser_grammar_rules r
 CROSS JOIN 
 table ( parser_grammar_gen.tokenize_rhs_refined ( r.rhs ) ) t
 --where r.lhs = '<block>'
+
 ;
 select 
  length( t.rhs ) len_rhs
@@ -35,7 +36,8 @@ select
 from parser_grammar_rules t
 where 1=1
 --  and instr ( lower(lhs), 'block' ) > 0
-  and instr ( lower(rhs), '|' ) > 0
+ -- and instr ( lower(rhs), '|' ) > 0
+order by rule_ id desc 
   ;
 select *
 from user_constraints 

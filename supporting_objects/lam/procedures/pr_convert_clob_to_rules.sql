@@ -1,10 +1,12 @@
 CREATE OR REPLACE PROCEDURE pr_convert_clob_to_rules
-( p_clob	CLOB )
+( p_clob		CLOB
+ ,p_comments 	VARCHAR2 
+ )
 AS 
     v_pos        PLS_INTEGER := 1;
     v_line       VARCHAR2(32767);
     v_lhs        VARCHAR2(4000);
-    v_rhs        CLOB;
+    v_rhs        VARCHAR2(4000);
     v_len        PLS_INTEGER;
     v_newline    PLS_INTEGER;
     -- 
@@ -47,15 +49,28 @@ BEGIN
                 v_rhs := TRIM(SUBSTR(v_line, v_sep_pos + 3));
 
                 -- Merge into table
-                MERGE INTO cfg_rules t
-                USING (SELECT v_lhs AS lhs, v_rhs AS rhs FROM dual) s
-                ON (t.lhs = s.lhs AND t.rhs = s.rhs)
+                MERGE INTO parser_grammar_rules t
+                USING (
+					SELECT v_lhs AS lhs
+						 , v_rhs AS rhs 
+						 , p_comments AS comments 
+						 FROM dual
+						 ) s
+                ON (t.lhs = s.lhs 
+					AND t.rhs = s.rhs
+				)
                 WHEN NOT MATCHED THEN
-                    INSERT (lhs, rhs)
-                    VALUES (s.lhs, s.rhs);
-
+                    INSERT (lhs, 	rhs,	comments )
+                    VALUES (s.lhs, s.rhs, s.comments)
+                WHEN MATCHED THEN
+                    UPDATE
+						SET comments = comments||' ; '||s.comments 
+					;
             END IF;
         END;
     END LOOP;
+	COMMIT; 
 END;
 /
+
+show errors 

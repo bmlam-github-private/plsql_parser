@@ -240,3 +240,13 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.05.02:
   Created procedure pr_convert_clob_to_rules.sql to convert oracle SELECT grammar rules into grammar table. need to compile and test!
   
+2026.05.08:
+  Tested procedure pr_convert_clob_to_rules.sql on ATP2 ! New understanding of token: both pieces of info must be present: original "lexeme", token value. Examples 
+	"select" -> SELECT
+	"1.2334" -> NUMBER 
+
+2026.05.10:
+  To further evaluate how good the grammar rules we got from AI is, I decided to load the rules of both SELECT statement and PLSQL-Program-Unit into parser_grammar_rules. Unique key is now on lhs and rhs, with comments indicating all sources, both sourced into table temp_clob. 
+  Apparently, test-pr_convert_clob_to_rules is not handling line separations properly. From one CLOB, all rules are loaded, from the other (original in Unix) only the first line is ingested!
+
+  A small setback
