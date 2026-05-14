@@ -250,3 +250,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Apparently, test-pr_convert_clob_to_rules is not handling line separations properly. From one CLOB, all rules are loaded, from the other (original in Unix) only the first line is ingested!
 
   A small setback
+
+2025.05.14:
+  Got the BNF rules for <expression> and it looks plausible except that a subquery is not included. Worst case we can use <select_statement>.

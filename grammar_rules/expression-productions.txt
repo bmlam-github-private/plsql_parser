@@ -1,0 +1,44 @@
+# this Grammar just for Expression 
+# because in other Sources, the rhs is not satisfactory! 
+
+# Rules are in order: Low Precedence -> High Precedence 
+
+<expression>           ::= <logical_and_expr> { "OR" <logical_and_expr> }
+
+<logical_and_expr>     ::= <logical_not_expr> { "AND" <logical_not_expr> }
+
+<logical_not_expr>     ::= [ "NOT" ] <relational_expr>
+
+<relational_expr>      ::= <additive_expr> [ <relational_op> <additive_expr> 
+                                           | <is_null_op> 
+                                           | <between_op> 
+                                           | <in_op> 
+                                           | <like_op> ]
+
+<relational_op>        ::= "=" | "<>" | "!=" | "<" | ">" | "<=" | ">="
+
+<is_null_op>           ::= "IS" [ "NOT" ] "NULL"
+
+<between_op>           ::= [ "NOT" ] "BETWEEN" <additive_expr> "AND" <additive_expr>
+
+<in_op>                ::= [ "NOT" ] "IN" "(" ( <expression> { "," <expression> } | <subquery> ) ")"
+
+<like_op>              ::= [ "NOT" ] "LIKE" <additive_expr> [ "ESCAPE" <additive_expr> ]
+
+<additive_expr>        ::= <multiplicative_expr> { ( "+" | "-" | "||" ) <multiplicative_expr> }
+
+<multiplicative_expr>  ::= <exponent_expr> { ( "*" | "/" ) <exponent_expr> }
+
+<exponent_expr>        ::= <unary_expr> { "**" <unary_expr> }
+
+<unary_expr>           ::= [ "+" | "-" ] <primary>
+
+<primary>              ::= <literal>
+                         | <variable_or_function>
+                         | <case_expression>
+                         | "(" <expression> ")"
+                         | "(" <subquery> ")"
+
+<variable_or_function> ::= <identifier> [ "(" [ <expression> { "," <expression> } ] ")" ]
+
+<literal>              ::= <numeric_literal> | <string_literal> | "TRUE" | "FALSE" | "NULL"

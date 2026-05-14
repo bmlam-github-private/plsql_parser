@@ -1,7 +1,7 @@
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_convert_clob_to_rules.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql" 
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules-plsql_no_SQL.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_alt_tokens.sql"
 
@@ -19,6 +19,24 @@ select content
 from test_clob 
 where id = 1
 ;
+SELECT t.*
+, dbms_lob.getlength( content ) len 
+from temp_clob t
+where 1=1
+;
+insert into temp_clob ( remarks, content ) select 'mini_test', dbms_lob.substr( content, 1000 ) from temp_clob where remarks = 'plsql_excluding_SQL' 
+;
+select 
+ length( t.rhs ) len_rhs
+,t.*
+from parser_grammar_rules t
+where 1=1
+--  and ( instr ( lower(lhs), 'expression>' ) > 0
+--      or instr ( lower(rhs), '<expression>' ) > 0
+--      )
+  and instr( comments, 'dedicated_to_expression ' ) > 0 
+order by rule_id desc 
+  ;
 select
  r.lhs, 
 t.*
@@ -30,15 +48,6 @@ table ( parser_grammar_gen.tokenize_rhs_refined ( r.rhs ) ) t
 --where r.lhs = '<block>'
 
 ;
-select 
- length( t.rhs ) len_rhs
-,t.*
-from parser_grammar_rules t
-where 1=1
---  and instr ( lower(lhs), 'block' ) > 0
- -- and instr ( lower(rhs), '|' ) > 0
-order by rule_ id desc 
-  ;
 select *
 from user_constraints 
 where table_name = 'PARSER_TOKEN'
