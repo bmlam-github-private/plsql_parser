@@ -1,9 +1,9 @@
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_source_module.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_alt_token.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_convert_clob_to_rules.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules-plsql_no_SQL.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-impl.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/tables/parser_alt_tokens.sql"
+sta     "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_tok_4_repeat_rule.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_parser_add_tok_4_repeat_rule.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
