@@ -1,6 +1,7 @@
-CREATE OR REPLACE PROCEDURE pr_parser_add_tok_4_repeat_rule (
-    p_lhs        IN VARCHAR2,
-    p_rhs_tokens IN parser_rule_token_col
+CREATE OR REPLACE PROCEDURE pr_parser_add_tok_4_repeat_rule 
+(    p_lhs          IN VARCHAR2
+    ,p_rhs_tokens   IN parser_rule_token_col
+    ,p_source       IN VARCHAR2 
 ) IS
     v_tail_name  VARCHAR2(60);
     
@@ -12,6 +13,10 @@ CREATE OR REPLACE PROCEDURE pr_parser_add_tok_4_repeat_rule (
     v_inside_loop BOOLEAN := FALSE;
     v_pos         NUMBER := 1;
 BEGIN
+    DELETE parser_alt_token 
+    WHERE lower( p_source )   = source 
+      AND lower ( p_lhs )     = lhs 
+      ;
     -- 1. Derive the tail rule name dynamically (e.g., <a> -> <a_tail>)
     v_tail_name := REPLACE(p_lhs, '>', '_tail>');
 
