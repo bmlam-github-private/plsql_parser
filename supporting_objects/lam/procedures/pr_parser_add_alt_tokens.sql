@@ -14,7 +14,7 @@ BEGIN
     IF f_token_is_present   ( p_rhs_tokens, '|' ) > 0 
      AND f_token_is_present ( p_rhs_tokens, '{')  > 0 
     THEN 
-        raise_application_error ( 'rhs tokens can not have both alternative and repetition!');
+        raise_application_error ( -20001, 'rhs tokens can not have both alternative and repetition!');
     END IF ;
     IF   f_token_is_present ( p_rhs_tokens, '{')  > 0 
     THEN 
