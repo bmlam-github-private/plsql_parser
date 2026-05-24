@@ -1,0 +1,139 @@
+CREATE OR REPLACE PROCEDURE pr_transform_ebnf_to_simple (
+    p_lhs 		IN VARCHAR2
+   ,p_rhs 		IN VARCHAR2
+   ,p_source 	IN VARCHAR2
+) IS
+-- 
+-- transform a rule with square and curly brackets to simple subrules 
+--
+    -- Static counter to ensure dynamically created subrule names are distinct
+	v_lhs_root 	VARCHAR2(100) := p_lhs ;
+	v_recurs_dept   NUMBER := 0;
+
+    -- Helper function to slice a space-delimited string into an array of tokens
+    FUNCTION tokenize(p_str IN VARCHAR2) RETURN simple_vc100_col IS
+        v_tokens simple_vc100_col := simple_vc100_col();
+    BEGIN
+        SELECT regexp_substr(p_str, '[^ ]+', 1, LEVEL)
+        BULK COLLECT INTO v_tokens
+        FROM dual
+        CONNECT BY regexp_substr(p_str, '[^ ]+', 1, LEVEL) IS NOT NULL;
+        RETURN v_tokens;
+    END tokenize;
+
+    -- Recursive processor acting on individual tokens
+    PROCEDURE process_tokens(p_current_lhs IN VARCHAR2, p_tokens IN simple_vc100_col) IS
+        v_out_tokens    simple_vc100_col := simple_vc100_col();
+        v_inner_tokens  simple_vc100_col;
+        
+        v_pos           NUMBER := 1;
+        v_bracket_count NUMBER;
+        v_match_pos     NUMBER;
+        
+        v_sub_rule      VARCHAR2(100);
+        v_final_rhs     VARCHAR2(4000) := '';
+    BEGIN
+		v_recurs_dept := v_recurs_dept + 1;
+        WHILE v_pos <= p_tokens.COUNT LOOP
+            
+            -- CASE 1: Found Optional Square Bracket [ ... ]
+            IF p_tokens(v_pos) = '[' THEN
+                v_bracket_count := 1;
+                v_match_pos     := v_pos + 1;
+                v_inner_tokens  := simple_vc100_col();
+                
+                WHILE v_match_pos <= p_tokens.COUNT AND v_bracket_count > 0 LOOP
+                    IF p_tokens(v_match_pos) = '[' THEN v_bracket_count := v_bracket_count + 1; END IF;
+                    IF p_tokens(v_match_pos) = ']' THEN v_bracket_count := v_bracket_count - 1; END IF;
+                    
+                    IF v_bracket_count > 0 THEN
+                        v_inner_tokens.EXTEND;
+                        v_inner_tokens(v_inner_tokens.LAST) := p_tokens(v_match_pos);
+                    END IF;
+                    v_match_pos := v_match_pos + 1;
+                END LOOP;
+                
+                -- Generate unique subrule ID
+                --v_sub_rule := 'G_OPT_' || TO_CHAR(DBMS_RANDOM.VALUE(1000, 9999), 'FM9999');
+                v_sub_rule := 'G_OPT_' || TO_CHAR( v_recurs_dept, 'FM9999');
+                
+                v_out_tokens.EXTEND;
+                v_out_tokens(v_out_tokens.LAST) := v_sub_rule;
+                
+                -- Path A: Process the interior recursively 
+                process_tokens(v_sub_rule, v_inner_tokens);
+                -- Path B: The empty/null rule variation
+                INSERT INTO parser_grammar_rule_simple (lhs, lhs_root, rhs, subrule_no	, source ) 
+					VALUES (v_sub_rule, v_lhs_root, 'null', 2,	p_source);
+                
+                v_pos := v_match_pos;
+
+            -- CASE 2: Found Repetition Curly Brace { ... }*
+            ELSIF p_tokens(v_pos) = '{' THEN
+                v_bracket_count := 1;
+                v_match_pos     := v_pos + 1;
+                v_inner_tokens  := simple_vc100_col();
+                
+                WHILE v_match_pos <= p_tokens.COUNT AND v_bracket_count > 0 LOOP
+                    IF p_tokens(v_match_pos) = '{' THEN v_bracket_count := v_bracket_count + 1; END IF;
+                    IF p_tokens(v_match_pos) = '}' THEN v_bracket_count := v_bracket_count - 1; END IF;
+                    
+                    IF v_bracket_count > 0 THEN
+                        v_inner_tokens.EXTEND;
+                        v_inner_tokens(v_inner_tokens.LAST) := p_tokens(v_match_pos);
+                    END IF;
+                    v_match_pos := v_match_pos + 1;
+                END LOOP;
+                
+                -- Consume the trailing Kleene star symbol if present
+                IF v_match_pos <= p_tokens.COUNT AND p_tokens(v_match_pos) = '*' THEN
+                    v_match_pos := v_match_pos + 1;
+                END IF;
+                
+               -- v_sub_rule := 'G_LST_' || TO_CHAR(DBMS_RANDOM.VALUE(1000, 9999), 'FM9999');
+                v_sub_rule := 'G_LST_' || TO_CHAR( v_recurs_dept, 'FM9999');
+                
+                v_out_tokens.EXTEND;
+                v_out_tokens(v_out_tokens.LAST) := v_sub_rule;
+                
+                -- Add self-reference token to the array for recursive list extension: { X }* -> X G_LST
+                v_inner_tokens.EXTEND;
+                v_inner_tokens(v_inner_tokens.LAST) := v_sub_rule;
+                
+                -- Path A: Subrule points to its contents + loop
+                process_tokens(v_sub_rule, v_inner_tokens);
+                -- Path B: Subrule drops out to empty
+                INSERT INTO parser_grammar_rule_simple (lhs, lhs_root, rhs, subrule_no	, source ) 
+						VALUES (	v_sub_rule, 	v_lhs_root, 'null', 2,		p_source);
+                
+                v_pos := v_match_pos;
+
+            -- CASE 3: Standard Terminal/Non-terminal item
+            ELSE
+                v_out_tokens.EXTEND;
+                v_out_tokens(v_out_tokens.LAST) := p_tokens(v_pos);
+                v_pos := v_pos + 1;
+            END IF;
+        END LOOP;
+
+        -- Reassemble tokens back into a flat string sequence separated by spaces
+        IF v_out_tokens.COUNT > 0 THEN
+            FOR i IN 1..v_out_tokens.COUNT LOOP
+                v_final_rhs := v_final_rhs || v_out_tokens(i) || ' ';
+            END LOOP;
+            v_final_rhs := RTRIM(v_final_rhs);
+            
+            INSERT INTO parser_grammar_rule_simple (lhs, lhs_root, rhs, subrule_no, 	source)
+            VALUES (p_current_lhs, v_lhs_root, v_final_rhs, 1,	p_source );
+        END IF;
+    END process_tokens;
+
+BEGIN
+	DELETE parser_grammar_rule_simple 
+	WHERE lhs_root = v_lhs_root 
+	  AND source   = p_source
+	;
+    -- Kick off execution by tokenizing our string entry point
+    process_tokens(p_lhs, tokenize(p_rhs));
+END;
+/

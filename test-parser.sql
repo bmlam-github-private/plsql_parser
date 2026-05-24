@@ -1,9 +1,10 @@
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_alt_token.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_transform_ebnf_to_simple.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_transform_ebnf_to_simple.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-impl.sql"
-
-sta     "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_tok_4_repeat_rule.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_parser_add_tok_4_repeat_rule.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_alt_tokens.sql"
+sta  "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_tok_4_repeat_rule.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
@@ -13,6 +14,15 @@ set serveroutput on
 select parser_grammar_gen.get_parser_code_v2  from dual
 ;
 select parser_grammar_gen.get_parser_package_code( 'XXX')  from dual
+;
+SELECT *
+fROM parser_grammar_rule_simple 
+where 1=1
+-- lhs_root = '<<variable_or_function>>'
+order by lhs 
+;
+select *
+from parser_alt_token
 ;
 select content
 , bnf_to_insert_stmts ( content )
@@ -75,10 +85,4 @@ order by tok_seq
 ;
 select * 
 from table ( parser_grammar_gen.tokenize_rhs_refined ( 'SELECT * | update table foo ";"' ) )
-;
-select *
-from parser_alt_token
-;
-alter table parser_grammar_rules 
-    modify   lhs_normed     VARCHAR2(100)  --  NOT NULL 
 ;
