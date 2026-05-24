@@ -255,4 +255,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Got the BNF rules for <expression> and it looks plausible except that a subquery is not included. Worst case we can use <select_statement>.
 
   Created pr_parser_add_tok_4_repeat_rule with AI, need to modify so that the generated token sequences indicates the source in the new column COMMENTS
-  
+
+2025.05.24:
+	to test pr_parser_add_tok_4_repeat_rule with nore realistic example! 

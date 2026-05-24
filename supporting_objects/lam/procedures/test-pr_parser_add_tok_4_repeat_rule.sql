@@ -7,7 +7,7 @@ declare
 begin 
     v_tokens := parser_grammar_gen.tokenize_rhs_refined ( c_rhs );
     pr_parser_add_tok_4_repeat_rule ( p_lhs=> v_lhs, p_rhs_tokens  => v_tokens
-	-- , p_purge_old => true 
+        , p_source => 'plausi_test'
 	);
 end;
 /

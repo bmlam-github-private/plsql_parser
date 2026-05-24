@@ -43,14 +43,14 @@ BEGIN
     -------------------------------------------------------------------
     v_pos := 1;
     FOR i IN 1 .. v_base_tokens.COUNT LOOP
-        INSERT INTO parser_alt_token (lhs, alt_no, position, symbol)
-        VALUES (p_lhs, 1, v_pos, v_base_tokens(i).content);
+        INSERT INTO parser_alt_token (lhs, alt_no, position, symbol,    source)
+        VALUES (p_lhs, 1, v_pos, v_base_tokens(i).content,  p_source);
         v_pos := v_pos + 1;
     END LOOP;
     
     -- Append the pointer to the virtual tail rule at the end of the base sequence
-    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol)
-    VALUES (p_lhs, 1, v_pos, v_tail_name);
+    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol,    source )
+    VALUES (p_lhs, 1, v_pos, v_tail_name,   p_source );
 
 
     -------------------------------------------------------------------
@@ -58,21 +58,21 @@ BEGIN
     -------------------------------------------------------------------
     v_pos := 1;
     FOR i IN 1 .. v_loop_tokens.COUNT LOOP
-        INSERT INTO parser_alt_token (lhs, alt_no, position, symbol)
-        VALUES (v_tail_name, 1, v_pos, v_loop_tokens(i).content);
+        INSERT INTO parser_alt_token (lhs, alt_no, position, symbol, source)
+        VALUES (v_tail_name, 1, v_pos, v_loop_tokens(i).content,    p_source);
         v_pos := v_pos + 1;
     END LOOP;
     
     -- Append the self-recursive tail pointer
-    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol)
-    VALUES (v_tail_name, 1, v_pos, v_tail_name);
+    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol,    source)
+    VALUES (v_tail_name, 1, v_pos, v_tail_name, p_source);
 
 
     -------------------------------------------------------------------
     -- STEP 5: Populate Table X for Tail Alt 2 (<a_tail> ::= epsilon)
     -------------------------------------------------------------------
-    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol)
-    VALUES (v_tail_name, 2, 1, 'epsilon');
+    INSERT INTO parser_alt_token (lhs, alt_no, position, symbol,    source)
+    VALUES (v_tail_name, 2, 1, 'epsilon',       p_source );
 
 END;
 /
