@@ -1,3 +1,5 @@
+REM this procedure is rendered obsolete by pr_transform_ebnf_to_simple.sql
+/*
 CREATE OR REPLACE PROCEDURE pr_parser_add_tok_4_repeat_rule 
 (    p_lhs          IN VARCHAR2
     ,p_rhs_tokens   IN parser_rule_token_col
@@ -77,3 +79,4 @@ BEGIN
 END;
 /
 
+*/ 

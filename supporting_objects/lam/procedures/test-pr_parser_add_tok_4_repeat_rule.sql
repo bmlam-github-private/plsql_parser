@@ -1,3 +1,6 @@
+REM  procedure is rendered obsolete by pr_transform_ebnf_to_simple
+
+/*
 declare 
 	v_lhs	VARCHAR2(30) := '<test_column_list>';
     v_tokens parser_rule_token_col;
@@ -11,3 +14,4 @@ begin
 	);
 end;
 /
+*/ 

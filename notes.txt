@@ -262,3 +262,5 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2025.05.24:
   to test pr_parser_add_tok_4_repeat_rule with nore realistic example! 
   
+2025.05.25:
+	Created procedure pr_resolve_ebnf_rules. to be tested! Renamed a rule table to mean it is for EBNF, to be distinguished from simple. 

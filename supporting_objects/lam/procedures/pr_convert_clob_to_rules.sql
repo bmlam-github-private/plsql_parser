@@ -1,6 +1,6 @@
 CREATE OR REPLACE PROCEDURE pr_convert_clob_to_rules
 ( p_clob		CLOB
- ,p_comments 	VARCHAR2 
+ ,p_source 	VARCHAR2 
  )
 AS 
     v_pos        PLS_INTEGER := 1;
@@ -9,17 +9,21 @@ AS
     v_rhs        VARCHAR2(4000);
     v_len        PLS_INTEGER;
     v_newline    PLS_INTEGER;
+	v_source_normed 	parser_grammar_rule_ebnf.source%TYPE;
     -- 
-    TYPE hash_occurrence IS TABLE OF INTEGER INDEX BY VARCHAR2(100);
-    v_lhs_occ hash_occurrence;  -- allow detection of duplicate lhs 
 BEGIN
     IF p_clob IS NULL THEN
         RETURN;
     END IF;
-
+	--
+	v_source_normed := trim( upper ( p_source ) );
     v_len := DBMS_LOB.getlength(p_clob);
 
-    WHILE v_pos <= v_len LOOP
+	DELETE parser_grammar_rule_ebnf 
+	WHERE source = v_source_normed
+	; 
+    WHILE v_pos <= v_len 
+	LOOP
         -- Find next newline
         v_newline := DBMS_LOB.instr(p_clob, CHR(10), v_pos);
 --dbms_output.put_line ( 'Ln'||$$plsql_line||' v_newline:'||v_newline||' v_pos:'||v_pos );
@@ -49,27 +53,14 @@ BEGIN
             v_sep_pos := INSTR(v_line, '::=');
 --dbms_output.put_line ( 'Ln'||$$plsql_line||' v_sep_pos:'||v_sep_pos );
 
-            IF v_sep_pos > 0 THEN
+			IF v_sep_pos > 0 THEN
                 v_lhs := TRIM(SUBSTR(v_line, 1, v_sep_pos - 1));
                 v_rhs := TRIM(SUBSTR(v_line, v_sep_pos + 3));
 
-                -- Merge into table
-                MERGE INTO parser_grammar_rules t
-                USING (
-					SELECT v_lhs AS lhs
-						 , v_rhs AS rhs 
-						 , p_comments AS comments 
-						 FROM dual
-						 ) s
-                ON (t.lhs = s.lhs 
-					AND t.rhs = s.rhs
-				)
-                WHEN NOT MATCHED THEN
-                    INSERT (lhs, 	rhs,	comments )
-                    VALUES (s.lhs, s.rhs, s.comments)
-                WHEN MATCHED THEN
-                    UPDATE
-						SET comments = comments||' ; '||s.comments 
+                --  into table
+                INSERT INTO parser_grammar_rule_ebnf t
+						(lhs, 	rhs,	source )
+                    VALUES (v_lhs, v_rhs, 	v_source_normed )
 					;
             END IF;
         END;
@@ -78,4 +69,4 @@ BEGIN
 END;
 /
 
-show errors 
+--show errors 

@@ -1,6 +1,7 @@
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_alt_token.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_transform_ebnf_to_simple.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_transform_ebnf_to_simple.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_grammar_rules.sql"
+
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_resolve_ebnf_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_alt_tokens.sql"
 sta  "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_tok_4_repeat_rule.sql"
@@ -14,6 +15,8 @@ set serveroutput on
 select parser_grammar_gen.get_parser_code_v2  from dual
 ;
 select parser_grammar_gen.get_parser_package_code( 'XXX')  from dual
+;
+--rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
 SELECT *
 fROM parser_grammar_rule_simple 
@@ -39,12 +42,12 @@ insert into temp_clob ( remarks, content ) select 'mini_test', dbms_lob.substr( 
 select 
  length( t.rhs ) len_rhs
 ,t.*
-from parser_grammar_rules t
+from parser_grammar_rule_ebnf t
 where 1=1
 --  and ( instr ( lower(lhs), 'expression>' ) > 0
 --      or instr ( lower(rhs), '<expression>' ) > 0
 --      )
-  and instr( comments, 'dedicated_to_expression ' ) > 0 
+--  and instr( comments, 'dedicated_to_expression ' ) > 0 
 order by rule_id desc 
   ;
 select
