@@ -251,12 +251,12 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
   A small setback
 
-2025.05.15:
+2026.05.15:
   Got the BNF rules for <expression> and it looks plausible except that a subquery is not included. Worst case we can use <select_statement>.
 
   Created pr_parser_add_tok_4_repeat_rule with AI, need to modify so that the generated token sequences indicates the source in the new column COMMENTS
 
-2025.05.16:
+2026.05.16:
  New pr_transform_ebnf_to_simple can be used to simplify all grammar rules, extended or not and store the straightforward rules to build token sequence and plsql code. this is the table parser_grammar_rule_simple.
 
 2025.05.24:
@@ -264,3 +264,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
 2025.05.25:
 	Created procedure pr_resolve_ebnf_rules. to be tested! Renamed a rule table to mean it is for EBNF, to be distinguished from simple. 
+
+2026.06.04
+  Converting procedure to do transformation to table functions for better evaluation. For 3 tables. For the last table type and function script still to be compiled. Next to convert the procedure to function! 
