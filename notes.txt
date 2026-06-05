@@ -267,3 +267,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.06.04
   Converting procedure to do transformation to table functions for better evaluation. For 3 tables. For the last table type and function script still to be compiled. Next to convert the procedure to function! 
+
+2026.06.05
+  Moved logic of pr_transform_ebnf_to_simple into package parser_rule_util and tested ok with optional tokens. Still Need to test: repitition.
+  Obviously, the logic does not output the rhs for repitition correctly ! 
