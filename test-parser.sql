@@ -1,11 +1,9 @@
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_grammar_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\types\parser_grammar_rule_simple_col.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_resolve_ebnf_rules.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-def.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_alt_tokens.sql"
-sta  "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_parser_add_tok_4_repeat_rule.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_transform_ebnf_to_simple.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_grammar_gen-impl.sql" 
 
@@ -18,11 +16,14 @@ select parser_grammar_gen.get_parser_package_code( 'XXX')  from dual
 ;
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
-SELECT *
+--CREATE TABLE tmp_parser_grammar_rule_simple_man_test 
+--as SELECT * fROM parser_grammar_rule_simple 
+--where 1=1
+-- and source = 'manual_test';
+select * 
 fROM parser_grammar_rule_simple 
 where 1=1
--- lhs_root = '<<variable_or_function>>'
-order by lhs 
+ and source = 'manual_test'
 ;
 select *
 from parser_alt_token
@@ -89,3 +90,18 @@ order by tok_seq
 select * 
 from table ( parser_grammar_gen.tokenize_rhs_refined ( 'SELECT * | update table foo ";"' ) )
 ;
+select * 
+from table ( parser_rule_util.fn_1_ebnf_to_simple
+    ( p_lhs=> '<select_statement_no_fancy>'
+     ,p_rhs=> '  [ <with_clause> ] <query_block> { <set_operator> <query_block> } * [ <order_by_clause> ] [ <for_update_clause> ] ' 
+     ,p_source=>   'manual_test'    )
+     );
+select * 
+from table ( parser_rule_util.fn_1_ebnf_to_simple
+    ( p_lhs=> '<if_statement>'
+     ,p_rhs=> '"IF" <condition> "THEN" <executable_section> { "ELSIF" <condition> "THEN" <executable_section> }* ["ELSE" <executable_section>] "END IF" ";"' 
+     ,p_source=>   'manual_test_2'    )
+     );
+     
+      
+
