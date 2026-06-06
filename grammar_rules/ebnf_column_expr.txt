@@ -1,0 +1,8 @@
+<column_expression> ::= <term> { ( "+" | "-" ) <term> }*
+
+<term>              ::= <factor> { ( "*" | "/" ) <factor> }*
+
+<factor>            ::= identifier 
+                      | literal 
+                      | function_call 
+                      | "(" <column_expression> ")"
