@@ -205,11 +205,17 @@ END transform_and_insert_ebnf;
 TRUNCATE TABLE temp_bnf_rules;
 
 BEGIN
-    -- Rule 1: Expressions
-    transform_and_insert_ebnf('<column_expression>', '<term> { ( "+" | "-" ) <term> }*');
+    -- Rule 1a: Expressions
+    transform_and_insert_ebnf('<column_expression>', '<term> {  "+"  <term> }*');
+    -- Rule 1b: Expressions
+    transform_and_insert_ebnf('<column_expression>', '<term> {  "-"  <term> }*');
     
+--    transform_and_insert_ebnf('<column_expression>', '<term> {  ( "-" | "+" ) <term> }*  ');
+    
+    -- Rule 2a: Terms
+    transform_and_insert_ebnf('<term>', '<factor> {  "*"  <factor> }*');
     -- Rule 2: Terms
-    transform_and_insert_ebnf('<term>', '<factor> { ( "*" | "/" ) <factor> }*');
+    transform_and_insert_ebnf('<term>', '<factor> {  "/"  <factor> }*');
     
     -- Rule 3: Factors
     transform_and_insert_ebnf('<factor>', 'identifier | literal | function_call | "(" <column_expression> ")"');
@@ -217,5 +223,5 @@ END;
 /
 
 -- Query the table to verify your output results
- SELECT lhs, rule_number, rhs FROM temp_bnf_rules ORDER BY rule_number
+ SELECT lhs, rule_number, rhs FROM temp_bnf_rules ORDER BY lhs, rule_number
 ;

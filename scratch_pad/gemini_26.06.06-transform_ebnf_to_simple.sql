@@ -137,7 +137,5 @@ BEGIN
 END;
 /
 
--- Verify the result 
-SELECT lhs, rule_number, rhs FROM temp_bnf_rules ORDER BY rule_number;
 -- Query the table to verify your output results
 SELECT lhs, rule_number, rhs FROM temp_bnf_rules ORDER BY rule_number;

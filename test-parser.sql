@@ -98,8 +98,8 @@ from table ( parser_rule_util.fn_1_ebnf_to_simple
      );
 select * 
 from table ( parser_rule_util.fn_1_ebnf_to_simple
-    ( p_lhs=> '<if_statement>'
-     ,p_rhs=> '"IF" <condition> "THEN" <executable_section> { "ELSIF" <condition> "THEN" <executable_section> }* ["ELSE" <executable_section>] "END IF" ";"' 
+    ( p_lhs=> 'column_expression'
+     ,p_rhs=> 'identifier | literal | function_call | "(" column_expression ")" ' 
      ,p_source=>   'manual_test_2'    )
      );
      
