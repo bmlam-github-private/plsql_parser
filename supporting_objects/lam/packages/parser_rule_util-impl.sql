@@ -1,6 +1,8 @@
 CREATE OR REPLACE PACKAGE BODY parser_rule_util
 AS 
 --
+    c_epsilon   CONSTANT VARCHAR2( 10 ) := 'EPSILON';
+--
 PROCEDURE push_row
     ( pi_row     IN parser_grammar_rule_simple_rec
      ,pio_rows   IN OUT NOCOPY parser_grammar_rule_simple_col 
@@ -455,7 +457,7 @@ AS
                     v_working_rules(v_working_rules.LAST).tokens(i+1) := v_inner_tokens(i);
                 END LOOP;
                 v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 2) := '|';
-                v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 3) := ';';
+                v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 3) := c_epsilon;
                 v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 4) := ')';
                 
                 v_skip_until := v_close_idx;
@@ -478,7 +480,7 @@ AS
                     
                     v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 2) := v_new_rule_name;
                     v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 3) := '|';
-                    v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 4) := ';';
+                    v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 4) := c_epsilon;
                     v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 5) := ')';
                     
                     v_skip_until := v_close_idx + 1;
@@ -638,8 +640,8 @@ BEGIN
             
             -- Catch residual string elements trailing past the last pipe, or if no pipe existed
             IF TRIM(v_buffer_rhs) IS NOT NULL THEN
-                INSERT INTO temp_bnf_rules (lhs, rule_number, rhs)
-                VALUES (v_final_lhs, v_rule_seq, TRIM(v_buffer_rhs) );
+                --INSERT INTO temp_bnf_rules (lhs, rule_number, rhs)
+                --VALUES (v_final_lhs, v_rule_seq, TRIM(v_buffer_rhs) );
                 push_row ( parser_grammar_rule_simple_rec
                             (lhs=>          v_final_lhs
                             ,rhs=>          TRIM(v_buffer_rhs) 

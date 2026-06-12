@@ -278,3 +278,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.06.11
   gemini..v3 logic mentioned above integrated into package as function. no testing yet. function push_row promote to package level for easier reuse.
+
+2026.06.12
+  Tested parser_rule_util. fn_1_ebnf_to_simple. Next: function to convert set of rules in a CLOB to simple rules
