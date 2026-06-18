@@ -281,3 +281,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.06.12
   Tested parser_rule_util. fn_1_ebnf_to_simple. Next: function to convert set of rules in a CLOB to simple rules
+
+
+2026.06.18
+  Created package function for above purpose. Only first step coded; convert CLOB to table of lines,  

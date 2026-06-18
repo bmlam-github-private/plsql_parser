@@ -670,7 +670,23 @@ BEGIN
     --
     RETURN v_return;
 END fn_1_ebnf_to_simple;
+--  
+FUNCTION fn_ebnf_clob_to_simple
+(   p_clob      IN CLOB
+   ,p_source    IN VARCHAR2
+)
+RETURN parser_grammar_rule_simple_col
 --
+AS 
+    v_lines         APEX_T_VARCHAR2;
+BEGIN 
+    BEGIN 
+        v_lines := apex_string.split ( p_str => p_clob , p_sep=> chr(10));
+    EXCEPTION 
+        WHEN sqlcode = -6502 THEN 
+            raise_application_error( -20001, 'CLOB have have lines bigger thatn 32K!');
+    END;
+    --
 END;	-- package 
 /
 
