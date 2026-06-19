@@ -4,7 +4,7 @@ sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_res
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
 
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/packages/parser_rule_util-impl.sql" 
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
 
 sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/functions/bnf_to_insert_stmts.sql" 
 
@@ -99,5 +99,28 @@ from dual
 
 select * from table ( parser_rule_util. fn_1_ebnf_to_simple ( 
     '<term>', '<factor> { ( "*" | "/" ) <factor> }*'
+    , p_source => 'manual_test' ) )
+;
+set serveroutput on 
+
+declare 
+    x parser_grammar_rule_simple_col;
+BEGIN 
+    x := parser_rule_util. fn_ebnf_clob_to_simple ( 
+    '<term>::=<factor> { ( "*" | "/" ) <factor> }*'
+    , p_source => 'manual_test' ) 
+    ;
+END ;
+/
+
+select * from table ( parser_rule_util. fn_ebnf_clob_to_simple ( 
+    '<column_expression> ::= <term> { ( "+" | "-" ) <term> }*
+
+<term>              ::= <factor> { ( "*" | "/" ) <factor> }*
+
+<factor>            ::= identifier 
+                      | literal 
+                      | function_call 
+                      | "(" <column_expression> ")"'
     , p_source => 'manual_test' ) )
 ;

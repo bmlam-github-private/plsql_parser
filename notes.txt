@@ -285,3 +285,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.06.18
   Created package function for above purpose. Only first step coded; convert CLOB to table of lines,  
+
+2026.06.19
+  Tested package function fn_ebnf_clob_to_simple. Started function to transform grammar to rule tokens with p_persist option. From there we come to the real thing: generate package code to parse the real thing! 
+

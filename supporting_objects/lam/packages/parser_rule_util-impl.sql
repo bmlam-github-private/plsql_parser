@@ -678,15 +678,81 @@ FUNCTION fn_ebnf_clob_to_simple
 RETURN parser_grammar_rule_simple_col
 --
 AS 
+	v_return 		parser_grammar_rule_simple_col := 		parser_grammar_rule_simple_col();
     v_lines         APEX_T_VARCHAR2;
+    v_line          VARCHAR2(32000 	CHAR);
+	v_source_normed parser_grammar_rule_simple.source%TYPE;
 BEGIN 
-    BEGIN 
-        v_lines := apex_string.split ( p_str => p_clob , p_sep=> chr(10));
-    EXCEPTION 
-        WHEN sqlcode = -6502 THEN 
-            raise_application_error( -20001, 'CLOB have have lines bigger thatn 32K!');
-    END;
+	v_source_normed := trim( upper ( p_source ) );
+    v_lines := f_apex_split_clob ( p_clob => p_clob , p_sep=> chr(10) );
     --
+	--dbms_output.put_line ( 'Ln'||$$plsql_line|| ' xx: '||  xx );
+	dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lines.count: '||  v_lines.count );
+	FOR ln_ix IN 1 .. v_lines.count 
+	LOOP 
+		v_line := v_lines( ln_ix );
+        -- Skip empty lines
+        IF v_line IS NULL 
+			OR instr( ltrim( v_line ), '#' ) = 1 		-- line is a comment;
+		THEN
+            CONTINUE;
+        END IF;
+
+        -- Parse LHS and RHS
+        DECLARE
+			v_return_temp 	parser_grammar_rule_simple_col;
+            v_lhs_rhs_sep_pos PLS_INTEGER;
+			v_lhs 			parser_grammar_rule_simple.lhs%TYPE;
+			v_rhs 			parser_grammar_rule_simple.rhs%TYPE;
+        BEGIN
+            v_lhs_rhs_sep_pos := INSTR(v_line, '::=');
+dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lhs_rhs_sep_pos: '||  v_lhs_rhs_sep_pos );
+--dbms_output.put_line ( 'Ln'||$$plsql_line||' v_sep_pos:'||v_sep_pos );
+
+			IF v_lhs_rhs_sep_pos > 0 THEN
+                v_lhs := TRIM(SUBSTR(v_line, 1, v_lhs_rhs_sep_pos - 1));
+                v_rhs := TRIM(SUBSTR(v_line, v_lhs_rhs_sep_pos + 3));
+                --  transform one ebnf rule 
+				v_return_temp := fn_1_ebnf_to_simple
+					( p_lhs=> v_lhs
+					, p_rhs=> v_rhs
+					, p_source=> v_source_normed 
+					);
+	dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_return_temp.count: '||  v_return_temp.count );
+            END IF;
+			-- 
+			IF v_return_temp IS NOT NULL THEN 
+				v_return := v_return MULTISET UNION ALL v_return_temp;
+			END IF;
+        END;
+    END LOOP;
+	--
+	RETURN v_return; 
+END fn_ebnf_clob_to_simple;
+--
+FUNCTION fn_grammar_clob_to_rule_tokens
+(   p_clob      IN CLOB
+   ,p_source    IN VARCHAR2
+   ,p_persist   IN BOOLEAN DEFAULT FALSE -- true forfeits usage in SELECT 
+)
+RETURN parser_alt_token_col
+AS 
+BEGIN 
+	
+	IF p_persist THEN 
+		-- xx 
+		RETURN parser_alt_token_rec 
+			( lhs => null 
+			 ,alt_no => 0
+			 ,position => null 
+			 ,symbol => 'persisted to table'
+			 ,source => p_source 
+			 );
+	END IF;
+	--
+	
+END fn_grammar_clob_to_rule_tokens;
+
 END;	-- package 
 /
 
