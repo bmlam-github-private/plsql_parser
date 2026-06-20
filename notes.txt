@@ -289,3 +289,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.06.19
   Tested package function fn_ebnf_clob_to_simple. Started function to transform grammar to rule tokens with p_persist option. From there we come to the real thing: generate package code to parse the real thing! 
 
+2026.06.20
+  Took a shot of code generator without providing example rules with sequenced tokes. See scratch pad
+
