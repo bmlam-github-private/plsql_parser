@@ -1,119 +1,163 @@
-CREATE OR REPLACE FUNCTION generate_parser_proc RETURN CLOB IS
-    v_clob        CLOB;
-    v_line        VARCHAR2(32767);
-    v_prev_lhs    VARCHAR2(30) := '~FIRST~';
-    v_prev_alt    NUMBER(2)    := -1;
+CREATE OR REPLACE FUNCTION generate_parser_package (
+    p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+) RETURN CLOB IS
+    l_clob        CLOB;
+    l_spec        CLOB;
+    l_body        CLOB;
     
-    -- Cursor grabs layout sequenced strictly by Rule, Alt Number, and Position
+    -- Cursor for unique LHS rules (Type 1)
     CURSOR c_rules IS
-        SELECT lhs, alt_no, position, symbol
-          FROM parser_rule_alt_tokens
-         ORDER BY lhs, alt_no, position;
-BEGIN
-    -- Initialize the CLOB
-    DBMS_LOB.CREATEMB_LOB(v_clob);
-    DBMS_LOB.OPEN(v_clob, DBMS_LOB.LOB_READWRITE);
-
-    -- Append Global Header and Helper Definitions
-    v_line := '/* AUTOMATICALLY GENERATED LINEAR PARSER CODE */' || CHR(10) ||
-              'PACKAGE BODY dynamic_parser IS' || CHR(10) || CHR(10) ||
-              '    -- Global parser state tracking' || CHR(10) ||
-              '    g_ptr  PLS_INTEGER := 1;' || CHR(10) || CHR(10) ||
-              '    -- Core matching tool' || CHR(10) ||
-              '    PROCEDURE match(p_expected VARCHAR2) IS' || CHR(10) ||
-              '    BEGIN' || CHR(10) ||
-              '        IF g_ptr <= g_tokens.COUNT AND g_tokens(g_ptr) = p_expected THEN' || CHR(10) ||
-              '            g_ptr := g_ptr + 1;' || CHR(10) ||
-              '        ELSE' || CHR(10) ||
-              '            RAISE_APPLICATION_ERROR(-20002, ''Token mismatch. Expected: '' || p_expected);' || CHR(10) ||
-              '        END IF;' || CHR(10) ||
-              '    END match;' || CHR(10) || CHR(10);
-    DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
-
-    FOR r IN c_rules LOOP
+        SELECT DISTINCT lhs 
+        FROM parser_alt_token 
+        ORDER BY lhs;
         
-        -- Detect transition to a new Alternative Procedure
-        IF r.lhs != v_prev_lhs OR r.alt_no != v_prev_alt THEN
-            
-            -- Close out the previous subprocedure if it's not the initial loop iteration
-            IF v_prev_lhs != '~FIRST~' THEN
-                v_line := '    EXCEPTION' || CHR(10) ||
-                          '        WHEN OTHERS THEN' || CHR(10) ||
-                          '            g_ptr := v_start_ptr; -- Rollback token pointer state' || CHR(10) ||
-                          '            RAISE;' || CHR(10) ||
-                          '    END parse_' || v_prev_lhs || '_' || v_prev_alt || ';' || CHR(10) || CHR(10);
-                DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
-            END IF;
-            
-            -- Start a brand new, clean subprocedure dedicated to LHS + ALT_NO
-            v_line := '    PROCEDURE parse_' || r.lhs || '_' || r.alt_no || ' IS' || CHR(10) ||
-                      '        v_start_ptr PLS_INTEGER := g_ptr;' || CHR(10) ||
-                      '    BEGIN' || CHR(10);
-            DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
-            
-            v_prev_lhs := r.lhs;
-            v_prev_alt := r.alt_no;
-        END IF;
+    -- Cursor for alternatives of a specific LHS (Type 2)
+    CURSOR c_alts(cp_lhs VARCHAR2) IS
+        SELECT DISTINCT alt_no 
+        FROM parser_alt_token 
+        WHERE lhs = cp_lhs 
+        ORDER BY alt_no;
+        
+    -- Cursor for symbols within a specific alternative
+    CURSOR c_symbols(cp_lhs VARCHAR2, cp_alt_no NUMBER) IS
+        SELECT position, symbol 
+        FROM parser_alt_token 
+        WHERE lhs = cp_lhs AND alt_no = cp_alt_no 
+        ORDER BY position;
 
-        -- Write the matching instruction step for this token position
-        -- If upper-case, treat as terminal token string literal; otherwise, treat as subprogram rule dispatch
-        IF r.symbol = UPPER(r.symbol) AND r.symbol != LOWER(r.symbol) THEN
-            v_line := '        match(''' || r.symbol || ''');' || CHR(10);
-        ELSE
-            -- Note: For composite sub-rules, you would wrap calls in try/catch or call their master coordinator rule
-            v_line := '        parse_' || r.symbol || '_1;' || CHR(10); 
-        END IF;
-        DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
+    -- Cursor to find distinct terminal symbols vs LHS rules
+    TYPE t_lhs_list IS TABLE OF VARCHAR2(30);
+    l_all_lhs NUMBER;
+    
+    PROCEDURE append_to_clob(p_target IN OUT NOCOPY CLOB, p_text IN VARCHAR2) IS
+    BEGIN
+        DBMS_LOB.WRITEAPPEND(p_target, LENGTH(p_text), p_text);
+    END append_to_clob;
 
+BEGIN
+    -- Initialize CLOBs
+    DBMS_LOB.CREATETEMPORARY(l_spec, TRUE);
+    DBMS_LOB.CREATETEMPORARY(l_body, TRUE);
+    DBMS_LOB.CREATETEMPORARY(l_clob, TRUE);
+
+    -- 1. BUILD PACKAGE SPECIFICATION HEADERS
+    append_to_clob(l_spec, 'CREATE OR REPLACE PACKAGE ' || p_package_name || ' AS' || CHR(10));
+    append_to_clob(l_spec, '  -- Global collection type for tokens' || CHR(10));
+    append_to_clob(l_spec, '  TYPE t_token_list IS TABLE OF parser_token_rec;' || CHR(10)|| CHR(10));
+    append_to_clob(l_spec, '  g_tokens         t_token_list;' || CHR(10));
+    append_to_clob(l_spec, '  g_curr_token_ix  NUMBER := 1;' || CHR(10) || CHR(10));
+
+    -- 2. BUILD PACKAGE BODY HEADERS
+    append_to_clob(l_body, 'CREATE OR REPLACE PACKAGE BODY ' || p_package_name || ' AS' || CHR(10) || CHR(10));
+    
+    -- Forward declarations in Body for Type 2 rules (Alts) to allow arbitrary order recursion
+    FOR r IN c_rules LOOP
+        FOR a IN c_alts(r.lhs) LOOP
+            append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '_' || a.alt_no || '(po_success OUT BOOLEAN);' || CHR(10));
+        END LOOP;
+    END LOOP;
+    append_to_clob(l_body, CHR(10));
+
+    -- 3. GENERATE SUBPROGRAMS (Type 1 and Type 2)
+    FOR r IN c_rules LOOP
+        -- Add Type 1 (LHS master rule) to Specification
+        append_to_clob(l_spec, '  PROCEDURE ' || r.lhs || '(po_success OUT BOOLEAN);' || CHR(10));
+
+        -- Add Type 1 (LHS master rule) to Body
+        append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '(po_success OUT BOOLEAN) IS' || CHR(10));
+        append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
+        append_to_clob(l_body, '  BEGIN' || CHR(10));
+        append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
+        
+        -- Loop through alternatives inside Type 1
+        FOR a IN c_alts(r.lhs) LOOP
+            append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
+            append_to_clob(l_body, '      ' || r.lhs || '_' || a.alt_no || '(po_success);' || CHR(10));
+            append_to_clob(l_body, '      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;' || CHR(10));
+            append_to_clob(l_body, '    END IF;' || CHR(10));
+        END LOOP;
+        append_to_clob(l_body, '  END ' || r.lhs || ';' || CHR(10) || CHR(10));
+
+        -- Add Type 2 (Alternative rules) to Body
+        FOR a IN c_alts(r.lhs) LOOP
+            append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '_' || a.alt_no || '(po_success OUT BOOLEAN) IS' || CHR(10));
+            append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
+            append_to_clob(l_body, '  BEGIN' || CHR(10));
+            append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
+            
+            -- Process sequence symbols inside Alternative
+            FOR s IN c_symbols(r.lhs, a.alt_no) LOOP
+                append_to_clob(l_body, '    -- Position ' || s.position || ': Symbol ' || s.symbol || CHR(10));
+                append_to_clob(l_body, '    IF po_success THEN' || CHR(10));
+                
+                -- Check if symbol is another LHS rule (Non-Terminal)
+                SELECT COUNT(*) 
+				INTO l_all_lhs 
+				FROM (
+					SELECT DISTINCT lhs FROM parser_alt_token )
+					WHERE lhs = s.symbol 
+					;
+                
+                IF l_all_lhs > 0 THEN
+                    -- Call sub-rule
+                    append_to_clob(l_body, '      ' || s.symbol || '(po_success);' || CHR(10));
+                ELSE
+                    -- Terminal Token validation match
+                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || s.symbol || ''' THEN' || CHR(10));
+                    append_to_clob(l_body, '        g_curr_token_ix := g_curr_token_ix + 1;' || CHR(10));
+                    append_to_clob(l_body, '      ELSE' || CHR(10));
+                    append_to_clob(l_body, '        po_success := FALSE;' || CHR(10));
+                    append_to_clob(l_body, '      END IF;' || CHR(10));
+                END IF;
+                append_to_clob(l_body, '    END IF;' || CHR(10));
+            END LOOP;
+            
+            -- Backtrack if alternative sequence failed midway
+            append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
+            append_to_clob(l_body, '      g_curr_token_ix := l_entry_idx;' || CHR(10));
+            append_to_clob(l_body, '    END IF;' || CHR(10));
+            append_to_clob(l_body, '  END ' || r.lhs || '_' || a.alt_no || ';' || CHR(10) || CHR(10));
+        END LOOP;
     END LOOP;
 
-    -- Clean wrap up of the final trailing procedure inside the cursor buffer
-    IF v_prev_lhs != '~FIRST~' THEN
-        v_line := '    EXCEPTION' || CHR(10) ||
-                  '        WHEN OTHERS THEN' || CHR(10) ||
-                  '            g_ptr := v_start_ptr;' || CHR(10) ||
-                  '            RAISE;' || CHR(10) ||
-                  '    END parse_' || v_prev_lhs || '_' || v_prev_alt || ';' || CHR(10) || CHR(10);
-        DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
-    END IF;
+    -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
+    append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
+    append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN);' || CHR(10));
+    
+    append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN) IS' || CHR(10));
+    append_to_clob(l_body, '  BEGIN' || CHR(10));
+    append_to_clob(l_body, '    g_tokens := p_token_stream;' || CHR(10));
+    append_to_clob(l_body, '    g_curr_token_ix := 1;' || CHR(10));
+    append_to_clob(l_body, '    po_success := FALSE;' || CHR(10) || CHR(10));
+    
+    -- Identify top level rules using an anti-join query
+    FOR top_rule IN (
+        SELECT DISTINCT lhs 
+        FROM parser_alt_token
+        WHERE lhs NOT IN (
+            SELECT DISTINCT symbol 
+            FROM parser_alt_token 
+            WHERE symbol IS NOT NULL
+        )
+        ORDER BY lhs
+    ) LOOP
+        append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
+        append_to_clob(l_body, '      g_curr_token_ix := 1; -- Reset stream index for next entry option' || CHR(10));
+        append_to_clob(l_body, '      ' || top_rule.lhs || '(po_success);' || CHR(10));
+        append_to_clob(l_body, '    END IF;' || CHR(10));
+    END LOOP;
+    
+    append_to_clob(l_body, '  END parse_main;' || CHR(10) || CHR(10));
 
-    v_line := 'END dynamic_parser;';
-    DBMS_LOB.WRITEAPPEND(v_clob, LENGTH(v_line), v_line);
+    -- 5. CLOSE OUT STRINGS
+    append_to_clob(l_spec, 'END ' || p_package_name || ';');
+    append_to_clob(l_body, 'END ' || p_package_name || ';');
 
-    RETURN v_clob;
+    -- Combine into final CLOB
+    DBMS_LOB.APPEND(l_clob, l_spec);
+    DBMS_LOB.WRITEAPPEND(l_clob, 2, CHR(10) || CHR(10));
+    DBMS_LOB.APPEND(l_clob, l_body);
+
+    RETURN l_clob;
 END;
 /
-
-/* examplary AUTOMATICALLY GENERATED LINEAR PARSER CODE 
-PACKAGE BODY dynamic_parser IS
-
-    g_ptr  PLS_INTEGER := 1;
-
-    PROCEDURE match(p_expected VARCHAR2) IS ...
-
-    PROCEDURE parse_expr_1 IS
-        v_start_ptr PLS_INTEGER := g_ptr;
-    BEGIN
-        match('ID');
-        match('=');
-        match('NUMBER');
-    EXCEPTION
-        WHEN OTHERS THEN
-            g_ptr := v_start_ptr; -- Reset position back to original state on failure
-            RAISE;
-    END parse_expr_1;
-
-    PROCEDURE parse_expr_2 IS
-        v_start_ptr PLS_INTEGER := g_ptr;
-    BEGIN
-        match('ID');
-        match('+');
-        match('ID');
-    EXCEPTION
-        WHEN OTHERS THEN
-            g_ptr := v_start_ptr; -- Reset position back to original state on failure
-            RAISE;
-    END parse_expr_2;
-
-END dynamic_parser;
-*/

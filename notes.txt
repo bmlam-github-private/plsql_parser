@@ -292,3 +292,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.06.20
   Took a shot of code generator without providing example rules with sequenced tokes. See scratch pad
 
+2026.06.21
+  Improved the code generator function in scratch_pad. Need to populete parser_alt_token table to test ! 
+  
