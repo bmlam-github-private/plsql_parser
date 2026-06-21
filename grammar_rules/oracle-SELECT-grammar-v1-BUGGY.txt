@@ -141,13 +141,13 @@
             | "'" <string> "'"
             | NULL
 
-<number> ::= <digit> {<digit>}*
+#<number> ::= <digit> {<digit>}*
 
-<string> ::= { any character except "'" }
+#<string> ::= { any character except "'" }
 
-<letter> ::= "A" | ... | "Z" | "a" | ... | "z"
+#<letter> ::= "A" | ... | "Z" | "a" | ... | "z"
 
-<digit> ::= "0" | ... | "9"
+#<digit> ::= "0" | ... | "9"
 
 
 

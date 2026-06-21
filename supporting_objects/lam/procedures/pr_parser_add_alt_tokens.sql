@@ -1,7 +1,7 @@
 CREATE OR REPLACE PROCEDURE pr_parser_add_alt_tokens 
-(    p_lhs    IN VARCHAR2
-    ,p_rhs_tokens IN parser_rule_token_col 
-    ,p_source VARCHAR2 
+(    p_lhs    		IN VARCHAR2
+    ,p_rhs_tokens 	IN parser_rule_token_col 
+    ,p_source 		IN VARCHAR2 
 )
 IS
     v_alt_no   NUMBER := 1;

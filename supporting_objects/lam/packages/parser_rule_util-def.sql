@@ -15,6 +15,15 @@ FUNCTION fn_ebnf_clob_to_simple
 )
 RETURN parser_grammar_rule_simple_col
 ;
-end parser_rule_util;
+--
+FUNCTION fn_grammar_clob_to_rule_tokens
+(   p_clob      IN CLOB
+   ,p_source    IN VARCHAR2
+   ,p_persist   IN BOOLEAN DEFAULT FALSE -- true forfeits usage in SELECT 
+)
+RETURN parser_alt_token_col
+;
+--
+end;
 /
 

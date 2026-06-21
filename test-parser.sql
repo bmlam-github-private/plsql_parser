@@ -4,9 +4,9 @@ sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_res
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
 
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-def.sql"
 
-sta "/Users/bmlam/Library/Mobile Documents/com~apple~CloudDocs/github_2_privat/plsql_parser/supporting_objects/lam/functions/bnf_to_insert_stmts.sql" 
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
 
 set serveroutput on
 select parser_grammar_gen.get_parser_code_v2  from dual
@@ -113,14 +113,30 @@ BEGIN
 END ;
 /
 
-select * from table ( parser_rule_util. fn_ebnf_clob_to_simple ( 
-    '<column_expression> ::= <term> { ( "+" | "-" ) <term> }*
 
-<term>              ::= <factor> { ( "*" | "/" ) <factor> }*
 
-<factor>            ::= identifier 
-                      | literal 
-                      | function_call 
-                      | "(" <column_expression> ")"'
-    , p_source => 'manual_test' ) )
-;
+
+
+DECLARE 
+    x parser_alt_token_col;
+BEGIN 
+    x := 
+--select * from table ( 
+--parser_rule_util. fn_ebnf_clob_to_simple 
+    parser_rule_util. fn_grammar_clob_to_rule_tokens 
+    ( 
+        '<column_expression> ::= <term> { ( "+" | "-" ) <term> }*
+    
+    <term>              ::= <factor> { ( "*" | "/" ) <factor> }*
+    
+    <factor>            ::= identifier 
+                          | literal 
+                          | function_call 
+                          | "(" <column_expression> ")"'
+        , p_source => 'manual_test'  
+        , p_persist => TRUE 
+        )
+-- if "select"        )
+    ;
+END;
+/
