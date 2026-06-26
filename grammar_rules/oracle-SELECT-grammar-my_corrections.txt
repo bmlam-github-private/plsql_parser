@@ -1,0 +1,159 @@
+-- idea: remove Expansion of <identifier> <number> <string> etc 
+-- 2026.06.26: Nothing done yet!
+
+
+<select_statement> ::= [<with_clause>] <query_block> {<set_operator> <query_block>}* [<order_by_clause>] [<for_update_clause>]
+
+<with_clause> ::= WITH <with_item> {"," <with_item>}*
+
+<with_item> ::= <identifier> [ "(" <column_list> ")" ] AS "(" <subquery> ")"
+
+<set_operator> ::= UNION [ALL]
+                 | INTERSECT
+                 | MINUS
+
+<subquery> ::= <query_block> {<set_operator> <query_block>}*
+
+<query_block> ::= SELECT [DISTINCT | UNIQUE | ALL]
+                  <select_list>
+                  FROM <table_reference_list>
+                  [<where_clause>]
+                  [<group_by_clause>]
+                  [<having_clause>]
+                  [<hierarchical_query_clause>]
+
+<select_list> ::= <select_item> {"," <select_item>}*
+
+<select_item> ::= <expression> [<alias>]
+                | "*"
+
+<alias> ::= <identifier> | '"' <identifier> '"'
+
+<table_reference_list> ::= <table_reference> {"," <table_reference>}*
+
+<table_reference> ::= <table_factor> {<join_clause>}*
+
+<table_factor> ::= <table_name> [<alias>]
+                 | "(" <subquery> ")" [<alias>]
+
+<join_clause> ::= <join_type> JOIN <table_factor>
+                  ON <condition>
+                | <join_type> JOIN <table_factor>
+                  USING "(" <column_list> ")"
+
+<join_type> ::= INNER
+              | LEFT [OUTER]
+              | RIGHT [OUTER]
+              | FULL [OUTER]
+              | CROSS
+
+<where_clause> ::= WHERE <condition>
+
+<group_by_clause> ::= GROUP BY <group_by_list>
+
+<group_by_list> ::= <group_by_item> {"," <group_by_item>}*
+
+<group_by_item> ::= <expression>
+                  | ROLLUP "(" <expression_list> ")"
+                  | CUBE "(" <expression_list> ")"
+
+<having_clause> ::= HAVING <condition>
+
+<hierarchical_query_clause> ::= START WITH <condition>
+                               CONNECT BY [NOCYCLE] <condition>
+
+<order_by_clause> ::= ORDER BY <order_by_list>
+
+<order_by_list> ::= <order_by_item> {"," <order_by_item>}*
+
+<order_by_item> ::= <expression> [ASC | DESC] [NULLS FIRST | NULLS LAST]
+
+<for_update_clause> ::= FOR UPDATE [OF <column_list>]
+                       [NOWAIT | WAIT <number> | SKIP LOCKED]
+
+<column_list> ::= <identifier> {"," <identifier>}*
+
+<condition> ::= <expression>
+
+<expression> ::= <logical_term> {OR <logical_term>}*
+
+<logical_term> ::= <logical_factor> {AND <logical_factor>}*
+
+<logical_factor> ::= [NOT] <predicate>
+
+<predicate> ::= <comparison>
+              | <between_predicate>
+              | <in_predicate>
+              | <exists_predicate>
+              | <like_predicate>
+
+<comparison> ::= <arithmetic_expr> <comp_op> <arithmetic_expr>
+
+<comp_op> ::= "=" | "!=" | "<>" | "<" | ">" | "<=" | ">="
+
+<between_predicate> ::= <arithmetic_expr> [NOT] BETWEEN <arithmetic_expr> AND <arithmetic_expr>
+
+<in_predicate> ::= <arithmetic_expr> [NOT] IN "(" (<expression_list> | <subquery>) ")"
+
+<exists_predicate> ::= EXISTS "(" <subquery> ")"
+
+<like_predicate> ::= <arithmetic_expr> [NOT] LIKE <arithmetic_expr>
+
+<arithmetic_expr> ::= <term> {("+" | "-") <term>}*
+
+<term> ::= <factor> {("*" | "/") <factor>}*
+
+<factor> ::= <literal>
+           | <column_reference>
+           | <function_call>
+           | <case_expression>
+           | "(" <expression> ")"
+           | "(" <subquery> ")"
+
+
+<function_call> ::= <identifier> "(" [<expression_list>] ")" [<analytic_clause>]
+
+<analytic_clause> ::= OVER "(" [<partition_clause>] [<order_by_clause>] ")"
+
+<partition_clause> ::= PARTITION BY <expression_list>
+
+<case_expression> ::= CASE
+                      {WHEN <condition> THEN <expression>}+
+                      [ELSE <expression>]
+                      END
+                    | CASE <expression>
+                      {WHEN <expression> THEN <expression>}+
+                      [ELSE <expression>]
+                      END
+
+<decode_function> ::= DECODE "(" <expression> "," <expression_list> ")"
+
+<nvl_function> ::= NVL "(" <expression> "," <expression> ")"
+
+
+<comparison> ::= <arithmetic_expr> <comp_op> <arithmetic_expr> ["(+)"]
+
+<column_reference> ::= [<identifier> "."] <identifier>
+
+<table_name> ::= <identifier>
+
+<identifier> ::= <letter> {<letter> | <digit> | "_" | "$"}*
+
+<expression_list> ::= <expression> {"," <expression>}*
+
+<literal> ::= <number>
+            | "'" <string> "'"
+            | NULL
+
+#<number> ::= <digit> {<digit>}*
+
+#<string> ::= { any character except "'" }
+
+#<letter> ::= "A" | ... | "Z" | "a" | ... | "z"
+
+#<digit> ::= "0" | ... | "9"
+
+
+
+
+

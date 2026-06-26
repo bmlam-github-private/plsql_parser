@@ -24,11 +24,6 @@ order by lhs
 select *
 from parser_alt_token
 ;
-select content
-, bnf_to_insert_stmts ( content )
-from test_clob 
-where id = 1
-;
 SELECT t.*
 , dbms_lob.getlength( content ) len 
 from temp_clob t
@@ -119,20 +114,18 @@ END ;
 
 DECLARE 
     x parser_alt_token_col;
+    gram_clob   CLOB;
 BEGIN 
+    SELECT content 
+    INTO gram_clob 
+    FROM temp_clob
+    where remarks = 'oracle-SELECT-grammar'
+    ;
     x := 
 --select * from table ( 
 --parser_rule_util. fn_ebnf_clob_to_simple 
     parser_rule_util. fn_grammar_clob_to_rule_tokens 
-    ( 
-        '<column_expression> ::= <term> { ( "+" | "-" ) <term> }*
-    
-    <term>              ::= <factor> { ( "*" | "/" ) <factor> }*
-    
-    <factor>            ::= identifier 
-                          | literal 
-                          | function_call 
-                          | "(" <column_expression> ")"'
+    (  p_clob => gram_clob
         , p_source => 'manual_test'  
         , p_persist => TRUE 
         )

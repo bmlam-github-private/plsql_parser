@@ -296,3 +296,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Improved the code generator function in scratch_pad. We populated parser_alt_token table with grammar for Oracle SELECT statement to test ! 
   Next step: generate the parser code!
   
+
+2026.06.26
+  Tried to parse grammar plsql_excluding_SQL.txt (updated in temp_clob) with parser_rule_util. fn_grammar_clob_to_rule_tokens and it hit ora-21780 obviously due to infinite loop. Need to include a nesting level check and dump the last checked rules to facilitate identifiction of troublesome rules!
