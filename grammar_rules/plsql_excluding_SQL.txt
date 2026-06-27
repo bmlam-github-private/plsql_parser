@@ -57,12 +57,22 @@
 
 <expression_list> ::= <expression> {"," <expression>}*
 
-<expression> ::= <literal>
-               | <variable_reference>
-               | <function_call>
-               | <expression> <operator> <expression>
-               | "(" <expression> ")"
+#<expression> ::= <literal>
+#               | <variable_reference>
+#               | <function_call>
+#               | <expression> <operator> <expression>
+#               | "(" <expression> ")"
 
+<expression>      ::= <term> <expression_tail>
+
+<expression_tail> ::= <operator> <term> <expression_tail>
+                    | ε  /* ε means empty/nothing */
+
+<term>            ::= <literal>
+                    | <variable_reference>
+                    | <function_call>
+                    | "(" <expression> ")"
+					
 <variable_reference> ::= <identifier> ["." <field_name>]
 
 <literal> ::= <number> | <string> | "TRUE" | "FALSE" | "NULL"
@@ -74,12 +84,12 @@
 
 <trigger> ::= "CREATE" "OR" "REPLACE" "TRIGGER" <identifier> <trigger_time_event> <trigger_body> "END" <identifier> ";"
 
--- <trigger_time_event> ::= ...  -- not expanded here
+# <trigger_time_event> ::= ...  -- not expanded here
 
 <trigger_body> ::= <declaration_section> "BEGIN" <executable_section> ["EXCEPTION" <exception_section>]
 
 <dynamic_sql_statement> ::= "EXECUTE IMMEDIATE" <string_literal> ["INTO" <variable_reference>];
 
--- <other_sql_statement> ::= placeholder for SELECT / INSERT / UPDATE / DELETE / MERGE
+# <other_sql_statement> ::= placeholder for SELECT / INSERT / UPDATE / DELETE / MERGE
 
 <block> ::= ["DECLARE" <declaration_section>] "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" ";"

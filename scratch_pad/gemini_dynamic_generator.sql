@@ -1,5 +1,6 @@
-CREATE OR REPLACE FUNCTION generate_parser_package (
-    p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+CREATE OR REPLACE FUNCTION generate_parser_package 
+	(p_source		IN VARCHAR2 
+	,p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
 ) RETURN CLOB IS
     l_clob        CLOB;
     l_spec        CLOB;

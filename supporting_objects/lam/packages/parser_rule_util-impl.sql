@@ -2,6 +2,12 @@ CREATE OR REPLACE PACKAGE BODY parser_rule_util
 AS 
 --
     c_epsilon   CONSTANT VARCHAR2( 10 ) := 'EPSILON';
+	--
+	g_max_nesting 			NUMBER := 200;
+	g_nesting_dump_loop_max 	NUMBER := 5;
+	g_curr_nesting_level 	NUMBER := 0;
+	g_curr_lhs				VARCHAR2(100);
+	g_curr_rhs				VARCHAR2(4000);
 --
 PROCEDURE push_row
     ( pi_row     IN parser_grammar_rule_simple_rec
@@ -355,9 +361,7 @@ FUNCTION fn_1_ebnf_to_simple
    ,p_source    IN VARCHAR2
 )
 RETURN parser_grammar_rule_simple_col
---
--- insert to be replaced by push_row 
---
+-- 
 AS
     v_return parser_grammar_rule_simple_col :=  parser_grammar_rule_simple_col();
     -- Token list collection types
@@ -373,7 +377,7 @@ AS
     v_final_rules    rule_table := rule_table();
     
     v_current_idx    NUMBER := 1;
-    v_counter        NUMBER := 0;      -- Suffix counter for <opt_n> and <rep_n>
+    v_suffix_ix      NUMBER := 0;      -- Suffix counter for <opt_n> and <rep_n>
     v_rule_seq       NUMBER := 1;      -- Sequential identifier for the table
     v_initial_tokens token_list;
 
@@ -419,7 +423,33 @@ AS
         v_new_tokens     token_list;
         v_new_idx        NUMBER := 1;
         v_skip_until     NUMBER := 0;
+		-- 
+		PROCEDURE ipr_detect_infinite_loop
+		AS 
+		BEGIN 
+			g_curr_nesting_level := 		g_curr_nesting_level + 1;
+			IF g_curr_nesting_level >= g_max_nesting - g_nesting_dump_loop_max THEN 
+				FOR i IN 1 .. g_nesting_dump_loop_max LOOP 
+					dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
+							||' nesting: '||g_curr_nesting_level 
+							||' i: '||i 
+							||' p_tokens(i):' || p_tokens(i)
+						);
+				END LOOP; 
+				--
+				IF g_curr_nesting_level = g_max_nesting THEN 
+					dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
+							||' nesting: '||g_curr_nesting_level 
+							||' g_curr_lhs: '|| g_curr_lhs
+							||' g_curr_rhs: '|| g_curr_rhs
+						);
+					RAISE_APPLICATION_ERROR( -20001, 'Max nesting level reached: '||g_max_nesting );
+				END IF;
+			END IF;
+		END ipr_detect_infinite_loop;
     BEGIN
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' g_curr_nesting_level: '||g_curr_nesting_level||' p_tokens: '||p_tokens.count||' first: '|| p_tokens(1)||' last: '|| p_tokens(p_tokens.last)	);		
+		-- 
         -- Scan tokens to find the first outermost opening bracket sequence
         FOR i IN 1..p_tokens.COUNT LOOP
             IF p_tokens(i) IN ('[', '{') AND v_level = 0 THEN
@@ -443,10 +473,16 @@ AS
                 v_inner_tokens(v_inner_tokens.COUNT + 1) := p_tokens(i);
             END LOOP;
             
-            v_counter := v_counter + 1;
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line							||' nesting: '||g_curr_nesting_level 							||' v_bracket_type: '|| v_bracket_type						);
+            v_suffix_ix := v_suffix_ix + 1;
 
             IF v_bracket_type = '[' THEN
-                v_new_rule_name := '<'|| f_trim_angle_brackes(p_lhs) ||'_opt_' || v_counter || '>';
+                v_new_rule_name := '<'|| f_trim_angle_brackes(p_lhs) ||'_opt_' || v_suffix_ix || '>';
+				dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
+							||' nesting: '||g_curr_nesting_level 
+							||' v_new_rule_name: '|| v_new_rule_name
+							||' v_suffix_ix: '|| v_suffix_ix
+						);
                 
                 v_working_rules.EXTEND;
                 v_working_rules(v_working_rules.LAST).lhs := v_new_rule_name;
@@ -464,10 +500,15 @@ AS
                 
             ELSIF v_bracket_type = '{' THEN
                 IF p_tokens.EXISTS(v_close_idx + 1) AND p_tokens(v_close_idx + 1) = '*' THEN
-                    v_new_rule_name := '<'||f_trim_angle_brackes( p_lhs )||'_rep_' || v_counter || '>';
+                    v_new_rule_name := '<'||f_trim_angle_brackes( p_lhs )||'_rep_' || v_suffix_ix || '>';
                     
                     v_working_rules.EXTEND;
                     v_working_rules(v_working_rules.LAST).lhs := v_new_rule_name;
+				dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
+							||' nesting: '||g_curr_nesting_level 
+							||' v_new_rule_name: '|| v_new_rule_name
+							||' v_suffix_ix: '|| v_suffix_ix
+						);
                     
                     -- Formulate structural base: ( inner_tokens <rep_n> | ; )
                     v_working_rules(v_working_rules.LAST).tokens(1) := '(';
@@ -507,6 +548,7 @@ AS
             p_tokens := v_new_tokens;
             
             -- Recurse to handle any other bracket definitions inside this array block
+ipr_detect_infinite_loop;			
             process_token_brackets(p_tokens);
         END IF;
     END process_token_brackets;
@@ -612,6 +654,8 @@ AS
 
 BEGIN
     -- Tokenize and initialize Phase 1
+	g_curr_lhs := p_lhs;
+	g_curr_rhs := p_rhs;
     v_initial_tokens := tokenize(p_rhs);
     v_working_rules.EXTEND;
     v_working_rules(v_working_rules.LAST).lhs := TRIM(p_lhs);
@@ -706,7 +750,7 @@ BEGIN
 			v_rhs 			parser_grammar_rule_simple.rhs%TYPE;
         BEGIN
             v_lhs_rhs_sep_pos := INSTR(v_line, '::=');
-dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lhs_rhs_sep_pos: '||  v_lhs_rhs_sep_pos );
+-- dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lhs_rhs_sep_pos: '||  v_lhs_rhs_sep_pos );
 --dbms_output.put_line ( 'Ln'||$$plsql_line||' v_sep_pos:'||v_sep_pos );
 
 			IF v_lhs_rhs_sep_pos > 0 THEN
@@ -718,7 +762,7 @@ dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lhs_rhs_sep_pos: '||  v_lhs_rhs_
 					, p_rhs=> v_rhs
 					, p_source=> v_source_normed 
 					);
-	dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_return_temp.count: '||  v_return_temp.count );
+--	dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_return_temp.count: '||  v_return_temp.count );
             END IF;
 			-- 
 			IF v_return_temp IS NOT NULL THEN 
@@ -734,12 +778,14 @@ FUNCTION fn_grammar_clob_to_rule_tokens
 (   p_clob      IN CLOB
    ,p_source    IN VARCHAR2
    ,p_persist   IN BOOLEAN DEFAULT FALSE -- true forfeits usage in SELECT 
+   ,p_max_nesting 	IN NUMBER 
 )
 RETURN parser_alt_token_col
 AS 
 	v_return parser_alt_token_col :=  parser_alt_token_col ();
 	v_rule_col parser_grammar_rule_simple_col;
 BEGIN 
+	g_max_nesting := p_max_nesting;
 	v_rule_col := fn_ebnf_clob_to_simple 
 		( p_clob 	=> p_clob 
 		 ,p_source 	=> p_source 
@@ -797,6 +843,20 @@ BEGIN
 	--
 	RETURN v_return;
 END fn_grammar_clob_to_rule_tokens;
+--
+PROCEDURE pr_set_global
+(   p_key 		IN VARCHAR2
+   ,p_value		IN VARCHAR2
+) AS 
+BEGIN 
+	CASE upper( trim ( p_key ) ) 
+	WHEN 'MAX_NESTING'			THEN 		g_max_nesting := trunc( to_number( p_value ) );
+	WHEN 'NESTING_DUMP_LOOP'	THEN 		g_nesting_dump_loop_max := trunc( to_number( p_value ) );
+	ELSE 
+		RAISE_APPLICATION_ERROR( -20001, 'Unknown key for global: '||p_key );
+	END CASE;
+END pr_set_global 
+;
 
 END;	-- package 
 /

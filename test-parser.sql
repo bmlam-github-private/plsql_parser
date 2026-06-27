@@ -1,17 +1,15 @@
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_grammar_rules.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\pr_resolve_ebnf_rules.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\procedures\test-pr_convert_clob_to_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql"
 
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-def.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-def.sql"
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-impl.sql"
 
-set serveroutput on
-select parser_grammar_gen.get_parser_code_v2  from dual
-;
-select parser_grammar_gen.get_parser_package_code( 'XXX')  from dual
+select parser_grammar_gen.fn_get_parser_package_code( p_source => 'MANUAL_TEST' )  from dual
 ;
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
@@ -23,6 +21,8 @@ order by lhs
 ;
 select *
 from parser_alt_token
+WHERE 1=1
+  and lower( lhs ) like '%assignm%'
 ;
 SELECT t.*
 , dbms_lob.getlength( content ) len 
@@ -103,23 +103,23 @@ declare
 BEGIN 
     x := parser_rule_util. fn_ebnf_clob_to_simple ( 
     '<term>::=<factor> { ( "*" | "/" ) <factor> }*'
-    , p_source => 'manual_test' ) 
+    , p_source => upper('manual_test') ) 
     ;
 END ;
 /
 
-
-
-
-
+set serveroutput on size 1000000
+;
 DECLARE 
     x parser_alt_token_col;
     gram_clob   CLOB;
 BEGIN 
+    parser_rule_util. pr_set_global ( p_key=> 'max_nesting', p_value => 199 );
+    parser_rule_util. pr_set_global ( p_key=> 'nesting_dump_loop', p_value => 9 );
     SELECT content 
     INTO gram_clob 
     FROM temp_clob
-    where remarks = 'oracle-SELECT-grammar'
+    where remarks = 'plsql_excluding_SQL'
     ;
     x := 
 --select * from table ( 
@@ -128,6 +128,7 @@ BEGIN
     (  p_clob => gram_clob
         , p_source => 'manual_test'  
         , p_persist => TRUE 
+        , p_max_nesting => 999 
         )
 -- if "select"        )
     ;
