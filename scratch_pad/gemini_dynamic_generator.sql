@@ -1,3 +1,6 @@
+REM already incorporated into package parser_grammar_gen as of 2026.6.27
+
+
 CREATE OR REPLACE FUNCTION generate_parser_package 
 	(p_source		IN VARCHAR2 
 	,p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'

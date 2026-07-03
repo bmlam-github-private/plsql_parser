@@ -305,3 +305,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
   * procedure name contains angle brackes. 
   * handling of terminal symbols which are mostly still double-quoted 
   
+2026.07.03
+  Still testig grammar PLSQL_EXCLUDING_SQL, the generated code has these issues:
+  * the term to match from PARSER_ALT_TOKEN table some times still has leading left square bracket or trailing right square bracket. Fix: create a view to normalize and use this view in package PARSER_GRAMMAR_GEN
+  * procedure name for "generated simplifying rules" still has angle brackets.
+  

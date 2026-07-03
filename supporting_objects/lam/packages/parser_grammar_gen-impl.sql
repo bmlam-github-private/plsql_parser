@@ -184,7 +184,7 @@ FUNCTION get_parser_code_v2      -- sequence of procedures , does not  consider 
 RETURN CLOB
 IS
 -- Version up to May? 2026 ?
--- which has some of Minh's tweeks regarding check which procedure is "called" and "created" 
+-- which has some of Minh'symb tweeks regarding check which procedure is "called" and "created" 
 /*
   co_state_initial      CONSTANT VARCHAR2( 10 ) := 'initial';
 
@@ -195,7 +195,7 @@ IS
   v_code CLOB := EMPTY_CLOB();  -- will hold all generated procedures
 
   ----------------------------------------------------------------------
-  -- Append a line to the CLOB
+  -- Append altern line to the CLOB
   ----------------------------------------------------------------------
   PROCEDURE append_line(p_line VARCHAR2) IS
       v_proc_name type_vc2_100;
@@ -348,6 +348,20 @@ BEGIN
   RETURN v_return;
 END get_package_helpers;
 --
+FUNCTION fn_norm_as_proc_name 
+	(p_input 	VARCHAR2 
+) RETURN VARCHAR2 
+AS 
+	l_return VARCHAR2(100) := p_input;
+BEGIN
+	IF 		substr ( l_return, 1, 1 ) 	= '<'
+		AND substr ( l_return, -1) 		= '>'
+	THEN 
+		l_return := substr( l_return, 2, length ( l_return ) - 2 );
+	END IF;
+	--
+	RETURN 'pr_'||l_return;
+END fn_norm_as_proc_name;
 --
 FUNCTION fn_get_parser_package_code 
 	(p_source		IN VARCHAR2 
@@ -359,19 +373,27 @@ FUNCTION fn_get_parser_package_code
     
     -- Cursor for unique LHS rules (Type 1)
     CURSOR c_rules IS
-        SELECT DISTINCT lhs 
-        FROM parser_alt_token 
-		WHERE source = upper( trim( p_source ) ) 
-        ORDER BY lhs;
+		WITH dist_lhs AS ( 
+			SELECT DISTINCT lhs 
+			FROM parser_alt_token 
+			WHERE source = upper( trim( p_source ) ) 
+		) 
+		SELECT lhs 
+			, parser_grammar_gen. fn_norm_as_proc_name ( p_input=> lhs ) lhs_procname 
+			, row_number() OVER ( PARTITION BY NULL ORDER BY lhs ) 	as seq 
+			, count(*) OVER ( PARTITION BY NULL ORDER BY lhs ) 		as tot 
+		FROM dist_lhs
+		ORDER BY lhs
+			;
         
-    -- Cursor for alternatives of a specific LHS (Type 2)
-    CURSOR c_alts(cp_lhs VARCHAR2) IS
+    -- Cursor for alternatives of altern specific LHS (Type 2)
+    CURSOR c_alternatives(cp_lhs VARCHAR2) IS
         SELECT DISTINCT alt_no 
         FROM parser_alt_token 
         WHERE lhs = cp_lhs 
         ORDER BY alt_no;
         
-    -- Cursor for symbols within a specific alternative
+    -- Cursor for symbols within altern specific alternative
     CURSOR c_symbols(cp_lhs VARCHAR2, cp_alt_no NUMBER) IS
         SELECT position, symbol 
         FROM parser_alt_token 
@@ -387,7 +409,9 @@ FUNCTION fn_get_parser_package_code
         DBMS_LOB.WRITEAPPEND(p_target, LENGTH(p_text), p_text);
     END append_to_clob;
 
-BEGIN
+BEGIN	-- fn_get_parser_package_code 
+-- RAISE_APPLICATION_ERROR( -20001, 'ln'||$$plsql_line );
+dbms_output.put_line (  'ln'||$$plsql_line );
     -- Initialize CLOBs
     DBMS_LOB.CREATETEMPORARY(l_spec, TRUE);
     DBMS_LOB.CREATETEMPORARY(l_body, TRUE);
@@ -405,8 +429,8 @@ BEGIN
     
     -- Forward declarations in Body for Type 2 rules (Alts) to allow arbitrary order recursion
     FOR r IN c_rules LOOP
-        FOR a IN c_alts(r.lhs) LOOP
-            append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '_' || a.alt_no || '(po_success OUT BOOLEAN);' || CHR(10));
+        FOR altern IN c_alternatives(r.lhs) LOOP
+            append_to_clob(l_body, '  PROCEDURE ' || fn_norm_as_proc_name( r.lhs )|| '_' || altern.alt_no || '(po_success OUT BOOLEAN);' || CHR(10));
         END LOOP;
     END LOOP;
     append_to_clob(l_body, CHR(10));
@@ -414,33 +438,42 @@ BEGIN
     -- 3. GENERATE SUBPROGRAMS (Type 1 and Type 2)
     FOR r IN c_rules LOOP
         -- Add Type 1 (LHS master rule) to Specification
-        append_to_clob(l_spec, '  PROCEDURE ' || r.lhs || '(po_success OUT BOOLEAN);' || CHR(10));
+        append_to_clob(l_spec, '  PROCEDURE ' || r.lhs_procname || '(po_success OUT BOOLEAN);' || CHR(10));
+		IF r.seq  = 1 THEN 
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' lhs:'||r.lhs||' tot:'||r.tot );
+		END IF;
+		IF mod( r.seq , 5 ) = 1 THEN 
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' lhs:'||r.lhs||' spec len:'||dbms_lob.getlength( l_spec ) );
+		END IF;
 
         -- Add Type 1 (LHS master rule) to Body
-        append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '(po_success OUT BOOLEAN) IS' || CHR(10));
+        append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '(po_success OUT BOOLEAN) IS' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
         
         -- Loop through alternatives inside Type 1
-        FOR a IN c_alts(r.lhs) LOOP
+        FOR altern IN c_alternatives(r.lhs) LOOP
             append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
-            append_to_clob(l_body, '      ' || r.lhs || '_' || a.alt_no || '(po_success);' || CHR(10));
+            append_to_clob(l_body, '      ' || r.lhs_procname || '_' || altern.alt_no || '(po_success);' || CHR(10));
             append_to_clob(l_body, '      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;' || CHR(10));
             append_to_clob(l_body, '    END IF;' || CHR(10));
         END LOOP;
-        append_to_clob(l_body, '  END ' || r.lhs || ';' || CHR(10) || CHR(10));
+		IF mod( r.seq , 5 ) = 1 THEN 
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' lhs:'||r.lhs||' body len:'||dbms_lob.getlength( l_body ) );
+		END IF;
+        append_to_clob(l_body, '  END ' || r.lhs_procname || ';' || CHR(10) || CHR(10));
 
         -- Add Type 2 (Alternative rules) to Body
-        FOR a IN c_alts(r.lhs) LOOP
-            append_to_clob(l_body, '  PROCEDURE ' || r.lhs || '_' || a.alt_no || '(po_success OUT BOOLEAN) IS' || CHR(10));
+        FOR altern IN c_alternatives(r.lhs) LOOP
+            append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '_' || altern.alt_no || '(po_success OUT BOOLEAN) IS' || CHR(10));
             append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
             append_to_clob(l_body, '  BEGIN' || CHR(10));
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
             
             -- Process sequence symbols inside Alternative
-            FOR s IN c_symbols(r.lhs, a.alt_no) LOOP
-                append_to_clob(l_body, '    -- Position ' || s.position || ': Symbol ' || s.symbol || CHR(10));
+            FOR symb IN c_symbols(r.lhs, altern.alt_no) LOOP
+                append_to_clob(l_body, '    -- Position ' || symb.position || ': Symbol ' || symb.symbol || CHR(10));
                 append_to_clob(l_body, '    IF po_success THEN' || CHR(10));
                 
                 -- Check if symbol is another LHS rule (Non-Terminal)
@@ -448,15 +481,15 @@ BEGIN
 				INTO l_all_lhs 
 				FROM (
 					SELECT DISTINCT lhs FROM parser_alt_token )
-					WHERE lhs = s.symbol 
+					WHERE lhs = symb.symbol 
 					;
                 
                 IF l_all_lhs > 0 THEN
                     -- Call sub-rule
-                    append_to_clob(l_body, '      ' || s.symbol || '(po_success);' || CHR(10));
+                    append_to_clob(l_body, '      ' || fn_norm_as_proc_name( symb.symbol )|| '(po_success);' || CHR(10));
                 ELSE
                     -- Terminal Token validation match
-                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || s.symbol || ''' THEN' || CHR(10));
+                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || symb.symbol || ''' THEN' || CHR(10));
                     append_to_clob(l_body, '        g_curr_token_ix := g_curr_token_ix + 1;' || CHR(10));
                     append_to_clob(l_body, '      ELSE' || CHR(10));
                     append_to_clob(l_body, '        po_success := FALSE;' || CHR(10));
@@ -469,7 +502,7 @@ BEGIN
             append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
             append_to_clob(l_body, '      g_curr_token_ix := l_entry_idx;' || CHR(10));
             append_to_clob(l_body, '    END IF;' || CHR(10));
-            append_to_clob(l_body, '  END ' || r.lhs || '_' || a.alt_no || ';' || CHR(10) || CHR(10));
+            append_to_clob(l_body, '  END ' || r.lhs || '_' || altern.alt_no || ';' || CHR(10) || CHR(10));
         END LOOP;
     END LOOP;
 
@@ -513,6 +546,7 @@ BEGIN
 
     RETURN l_clob;
 END fn_get_parser_package_code;
+--
 --
 END; -- package 
 /

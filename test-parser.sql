@@ -19,10 +19,16 @@ where 1=1
 -- lhs_root = '<<variable_or_function>>'
 order by lhs 
 ;
+select source, count(1) from parser_alt_token group by source
+;
+update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
+;
 select *
 from parser_alt_token
 WHERE 1=1
-  and lower( lhs ) like '%assignm%'
+  and lower( lhs ) like '%%'
+  and lower( symbol) like '%decla%'
+--  and source = upper( trim( 'PLSQL_EXCLUDING_SQL' ) ) 
 ;
 SELECT t.*
 , dbms_lob.getlength( content ) len 
@@ -119,14 +125,14 @@ BEGIN
     SELECT content 
     INTO gram_clob 
     FROM temp_clob
-    where remarks = 'plsql_excluding_SQL'
+    where remarks = 'PLSQL_EXCLUDING_SQL'
     ;
     x := 
 --select * from table ( 
 --parser_rule_util. fn_ebnf_clob_to_simple 
     parser_rule_util. fn_grammar_clob_to_rule_tokens 
     (  p_clob => gram_clob
-        , p_source => 'manual_test'  
+        , p_source => 'PLSQL_EXCLUDING_SQL'  
         , p_persist => TRUE 
         , p_max_nesting => 999 
         )
@@ -134,3 +140,12 @@ BEGIN
     ;
 END;
 /
+set serveroutput on 
+;
+--declare x clob; BEGIN 
+    select parser_grammar_gen. fn_get_parser_package_code ( p_source => 'PLSQL_EXCLUDING_SQL' ) 
+--    into x 
+    from dual
+    ;
+--END;
+--/

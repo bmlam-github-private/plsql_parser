@@ -18,6 +18,14 @@ CREATE OR REPLACE PACKAGE parser_grammar_gen IS
     ----------------------------------------------------------------------
 ;
 --
+	FUNCTION fn_norm_as_proc_name 
+		(p_input 	VARCHAR2 
+	) RETURN VARCHAR2 
+    ----------------------------------------------------------------------
+    -- transform <abc> to pr_abc 
+    ----------------------------------------------------------------------
+;
+--
 FUNCTION fn_get_parser_package_code 
 	(p_source		IN VARCHAR2 
 	,p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
