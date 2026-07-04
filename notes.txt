@@ -310,3 +310,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   * the term to match from PARSER_ALT_TOKEN table some times still has leading left square bracket or trailing right square bracket. Fix: create a view to normalize and use this view in package PARSER_GRAMMAR_GEN
   * procedure name for "generated simplifying rules" still has angle brackets.
   
+2026.07.04
+  dynamically created package compiles! Next: find a token stream to exercise! 
+

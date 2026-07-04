@@ -1,62 +1,3 @@
-CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
-  -- Global collection type for tokens
-  TYPE t_token_list IS TABLE OF parser_token_rec;
-
-  g_tokens         t_token_list;
-  g_curr_token_ix  NUMBER := 1;
-
-  PROCEDURE pr_assignment_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_block(po_success OUT BOOLEAN);
-  PROCEDURE pr_block_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_block_opt_2(po_success OUT BOOLEAN);
-  PROCEDURE pr_condition(po_success OUT BOOLEAN);
-  PROCEDURE pr_dynamic_sql_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_dynamic_sql_statement_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_exception_handler(po_success OUT BOOLEAN);
-  PROCEDURE pr_exception_section(po_success OUT BOOLEAN);
-  PROCEDURE pr_exception_section_rep_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_executable_section(po_success OUT BOOLEAN);
-  PROCEDURE pr_executable_section_rep_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_exit_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_exit_statement_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_expression(po_success OUT BOOLEAN);
-  PROCEDURE pr_expression_list(po_success OUT BOOLEAN);
-  PROCEDURE pr_expression_list_rep_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_expression_tail(po_success OUT BOOLEAN);
-  PROCEDURE pr_for_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_function_body(po_success OUT BOOLEAN);
-  PROCEDURE pr_function_body_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_if_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_literal(po_success OUT BOOLEAN);
-  PROCEDURE pr_loop_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_null_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_operator(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_body(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_body_element(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_body_rep_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_element(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_spec(po_success OUT BOOLEAN);
-  PROCEDURE pr_package_spec_rep_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_procedure_body(po_success OUT BOOLEAN);
-  PROCEDURE pr_procedure_body_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_procedure_call(po_success OUT BOOLEAN);
-  PROCEDURE pr_procedure_call_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_raise_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_raise_statement_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_range(po_success OUT BOOLEAN);
-  PROCEDURE pr_statement(po_success OUT BOOLEAN);
-  PROCEDURE pr_term(po_success OUT BOOLEAN);
-  PROCEDURE pr_trigger(po_success OUT BOOLEAN);
-  PROCEDURE pr_trigger_body(po_success OUT BOOLEAN);
-  PROCEDURE pr_trigger_body_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_variable_reference(po_success OUT BOOLEAN);
-  PROCEDURE pr_variable_reference_opt_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_while_statement(po_success OUT BOOLEAN);
-
-  -- Main entry point for top-level parsing rules
-  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN);
-END PKG_DYNAMIC_PARSER;
-
 CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
 
   PROCEDURE pr_assignment_statement_0(po_success OUT BOOLEAN);
@@ -215,7 +156,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <assignment_statement>_0;
+  END pr_assignment_statement_0;
 
   PROCEDURE pr_assignment_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -248,7 +189,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <assignment_statement>_1;
+  END pr_assignment_statement_1;
 
   PROCEDURE pr_block(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -331,7 +272,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block>_0;
+  END pr_block_0;
 
   PROCEDURE pr_block_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -376,7 +317,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block>_1;
+  END pr_block_1;
 
   PROCEDURE pr_block_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -415,7 +356,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block_opt_1>_2;
+  END pr_block_opt_1_2;
 
   PROCEDURE pr_block_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -432,7 +373,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block_opt_1>_3;
+  END pr_block_opt_1_3;
 
   PROCEDURE pr_block_opt_2(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -467,7 +408,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block_opt_2>_4;
+  END pr_block_opt_2_4;
 
   PROCEDURE pr_block_opt_2_5(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -484,7 +425,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <block_opt_2>_5;
+  END pr_block_opt_2_5;
 
   PROCEDURE pr_condition(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -511,7 +452,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <condition>_0;
+  END pr_condition_0;
 
   PROCEDURE pr_condition_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -524,7 +465,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <condition>_1;
+  END pr_condition_1;
 
   PROCEDURE pr_dynamic_sql_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -587,7 +528,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <dynamic_sql_statement>_0;
+  END pr_dynamic_sql_statement_0;
 
   PROCEDURE pr_dynamic_sql_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -632,7 +573,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <dynamic_sql_statement>_1;
+  END pr_dynamic_sql_statement_1;
 
   PROCEDURE pr_dynamic_sql_statement_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -667,7 +608,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <dynamic_sql_statement_opt_1>_2;
+  END pr_dynamic_sql_statement_opt_1_2;
 
   PROCEDURE pr_dynamic_sql_statement_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -684,7 +625,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <dynamic_sql_statement_opt_1>_3;
+  END pr_dynamic_sql_statement_opt_1_3;
 
   PROCEDURE pr_exception_handler(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -735,7 +676,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_handler>_0;
+  END pr_exception_handler_0;
 
   PROCEDURE pr_exception_handler_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -772,7 +713,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_handler>_1;
+  END pr_exception_handler_1;
 
   PROCEDURE pr_exception_section(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -807,7 +748,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_section>_0;
+  END pr_exception_section_0;
 
   PROCEDURE pr_exception_section_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -824,7 +765,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_section>_1;
+  END pr_exception_section_1;
 
   PROCEDURE pr_exception_section_rep_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -855,7 +796,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_section_rep_1>_2;
+  END pr_exception_section_rep_1_2;
 
   PROCEDURE pr_exception_section_rep_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -872,7 +813,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exception_section_rep_1>_3;
+  END pr_exception_section_rep_1_3;
 
   PROCEDURE pr_executable_section(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -907,7 +848,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <executable_section>_0;
+  END pr_executable_section_0;
 
   PROCEDURE pr_executable_section_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -924,7 +865,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <executable_section>_1;
+  END pr_executable_section_1;
 
   PROCEDURE pr_executable_section_rep_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -955,7 +896,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <executable_section_rep_1>_2;
+  END pr_executable_section_rep_1_2;
 
   PROCEDURE pr_executable_section_rep_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -972,7 +913,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <executable_section_rep_1>_3;
+  END pr_executable_section_rep_1_3;
 
   PROCEDURE pr_exit_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1027,7 +968,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exit_statement>_0;
+  END pr_exit_statement_0;
 
   PROCEDURE pr_exit_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1056,7 +997,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exit_statement>_1;
+  END pr_exit_statement_1;
 
   PROCEDURE pr_exit_statement_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1091,7 +1032,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exit_statement_opt_1>_2;
+  END pr_exit_statement_opt_1_2;
 
   PROCEDURE pr_exit_statement_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1108,7 +1049,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <exit_statement_opt_1>_3;
+  END pr_exit_statement_opt_1_3;
 
   PROCEDURE pr_expression(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1139,7 +1080,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression>_0;
+  END pr_expression_0;
 
   PROCEDURE pr_expression_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1156,7 +1097,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression>_1;
+  END pr_expression_1;
 
   PROCEDURE pr_expression_list(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1199,7 +1140,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_list>_0;
+  END pr_expression_list_0;
 
   PROCEDURE pr_expression_list_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1216,7 +1157,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_list>_1;
+  END pr_expression_list_1;
 
   PROCEDURE pr_expression_list_rep_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1255,7 +1196,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_list_rep_1>_2;
+  END pr_expression_list_rep_1_2;
 
   PROCEDURE pr_expression_list_rep_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1272,7 +1213,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_list_rep_1>_3;
+  END pr_expression_list_rep_1_3;
 
   PROCEDURE pr_expression_tail(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1307,7 +1248,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_tail>_0;
+  END pr_expression_tail_0;
 
   PROCEDURE pr_expression_tail_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1328,7 +1269,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <expression_tail>_1;
+  END pr_expression_tail_1;
 
   PROCEDURE pr_for_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1415,7 +1356,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <for_statement>_0;
+  END pr_for_statement_0;
 
   PROCEDURE pr_for_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1488,7 +1429,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <for_statement>_1;
+  END pr_for_statement_1;
 
   PROCEDURE pr_function_body(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1587,7 +1528,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <function_body>_0;
+  END pr_function_body_0;
 
   PROCEDURE pr_function_body_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1660,7 +1601,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <function_body>_1;
+  END pr_function_body_1;
 
   PROCEDURE pr_function_body_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1695,7 +1636,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <function_body_opt_1>_2;
+  END pr_function_body_opt_1_2;
 
   PROCEDURE pr_function_body_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1712,7 +1653,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <function_body_opt_1>_3;
+  END pr_function_body_opt_1_3;
 
   PROCEDURE pr_if_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1759,7 +1700,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <if_statement>_0;
+  END pr_if_statement_0;
 
   PROCEDURE pr_if_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1792,7 +1733,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <if_statement>_1;
+  END pr_if_statement_1;
 
   PROCEDURE pr_literal(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1903,7 +1844,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_0;
+  END pr_literal_0;
 
   PROCEDURE pr_literal_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1920,7 +1861,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_1;
+  END pr_literal_1;
 
   PROCEDURE pr_literal_2(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1937,7 +1878,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_2;
+  END pr_literal_2;
 
   PROCEDURE pr_literal_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1954,7 +1895,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_3;
+  END pr_literal_3;
 
   PROCEDURE pr_literal_4(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1971,7 +1912,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_4;
+  END pr_literal_4;
 
   PROCEDURE pr_literal_5(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1988,7 +1929,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <literal>_5;
+  END pr_literal_5;
 
   PROCEDURE pr_loop_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2047,7 +1988,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <loop_statement>_0;
+  END pr_loop_statement_0;
 
   PROCEDURE pr_loop_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2092,7 +2033,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <loop_statement>_1;
+  END pr_loop_statement_1;
 
   PROCEDURE pr_null_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2131,7 +2072,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <null_statement>_0;
+  END pr_null_statement_0;
 
   PROCEDURE pr_null_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2156,7 +2097,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <null_statement>_1;
+  END pr_null_statement_1;
 
   PROCEDURE pr_operator(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2427,7 +2368,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_0;
+  END pr_operator_0;
 
   PROCEDURE pr_operator_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2444,7 +2385,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_1;
+  END pr_operator_1;
 
   PROCEDURE pr_operator_2(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2461,7 +2402,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_2;
+  END pr_operator_2;
 
   PROCEDURE pr_operator_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2478,7 +2419,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_3;
+  END pr_operator_3;
 
   PROCEDURE pr_operator_4(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2495,7 +2436,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_4;
+  END pr_operator_4;
 
   PROCEDURE pr_operator_5(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2512,7 +2453,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_5;
+  END pr_operator_5;
 
   PROCEDURE pr_operator_6(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2529,7 +2470,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_6;
+  END pr_operator_6;
 
   PROCEDURE pr_operator_7(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2546,7 +2487,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_7;
+  END pr_operator_7;
 
   PROCEDURE pr_operator_8(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2563,7 +2504,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_8;
+  END pr_operator_8;
 
   PROCEDURE pr_operator_9(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2580,7 +2521,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_9;
+  END pr_operator_9;
 
   PROCEDURE pr_operator_10(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2597,7 +2538,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_10;
+  END pr_operator_10;
 
   PROCEDURE pr_operator_11(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2614,7 +2555,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_11;
+  END pr_operator_11;
 
   PROCEDURE pr_operator_12(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2631,7 +2572,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_12;
+  END pr_operator_12;
 
   PROCEDURE pr_operator_13(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2648,7 +2589,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <operator>_13;
+  END pr_operator_13;
 
   PROCEDURE pr_package_body(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2735,7 +2676,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body>_0;
+  END pr_package_body_0;
 
   PROCEDURE pr_package_body_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2804,7 +2745,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body>_1;
+  END pr_package_body_1;
 
   PROCEDURE pr_package_body_element(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2831,7 +2772,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body_element>_0;
+  END pr_package_body_element_0;
 
   PROCEDURE pr_package_body_element_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2844,7 +2785,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body_element>_1;
+  END pr_package_body_element_1;
 
   PROCEDURE pr_package_body_rep_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2875,7 +2816,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body_rep_1>_2;
+  END pr_package_body_rep_1_2;
 
   PROCEDURE pr_package_body_rep_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2892,7 +2833,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_body_rep_1>_3;
+  END pr_package_body_rep_1_3;
 
   PROCEDURE pr_package_element(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2931,7 +2872,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_element>_0;
+  END pr_package_element_0;
 
   PROCEDURE pr_package_element_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -2956,7 +2897,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_element>_1;
+  END pr_package_element_1;
 
   PROCEDURE pr_package_spec(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3035,7 +2976,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_spec>_0;
+  END pr_package_spec_0;
 
   PROCEDURE pr_package_spec_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3096,7 +3037,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_spec>_1;
+  END pr_package_spec_1;
 
   PROCEDURE pr_package_spec_rep_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3127,7 +3068,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_spec_rep_1>_2;
+  END pr_package_spec_rep_1_2;
 
   PROCEDURE pr_package_spec_rep_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3144,7 +3085,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <package_spec_rep_1>_3;
+  END pr_package_spec_rep_1_3;
 
   PROCEDURE pr_procedure_body(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3243,7 +3184,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_body>_0;
+  END pr_procedure_body_0;
 
   PROCEDURE pr_procedure_body_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3316,7 +3257,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_body>_1;
+  END pr_procedure_body_1;
 
   PROCEDURE pr_procedure_body_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3351,7 +3292,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_body_opt_1>_2;
+  END pr_procedure_body_opt_1_2;
 
   PROCEDURE pr_procedure_body_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3368,7 +3309,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_body_opt_1>_3;
+  END pr_procedure_body_opt_1_3;
 
   PROCEDURE pr_procedure_call(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3427,7 +3368,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_call>_0;
+  END pr_procedure_call_0;
 
   PROCEDURE pr_procedure_call_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3456,7 +3397,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_call>_1;
+  END pr_procedure_call_1;
 
   PROCEDURE pr_procedure_call_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3499,7 +3440,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_call_opt_1>_2;
+  END pr_procedure_call_opt_1_2;
 
   PROCEDURE pr_procedure_call_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3516,7 +3457,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <procedure_call_opt_1>_3;
+  END pr_procedure_call_opt_1_3;
 
   PROCEDURE pr_raise_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3563,7 +3504,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <raise_statement>_0;
+  END pr_raise_statement_0;
 
   PROCEDURE pr_raise_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3592,7 +3533,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <raise_statement>_1;
+  END pr_raise_statement_1;
 
   PROCEDURE pr_raise_statement_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3623,7 +3564,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <raise_statement_opt_1>_2;
+  END pr_raise_statement_opt_1_2;
 
   PROCEDURE pr_raise_statement_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3640,7 +3581,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <raise_statement_opt_1>_3;
+  END pr_raise_statement_opt_1_3;
 
   PROCEDURE pr_range(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3679,7 +3620,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <range>_0;
+  END pr_range_0;
 
   PROCEDURE pr_range_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3704,7 +3645,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <range>_1;
+  END pr_range_1;
 
   PROCEDURE pr_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3731,7 +3672,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <statement>_0;
+  END pr_statement_0;
 
   PROCEDURE pr_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3744,7 +3685,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <statement>_1;
+  END pr_statement_1;
 
   PROCEDURE pr_term(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3771,7 +3712,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <term>_0;
+  END pr_term_0;
 
   PROCEDURE pr_term_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3784,7 +3725,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <term>_1;
+  END pr_term_1;
 
   PROCEDURE pr_trigger(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3883,7 +3824,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger>_0;
+  END pr_trigger_0;
 
   PROCEDURE pr_trigger_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3968,7 +3909,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger>_1;
+  END pr_trigger_1;
 
   PROCEDURE pr_trigger_body(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4027,7 +3968,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger_body>_0;
+  END pr_trigger_body_0;
 
   PROCEDURE pr_trigger_body_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4060,7 +4001,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger_body>_1;
+  END pr_trigger_body_1;
 
   PROCEDURE pr_trigger_body_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4095,7 +4036,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger_body_opt_1>_2;
+  END pr_trigger_body_opt_1_2;
 
   PROCEDURE pr_trigger_body_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4112,7 +4053,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <trigger_body_opt_1>_3;
+  END pr_trigger_body_opt_1_3;
 
   PROCEDURE pr_variable_reference(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4159,7 +4100,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <variable_reference>_0;
+  END pr_variable_reference_0;
 
   PROCEDURE pr_variable_reference_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4180,7 +4121,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <variable_reference>_1;
+  END pr_variable_reference_1;
 
   PROCEDURE pr_variable_reference_opt_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4219,7 +4160,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <variable_reference_opt_1>_2;
+  END pr_variable_reference_opt_1_2;
 
   PROCEDURE pr_variable_reference_opt_1_3(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4236,7 +4177,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <variable_reference_opt_1>_3;
+  END pr_variable_reference_opt_1_3;
 
   PROCEDURE pr_while_statement(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4307,7 +4248,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <while_statement>_0;
+  END pr_while_statement_0;
 
   PROCEDURE pr_while_statement_1(po_success OUT BOOLEAN) IS
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4364,7 +4305,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END <while_statement>_1;
+  END pr_while_statement_1;
 
   PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN) IS
   BEGIN
@@ -4374,60 +4315,61 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
 
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <block>(po_success);
+      pr_block(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <dynamic_sql_statement>(po_success);
+      pr_dynamic_sql_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <exit_statement>(po_success);
+      pr_exit_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <for_statement>(po_success);
+      pr_for_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <function_body>(po_success);
+      pr_function_body(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <if_statement>(po_success);
+      pr_if_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <loop_statement>(po_success);
+      pr_loop_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <null_statement>(po_success);
+      pr_null_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <package_body>(po_success);
+      pr_package_body(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <package_spec>(po_success);
+      pr_package_spec(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <procedure_call>(po_success);
+      pr_procedure_call(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <raise_statement>(po_success);
+      pr_raise_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <trigger>(po_success);
+      pr_trigger(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
-      <while_statement>(po_success);
+      pr_while_statement(po_success);
     END IF;
   END parse_main;
 
 END PKG_DYNAMIC_PARSER;
+/

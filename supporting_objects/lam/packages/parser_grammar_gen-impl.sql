@@ -354,18 +354,34 @@ FUNCTION fn_norm_as_proc_name
 AS 
 	l_return VARCHAR2(100) := p_input;
 BEGIN
+	IF l_return LIKE '%]' 	
+	THEN 
+		l_return := 		substr( l_return, 1, length( l_return ) -1 ) ;
+	END IF;
+	-- 
+	IF l_return LIKE '[%' 	
+	THEN 
+		l_return := substr( l_return, 2 ) ;
+	END IF;
+	-- 
 	IF 		substr ( l_return, 1, 1 ) 	= '<'
 		AND substr ( l_return, -1) 		= '>'
 	THEN 
 		l_return := substr( l_return, 2, length ( l_return ) - 2 );
 	END IF;
 	--
-	RETURN 'pr_'||l_return;
+	IF l_return LIKE '"%"' 	
+	THEN 
+		l_return := substr( l_return, 2, length ( l_return ) - 2 );
+	END IF;
+	-- 
+	RETURN 'pr_'||lower( l_return );
 END fn_norm_as_proc_name;
 --
 FUNCTION fn_get_parser_package_code 
-	(p_source		IN VARCHAR2 
-	,p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+	(p_source			IN VARCHAR2 
+	,p_package_name 	IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+	,p_spec_body_mask 	IN INTEGER DEFAULT 2 -- 0 both, 1-spec only, 2-body only
 ) RETURN CLOB IS
     l_clob        CLOB;
     l_spec        CLOB;
@@ -396,7 +412,8 @@ FUNCTION fn_get_parser_package_code
     -- Cursor for symbols within altern specific alternative
     CURSOR c_symbols(cp_lhs VARCHAR2, cp_alt_no NUMBER) IS
         SELECT position, symbol 
-        FROM parser_alt_token 
+			, symbol_cleansed 
+        FROM v_parser_alt_token 
         WHERE lhs = cp_lhs AND alt_no = cp_alt_no 
         ORDER BY position;
 
@@ -472,7 +489,8 @@ dbms_output.put_line (  'ln'||$$plsql_line );
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
             
             -- Process sequence symbols inside Alternative
-            FOR symb IN c_symbols(r.lhs, altern.alt_no) LOOP
+            FOR symb IN c_symbols(r.lhs, altern.alt_no) 
+			LOOP
                 append_to_clob(l_body, '    -- Position ' || symb.position || ': Symbol ' || symb.symbol || CHR(10));
                 append_to_clob(l_body, '    IF po_success THEN' || CHR(10));
                 
@@ -502,7 +520,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
             append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
             append_to_clob(l_body, '      g_curr_token_ix := l_entry_idx;' || CHR(10));
             append_to_clob(l_body, '    END IF;' || CHR(10));
-            append_to_clob(l_body, '  END ' || r.lhs || '_' || altern.alt_no || ';' || CHR(10) || CHR(10));
+            append_to_clob(l_body, '  END ' || fn_norm_as_proc_name( r.lhs )|| '_' || altern.alt_no || ';' || CHR(10) || CHR(10));
         END LOOP;
     END LOOP;
 
@@ -529,21 +547,27 @@ dbms_output.put_line (  'ln'||$$plsql_line );
     ) LOOP
         append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
         append_to_clob(l_body, '      g_curr_token_ix := 1; -- Reset stream index for next entry option' || CHR(10));
-        append_to_clob(l_body, '      ' || top_rule.lhs || '(po_success);' || CHR(10));
+        append_to_clob(l_body, '      ' || fn_norm_as_proc_name( top_rule.lhs )|| '(po_success);' || CHR(10));
         append_to_clob(l_body, '    END IF;' || CHR(10));
     END LOOP;
     
     append_to_clob(l_body, '  END parse_main;' || CHR(10) || CHR(10));
 
     -- 5. CLOSE OUT STRINGS
-    append_to_clob(l_spec, 'END ' || p_package_name || ';');
-    append_to_clob(l_body, 'END ' || p_package_name || ';');
+    append_to_clob(l_spec, 'END ' || p_package_name || ';' || co_nl ||'/'|| co_nl );
+    append_to_clob(l_body, 'END ' || p_package_name || ';' || co_nl ||'/'|| co_nl );
 
     -- Combine into final CLOB
-    DBMS_LOB.APPEND(l_clob, l_spec);
-    DBMS_LOB.WRITEAPPEND(l_clob, 2, CHR(10) || CHR(10));
-    DBMS_LOB.APPEND(l_clob, l_body);
-
+	IF p_spec_body_mask IN ( 0 , 1 ) 
+	THEN 
+		DBMS_LOB.APPEND(l_clob, l_spec);
+		DBMS_LOB.WRITEAPPEND(l_clob, 2, CHR(10) || CHR(10));
+	END IF; 
+	IF p_spec_body_mask IN ( 0 , 2 ) 
+	THEN 
+		DBMS_LOB.APPEND(l_clob, l_body);
+	END IF;
+	-- 
     RETURN l_clob;
 END fn_get_parser_package_code;
 --

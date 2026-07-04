@@ -23,10 +23,13 @@ select source, count(1) from parser_alt_token group by source
 ;
 update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
 ;
-select *
-from parser_alt_token
+select t.*
+    , parser_grammar_gen. fn_norm_as_proc_name ( lhs ) lhs_1 
+    , parser_grammar_gen. fn_norm_as_proc_name ( symbol ) symb_1 
+from parser_alt_token t
+--from v_parser_alt_token
 WHERE 1=1
-  and lower( lhs ) like '%%'
+--  and lower( lhs ) like '%%'
   and lower( symbol) like '%decla%'
 --  and source = upper( trim( 'PLSQL_EXCLUDING_SQL' ) ) 
 ;
@@ -143,7 +146,7 @@ END;
 set serveroutput on 
 ;
 --declare x clob; BEGIN 
-    select parser_grammar_gen. fn_get_parser_package_code ( p_source => 'PLSQL_EXCLUDING_SQL' ) 
+    select parser_grammar_gen. fn_get_parser_package_code ( p_source => 'PLSQL_EXCLUDING_SQL' , p_spec_body_mask => 2 ) 
 --    into x 
     from dual
     ;

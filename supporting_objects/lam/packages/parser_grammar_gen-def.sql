@@ -27,8 +27,9 @@ CREATE OR REPLACE PACKAGE parser_grammar_gen IS
 ;
 --
 FUNCTION fn_get_parser_package_code 
-	(p_source		IN VARCHAR2 
-	,p_package_name IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+	(p_source			IN VARCHAR2 
+	,p_package_name 	IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
+	,p_spec_body_mask 	IN INTEGER DEFAULT 2 -- 0 both, 1-spec only, 2-body only
 	) RETURN CLOB 
 	;
 END;
