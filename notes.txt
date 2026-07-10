@@ -313,3 +313,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.07.04
   dynamically created package compiles! Next: find a token stream to exercise! 
 
+2026.07.10
+ With support of gemini created a lexer (again?). Basic testing looks ok. We need more complicated test cases with database link, dot-chained identifiers.
+

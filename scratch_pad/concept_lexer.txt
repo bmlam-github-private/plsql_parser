@@ -1,0 +1,23 @@
+suppose we have a table parser_alt_token which stores parser rules, each row represents a flattened rule, alternative, a token in the expected sequences - first sets. The table has this layout:
+
+( LHS      NOT NULL VARCHAR2(30) , ALT_NO   NOT NULL NUMBER(2), POSITION NOT NULL NUMBER(2), SYMBOL   NOT NULL VARCHAR2(30)   )
+
+write a plsql function returning a CLOB. The clob contains a package with two types of subprocedures 
+Type 1 covers the a rule with the same lhs, in this each alternative rule is invoked as subprocedure. the subprocedure has an Output Parameter po_success which tells where the alternative rule is completely satified. When the 
+Type 2  covers an alternative rule and shall be named as lhs plus alternative number (alt_no). each token of the alternative rule is parsed in sequence. In case the alternative rule is not satified, po_success is set to FALSE 
+
+The type 1 subprogram also has a po_success Output Parameter. 
+
+assume the the Input code to be parsed is already a Collection of the type  TYPE parser_token_rec 
+AS OBJECT 
+( tok_seq 	NUMBER 
+ ,tok_type	VARCHAR2(30)
+ ,tok_text	VARCHAR2(4000 char)
+)
+
+the generated package has a global variable g_curr_token_ix pointing to the index of the token to be parsed. for both types of subprograms, when a rule cannot be satified , po_success is set to false and g_curr_token_ix should be reset to where it was when the subprogram is entered. when a lhs is satisfied and po_success is set to true no peer rule should be tried.
+
+each subprogram created covering a rule should be in the package specification.
+
+As a bonus, please figure out which lhs in the table parser_alt_token are at the top-level and generate a main subprogram to try the top level rules in turn.
+
