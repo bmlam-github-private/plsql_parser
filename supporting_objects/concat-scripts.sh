@@ -12,11 +12,14 @@ base_folder=lam
 outfile=run-master.sql 
 
 echo > $outfile
-for script in ` find $base_folder -name "*.sql"  | grep -v "test-" | grep -v "run-" `; do 
+for script in ` find $base_folder -name "*.sql"  | grep -v "test-" | grep -v "run-" | grep -vE -- "-v[0-9]+" | grep -v generated_code `; do 
 	echo "rem source $script" >> $outfile
 	cat   $script >> $outfile
 	echo "\n----- end source $script ------------\n" >>$outfile 
 done
+
+echo "\nEXEC dbms_utility.compile_schema( 'LAM', false)\n" >>$outfile 
+
 
 echo "outfile: $outfile"
 ls -l $outfile 

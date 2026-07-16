@@ -316,3 +316,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.07.10
  With support of gemini created a lexer (again?). Basic testing looks ok. We need more complicated test cases with database link, dot-chained identifiers.
 
+2026.07.17
+  In plsql_lexer tokenizer ampersand is not defined as special character. It is not fixed since plsql_lexer-impl.sql is not in sync with home Windows machine. On train to Munich , we go on with testing the dynamic package.
+  Using packages/test-generated-parser.sql, v_success is output with false. Need to enhance generator package to bread-crumb where it fails.
+  

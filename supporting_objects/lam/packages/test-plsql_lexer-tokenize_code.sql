@@ -10,6 +10,9 @@ FROM TABLE(plsql_lexer.tokenize_code(
        IF v_num <> 0 THEN
           DBMS_OUTPUT.PUT_LINE(v_msg);
        END IF;
+       SELECT COUNT(*) 
+       INTO v_dummy 
+       FROM funny_schema.dba_oops@db_link_a.world
      END;'
      ||'/*'||rpad( '.', 5000, '.' )||'*/'
 ))

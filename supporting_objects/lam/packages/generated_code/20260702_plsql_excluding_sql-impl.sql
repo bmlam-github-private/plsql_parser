@@ -4307,7 +4307,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_while_statement_1;
 
-  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN) IS
+  PROCEDURE parse_main(p_token_stream IN /*t_token_list*/ parser_token_col, po_success OUT BOOLEAN) IS
   BEGIN
     g_tokens := p_token_stream;
     g_curr_token_ix := 1;
