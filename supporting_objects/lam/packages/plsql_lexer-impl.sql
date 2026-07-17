@@ -153,6 +153,34 @@ CREATE OR REPLACE PACKAGE BODY plsql_lexer AS
         
         RETURN;
     END tokenize_code;
+--
+   FUNCTION tokens_to_clob(p_tokens IN parser_token_col)
+   RETURN CLOB
+   IS
+      v_result CLOB;
+   BEGIN
+      IF p_tokens IS NULL OR p_tokens.COUNT = 0 THEN
+         RETURN NULL;
+      END IF;
 
+      DBMS_LOB.CREATETEMPORARY(v_result, TRUE);
+
+      -- Query the collection ordered by the sequence to guarantee code integrity
+      FOR r IN (
+         SELECT tok_text_normal, tok_text_long
+         FROM TABLE(p_tokens)
+         ORDER BY tok_seq
+      ) LOOP
+         IF r.tok_text_normal IS NOT NULL THEN
+            DBMS_LOB.WRITEAPPEND(v_result, LENGTH(r.tok_text_normal), r.tok_text_normal);
+         ELSIF r.tok_text_long IS NOT NULL THEN
+            -- Safely append the CLOB token field to our result CLOB
+            DBMS_LOB.APPEND(v_result, r.tok_text_long);
+         END IF;
+      END LOOP;
+
+      RETURN v_result;
+   END tokens_to_clob;
+-- 
 END plsql_lexer;
 /

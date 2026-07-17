@@ -1,15 +1,16 @@
+sta "C:\Users\Bon-Minh Lam\bmlam\my_tools_READONLY\extract_from_dba_source.sql" package_body plsql_lexer lam 
+
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_grammar_rules.sql"
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql"
 
-
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-def.sql"
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-def.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-impl.sql"
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-impl.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\generated_code\20260717_plsql_excluding_sql-impl.sql"
 
-select parser_grammar_gen.fn_get_parser_package_code( p_source => 'MANUAL_TEST' )  from dual
+select parser_grammar_gen.fn_get_parser_package_code( p_source => 'MANUAL_TEST' , p_spec_body_mask=> 2 )  from dual
 ;
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
@@ -30,7 +31,7 @@ from parser_alt_token t
 --from v_parser_alt_token
 WHERE 1=1
 --  and lower( lhs ) like '%%'
-  and lower( symbol) like '%decla%'
+--  and lower( symbol) like '%decla%'
 --  and source = upper( trim( 'PLSQL_EXCLUDING_SQL' ) ) 
 ;
 SELECT t.*

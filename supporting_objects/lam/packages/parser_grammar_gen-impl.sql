@@ -465,6 +465,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
         -- Add Type 1 (LHS master rule) to Body
         append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '(po_success OUT BOOLEAN) IS' || CHR(10));
+        append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
@@ -484,6 +485,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
         -- Add Type 2 (Alternative rules) to Body
         FOR altern IN c_alternatives(r.lhs) LOOP
             append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '_' || altern.alt_no || '(po_success OUT BOOLEAN) IS' || CHR(10));
+			append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
             append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
             append_to_clob(l_body, '  BEGIN' || CHR(10));
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
@@ -529,6 +531,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
     append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN);' || CHR(10));
     
     append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN) IS' || CHR(10));
+    append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
     append_to_clob(l_body, '  BEGIN' || CHR(10));
     append_to_clob(l_body, '    g_tokens := p_token_stream;' || CHR(10));
     append_to_clob(l_body, '    g_curr_token_ix := 1;' || CHR(10));
