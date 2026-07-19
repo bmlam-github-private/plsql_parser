@@ -1,4 +1,4 @@
---set serveroutput on 
+set serveroutput on 
 DECLARE   
    v_tab_tokens parser_token_col;
    v_success BOOLEAN; 
@@ -26,7 +26,7 @@ BULK COLLECT INTO    v_tab_tokens
      ||'/*'||rpad( '.', 500, '.' )||'*/'
      )
  );
-   pkg_dynamic_parser.parse_main ( v_tab_tokens, v_success );
+   pkg_dynamic_parser.parse_main ( p_token_stream=> v_tab_tokens, po_success=> v_success );
    dbms_output.put_line ( 'v_succes:' ||case v_success when true then 'true' when false then 'false' else '?' end );
 END;
 /

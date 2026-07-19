@@ -153,3 +153,23 @@ set serveroutput on
     ;
 --END;
 --/
+
+-- result of lexer 
+SELECT * 
+    FROM TABLE ( 
+        plsql_lexer.tokenize_code ( 
+       'DECLARE
+       v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; -- inline comment
+       v_num NUMBER := 123.45;
+     BEGIN
+       /* Multi line block 
+          evaluation check */
+       IF v_num <> 0 THEN
+          DBMS_OUTPUT.PUT_LINE(v_msg);
+       END IF;
+     END;'
+     ||'/*'||rpad( '.', 500, '.' )||'*/'
+     ) )
+;
+
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\test-generated-parser.sql"

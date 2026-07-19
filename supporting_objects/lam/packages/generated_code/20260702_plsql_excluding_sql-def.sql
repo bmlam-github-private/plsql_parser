@@ -1,8 +1,5 @@
 CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   -- Global collection type for tokens
-  --TYPE t_token_list IS TABLE OF parser_token_rec;
-
-  --g_tokens         t_token_list;
   g_tokens         parser_token_col;
   g_curr_token_ix  NUMBER := 1;
 
@@ -55,7 +52,8 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_while_statement(po_success OUT BOOLEAN);
 
   -- Main entry point for top-level parsing rules
-  PROCEDURE parse_main(p_token_stream IN /*t_token_list*/ parser_token_col, po_success OUT BOOLEAN);
+  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN);
 END PKG_DYNAMIC_PARSER;
 /
+
 

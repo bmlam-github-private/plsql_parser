@@ -437,8 +437,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
     -- 1. BUILD PACKAGE SPECIFICATION HEADERS
     append_to_clob(l_spec, 'CREATE OR REPLACE PACKAGE ' || p_package_name || ' AS' || CHR(10));
     append_to_clob(l_spec, '  -- Global collection type for tokens' || CHR(10));
-    append_to_clob(l_spec, '  TYPE t_token_list IS TABLE OF parser_token_rec;' || CHR(10)|| CHR(10));
-    append_to_clob(l_spec, '  g_tokens         t_token_list;' || CHR(10));
+    append_to_clob(l_spec, '  g_tokens         parser_token_col;' || CHR(10));
     append_to_clob(l_spec, '  g_curr_token_ix  NUMBER := 1;' || CHR(10) || CHR(10));
 
     -- 2. BUILD PACKAGE BODY HEADERS
@@ -465,9 +464,10 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
         -- Add Type 1 (LHS master rule) to Body
         append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '(po_success OUT BOOLEAN) IS' || CHR(10));
-        append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
+        append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
+        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix||'' content: ''||g_tokens( g_curr_token_ix ).tok_type );' || CHR(10));
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
         
         -- Loop through alternatives inside Type 1
@@ -485,9 +485,10 @@ dbms_output.put_line (  'ln'||$$plsql_line );
         -- Add Type 2 (Alternative rules) to Body
         FOR altern IN c_alternatives(r.lhs) LOOP
             append_to_clob(l_body, '  PROCEDURE ' || r.lhs_procname || '_' || altern.alt_no || '(po_success OUT BOOLEAN) IS' || CHR(10));
-			append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
+			append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
             append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
             append_to_clob(l_body, '  BEGIN' || CHR(10));
+			append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix||'' content: ''||g_tokens( g_curr_token_ix ).tok_type );' || CHR(10));
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
             
             -- Process sequence symbols inside Alternative
@@ -528,10 +529,10 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
     -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
     append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
-    append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN);' || CHR(10));
+    append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN);' || CHR(10));
     
-    append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN t_token_list, po_success OUT BOOLEAN) IS' || CHR(10));
-    append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrump();' || CHR(10));
+    append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN) IS' || CHR(10));
+    append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
     append_to_clob(l_body, '  BEGIN' || CHR(10));
     append_to_clob(l_body, '    g_tokens := p_token_stream;' || CHR(10));
     append_to_clob(l_body, '    g_curr_token_ix := 1;' || CHR(10));
