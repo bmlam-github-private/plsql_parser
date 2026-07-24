@@ -4,6 +4,7 @@ AS OBJECT
  ,tok_type	VARCHAR2(30)
  ,tok_char_cnt		NUMBER
  ,tok_text_normal 	VARCHAR2(4000 char)
+ ,tok_value 		VARCHAR2(4000 char)
  ,tok_text_long 	CLOB
 );
 / 

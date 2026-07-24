@@ -510,7 +510,8 @@ dbms_output.put_line (  'ln'||$$plsql_line );
                     append_to_clob(l_body, '      ' || fn_norm_as_proc_name( symb.symbol )|| '(po_success);' || CHR(10));
                 ELSE
                     -- Terminal Token validation match
-                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || symb.symbol || ''' THEN' || CHR(10));
+                    --append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || symb.symbol || ''' THEN' || CHR(10));
+                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND fn_gram_compare( pi_tok=> g_tokens(g_curr_token_ix), pi_symb=> ''' || symb.symbol || ''' ) THEN' || CHR(10));
                     append_to_clob(l_body, '        g_curr_token_ix := g_curr_token_ix + 1;' || CHR(10));
                     append_to_clob(l_body, '      ELSE' || CHR(10));
                     append_to_clob(l_body, '        po_success := FALSE;' || CHR(10));

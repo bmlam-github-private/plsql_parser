@@ -326,3 +326,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.07.18
   Enhanced parser_grammar_gen to generated dynamic package with debugging. Test showed that we have a token with type "WORD" , while the generated parser is probably expecing "DECLARE" or "CREATE" or similar stuff. So we probably have to extend PARSER_TOKEN_REC to include a field which parser should look for, also whitespace and comments should have been purged from the token stream. parser_grammar_gen must be modified to compare the new field! 
 
+2026.07.18
+ First idea to solve problem described above is: intead of g_tokens( cur_ix ).tok_type = ':=', which is an example of symbol, we generate function call fn_gram_compare( g_tokens( cur_ix ) , ':=' ).
+  But better to check with AI how to solve this road block! 
