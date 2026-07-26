@@ -182,5 +182,64 @@ CREATE OR REPLACE PACKAGE BODY plsql_lexer AS
       RETURN v_result;
    END tokens_to_clob;
 -- 
+    PROCEDURE pr_to_tokens_of_lang_plsql 
+	( pi_tokens 			IN	parser_token_col 
+	 ,pi_grammar_source 	IN 	VARCHAR2 
+	 ,pi_remove_comment		IN 	BOOLEAN 	DEFAULT FALSE 
+	 ,po_tokens 			OUT parser_token_col 
+	) 
+	AS
+		v_return  parser_token_col ;
+		v_tok_new parser_token_rec; 
+		v_reserved_keywords  	sys.re$name_array ;
+		-- 
+		FUNCTION is_keyword (
+			pi_text		IN	VARCHAR2
+		)
+		RETURN BOOLEAN 
+		AS 
+			v_text_normed VARCHAR2(4000 CHAR);
+		BEGIN 
+			v_text_normed := upper( pi_text ); 
+			IF v_text_normed LIKE '"%"' THEN 
+				v_text_normed := substr( 2, v_text_normed, length( v_text_normed )-2 );
+			END IF;
+			FOR i IN 1 .. v_reserved_keywords.COUNT 
+			LOOP 
+				IF v_text_normed = v_reserved_keywords(i)
+				THEN 
+					RETURN TRUE; 
+				END IF; 
+			END LOOP;
+			--
+			RETURN FALSE; 
+		END is_keyword;
+	BEGIN 
+		select distinct substr( symbol, 2, length( symbol ) -2 ) reserved_words
+		BULK COLLECT 
+		INTO v_reserved_keywords
+		from parser_alt_token 
+		where 1=1
+		  and source = pi_grammar_source 
+		  and regexp_like ( symbol, '^"[A-Z_]+"$' )
+		;
+		-- 
+		FOR i IN 1 .. pi_tokens.count 
+		LOOP 
+			v_tok_new := parser_token_rec();
+			v_tok_new.seq := pi_tokens(i).seq ;
+			CASE 
+			WHEN pi_tokens = 'WORD' 
+				IF is_keyword ( pi_tokens ) THEN 
+					v_tok_new.tok_type := 'KEYWORD';
+					v_tok_value.tok_type := v_text_normed;
+				ELSE 
+					v_tok_new.tok_type := '<identifier>'; -- is this correct? 
+					v_tok_value.tok_value := v_text_normed;
+				END IF;
+			END CASE; 
+		END LOOP;
+		RETURN v_return; 
+	END to_tokens_of_lang_plsql;
 END plsql_lexer;
 /

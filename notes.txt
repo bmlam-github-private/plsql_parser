@@ -329,3 +329,9 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.07.18
  First idea to solve problem described above is: intead of g_tokens( cur_ix ).tok_type = ':=', which is an example of symbol, we generate function call fn_gram_compare( g_tokens( cur_ix ) , ':=' ).
   But better to check with AI how to solve this road block! 
+
+2026.07.26:
+  Gemini suggest using a list of reserved keywords of the language. 
+  So I need to revert changes done in generator regarding using a compare function.
+  Added attribute tok_value to be used for comparision. Added a convenience constractor so existing code works despite the new attribute. Added a new procedure in lexer package to enrich the original tokens to be keyword conscious, in the process also some other choirs to be done. Change in package not yet compilable!
+  
