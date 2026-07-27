@@ -20,9 +20,14 @@ where 1=1
 -- lhs_root = '<<variable_or_function>>'
 order by lhs 
 ;
-select source, count(1) from parser_alt_token group by source
+select distinct substr( symbol, 2, length( symbol ) -2 ) reserved_words
+from parser_alt_token 
+where 1=1
+  and source = 'PLSQL_EXCLUDING_SQL'
+  and regexp_like ( symbol, '^"[A-Z_]+"$' )
+--group by source
 ;
-update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
+--update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
 ;
 select t.*
     , parser_grammar_gen. fn_norm_as_proc_name ( lhs ) lhs_1 

@@ -39,12 +39,12 @@ AS
  ) RETURN SELF AS RESULT 
  AS 
  BEGIN
-	--self.tok_seq 	   	:=      parser_token_rec.tok_seq 	   	;
-	--self.tok_type	   	:=      parser_token_rec.tok_type	   	;
-	--self.tok_char_cnt	:=	    parser_token_rec.tok_char_cnt	;
-	--self.tok_text_normal:=	 	parser_token_rec.tok_text_normal;
-	--self.tok_value 		:=      parser_token_rec.tok_value 		;
-	--self.tok_text_long 	:=      parser_token_rec.tok_text_long 	;
+	self.tok_seq 	   	:=      tok_seq 	   	;
+	self.tok_type	   	:=      tok_type	   	;
+	self.tok_char_cnt	:=	    tok_char_cnt	;
+	self.tok_text_normal:=	 	tok_text_normal;
+	self.tok_value 		:=      tok_value 		;
+	self.tok_text_long 	:=      tok_text_long 	;
 	RETURN; 
 END; 
 END; 

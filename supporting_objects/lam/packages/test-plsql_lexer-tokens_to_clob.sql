@@ -9,7 +9,7 @@ BEGIN
 				)
 		BULK COLLECT INTO v_tokens 
 		FROM 	TABLE 	( 
-		plsql_lexer.tokenize_code(
+		plsql_lexer.code_to_basic_tokens(
     'DECLARE
        v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; -- inline comment
        v_num NUMBER := 123.45;

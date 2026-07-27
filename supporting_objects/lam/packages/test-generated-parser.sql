@@ -4,15 +4,15 @@ DECLARE
    v_success BOOLEAN; 
 BEGIN 
     SELECT  
-    parser_token_rec(tok_seq=> tok_seq
- ,tok_type=> tok_type
- ,tok_char_cnt=> tok_char_cnt
- ,tok_text_normal=> tok_text_normal
- ,tok_text_long=> tok_text_long
- )
-BULK COLLECT INTO    v_tab_tokens
+		parser_token_rec(tok_seq=> tok_seq
+		 ,tok_type=> tok_type
+		 ,tok_char_cnt=> tok_char_cnt
+		 ,tok_text_normal=> tok_text_normal
+		 ,tok_text_long=> tok_text_long
+		 )
+	BULK COLLECT INTO    v_tab_tokens
     FROM TABLE ( 
-        plsql_lexer.tokenize_code ( 
+        plsql_lexer.code_to_basic_tokens ( 
        'DECLARE
        v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; -- inline comment
        v_num NUMBER := 123.45;
