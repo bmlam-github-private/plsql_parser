@@ -21,3 +21,15 @@ each subprogram created covering a rule should be in the package specification.
 
 As a bonus, please figure out which lhs in the table parser_alt_token are at the top-level and generate a main subprogram to try the top level rules in turn.
 
+
+2026.07.26:
+Prompt: 
+Suppose we have a plsql parser which has input a table of tokens, the token record has the layout 
+(TOK_SEQ NUMBER ,TOK_TYPE VARCHAR2(30) ,TOK_TEXT VARCHAR2(4000 CHAR) ). 
+In the generated parser code which looks at the collection variable of tokens named g_tokens, there is this code: 
+"IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = '"CREATE"' THEN" . 
+The problem is, the lexer stores the symbol "CREATE" in field tok_text, while tok_type is "word", because the lexer only distinguish identifiers, operators, literals and comments. how is this best solved. 
+
+Reply:
+Option 1 is same as my initial idea.
+Option 2 said to be industrial Standard: define a list of reserved Keywords per language. Minh: Since the Grammar includes all the Keywords available, it is Pretty easy to define the liste. 

@@ -52,8 +52,7 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_while_statement(po_success OUT BOOLEAN);
 
   -- Main entry point for top-level parsing rules
+  PROCEDURE pr_increment_token_ix;
   PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN);
 END PKG_DYNAMIC_PARSER;
 /
-
-

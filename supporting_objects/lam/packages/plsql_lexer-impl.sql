@@ -26,7 +26,7 @@ IS
             v_rec parser_token_rec;
             v_char_len NUMBER;
         BEGIN
-			dbms_output.put_line( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' v_seq:'|| v_seq||' p_type:'|| p_type||' p_text:'|| dbms_lob.substr( p_text, 40, 1) );
+			--dbms_output.put_line( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' v_seq:'|| v_seq||' p_type:'|| p_type||' p_text:'|| dbms_lob.substr( p_text, 40, 1) );
 
             v_char_len := DBMS_LOB.GETLENGTH(p_text);
             v_rec := parser_token_rec(tok_seq=> v_seq, tok_type=> p_type, tok_char_cnt=> v_char_len, tok_text_normal=> NULL, tok_text_long=> NULL);
@@ -125,7 +125,7 @@ IS
 
             -- 6. Numeric Literals (Including decimals)
 			v_match_pos := REGEXP_INSTR ( pi_code, '[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?', v_pos);
-            dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' v_match_pos:'|| v_match_pos );
+            --dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' v_match_pos:'|| v_match_pos );
 			IF v_match_pos	= v_pos  
 			THEN 
 				v_match := 	REGEXP_SUBSTR(pi_code, '[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?', v_pos);
@@ -133,6 +133,9 @@ IS
 					v_next_char := dbms_lob.substr( pi_code, 1, v_pos + length( v_match ) );
 					IF v_next_char IS NOT NULL 
 					  AND v_next_char NOT IN (
+						-- whitespaces 
+						CHR(32), CHR(9), CHR(10), CHR(13),
+						-- special chars 
 						  CHR(33), -- ! Exclamation mark
 						  CHR(34), -- " Double quote
 						  CHR(35), -- # Number sign / Hash
@@ -193,8 +196,8 @@ IS
 
             -- 9. Words (Identifiers or Keywords)
             v_match := REGEXP_SUBSTR(pi_code, '[a-zA-Z_][a-zA-Z0-9_#$]*', v_pos);
-            dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' pos:'|| lpad(to_char(v_pos),4, ' ') ||' code at currpos:'|| substr(pi_code, v_pos, 30)  );
-            dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' match: '|| v_match );
+            --dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' pos:'|| lpad(to_char(v_pos),4, ' ') ||' code at currpos:'|| substr(pi_code, v_pos, 30)  );
+            --dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' match: '|| v_match );
 			IF v_match IS NOT NULL THEN
                 PIPE ROW( consume_token('WORD', v_match) );
                 v_pos := v_pos + LENGTH(v_match);
@@ -241,7 +244,7 @@ END basic_tokens_to_clob;
 PROCEDURE pr_to_tokens_of_lang_plsql 
 	( pi_basic_tokens 		IN	parser_token_col 
 	 ,pi_grammar_source 	IN 	VARCHAR2 
-	 ,pi_remove_comment		IN 	BOOLEAN 	DEFAULT FALSE 
+	 ,pi_remove_comment		IN 	NUMBER DEFAULT 0 
 	 ,po_lang_tokens 		OUT parser_token_col 
 	) 
 	AS
@@ -272,6 +275,8 @@ PROCEDURE pr_to_tokens_of_lang_plsql
 		END is_keyword;
 	-- 
 	BEGIN 	-- pr_to_tokens_of_lang_plsql 
+		po_lang_tokens := parser_token_col();
+		-- 
 		SELECT DISTINCT substr( symbol, 2, length( symbol ) -2 ) reserved_words
 		BULK COLLECT 
 		INTO v_reserved_keywords
@@ -290,7 +295,7 @@ PROCEDURE pr_to_tokens_of_lang_plsql
 			THEN 
 				IF is_keyword ( pi_basic_tokens(i).tok_text_normal, po_text_normed=> v_text_normed ) THEN 
 					v_tok_new.tok_type := 'KEYWORD';
-					v_tok_new.tok_value := v_text_normed;
+					v_tok_new.tok_value := '"'||v_text_normed||'"';
 				ELSE 
 					v_tok_new.tok_type := '<identifier>'; -- is this correct? 
 					v_tok_new.tok_value := v_text_normed;
@@ -302,7 +307,7 @@ PROCEDURE pr_to_tokens_of_lang_plsql
 				po_lang_tokens.extend; po_lang_tokens( po_lang_tokens.count ) := v_tok_new;
 			WHEN pi_basic_tokens(i).tok_type IN ( 'LINE_COMMENT', 'BLOCK_COMMENT' )
 			THEN 
-				IF NOT pi_remove_comment THEN 
+				IF pi_remove_comment > 0 THEN 
 					po_lang_tokens.extend; po_lang_tokens( po_lang_tokens.count ) := v_tok_new;
 				END IF;
 			WHEN pi_basic_tokens(i).tok_type IN ( 'STRING_LITERAL', 'STRING_LITERAL_Q', 'NUMBER_LITERAL' )
@@ -311,12 +316,13 @@ PROCEDURE pr_to_tokens_of_lang_plsql
 			END CASE; 
 		END LOOP;
 		--
-		dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' tokens out:'|| po_lang_tokens.count );
+		--dbms_output.put_line ( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' tokens out:'|| po_lang_tokens.count );
 	END pr_to_tokens_of_lang_plsql;
 --
 FUNCTION code_to_lang_tokens
 	( pi_code 			IN CLOB
 	 ,pi_grammar_source IN VARCHAR2
+	 ,pi_remove_comment	IN 	NUMBER DEFAULT 0 
 	) RETURN parser_token_col
 AS 
 	v_basic_tokens 	parser_token_col;  
@@ -337,7 +343,7 @@ BEGIN
 	pr_to_tokens_of_lang_plsql 
 	( pi_basic_tokens 		=> v_basic_tokens
 	 ,pi_grammar_source 	=> pi_grammar_source
-	 ,pi_remove_comment		=> FALSE 
+	 ,pi_remove_comment		=> pi_remove_comment 
 	 ,po_lang_tokens 		=> v_return 
 	);
 	-- 

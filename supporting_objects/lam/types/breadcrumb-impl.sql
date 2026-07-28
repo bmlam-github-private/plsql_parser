@@ -2,6 +2,7 @@ CREATE OR REPLACE TYPE BODY Breadcrumb AS
   CONSTRUCTOR FUNCTION Breadcrumb(SELF IN OUT NOCOPY Breadcrumb) RETURN SELF AS RESULT IS
     v_depth PLS_INTEGER := UTL_CALL_STACK.DYNAMIC_DEPTH;
   BEGIN
+  /*
     SELF.object_id := DBMS_UTILITY.GET_HASH_VALUE(TO_CHAR(SYSTIMESTAMP), 1, 1000000);
     SELF.created_at := SYSTIMESTAMP;
     
@@ -11,6 +12,7 @@ CREATE OR REPLACE TYPE BODY Breadcrumb AS
                          ||' of '||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(
                            UTL_CALL_STACK.SUBPROGRAM(v_depth -1) )
 						 );
+						 */ 
     RETURN;
   END;
 
@@ -18,8 +20,7 @@ CREATE OR REPLACE TYPE BODY Breadcrumb AS
     v_depth PLS_INTEGER := UTL_CALL_STACK.DYNAMIC_DEPTH;
   BEGIN
     -- Print the line number where destroy was explicitly called before scope exit
-    DBMS_OUTPUT.PUT_LINE('[Breadcrumb] DESTRUCTOR invoked at line: ' || 
-                         UTL_CALL_STACK.UNIT_LIne(v_depth - 1));
+    null; -- DBMS_OUTPUT.PUT_LINE('[Breadcrumb] DESTRUCTOR invoked at line: ' ||                          UTL_CALL_STACK.UNIT_LIne(v_depth - 1));
   END;
 END;
 /

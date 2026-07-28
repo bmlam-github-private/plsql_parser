@@ -179,156 +179,6 @@ AS
     RETURN v_return;
   END tokenize_rhs_refined;
 
--- 
-FUNCTION get_parser_code_v2      -- sequence of procedures , does not  consider alternatives correctly
-RETURN CLOB
-IS
--- Version up to May? 2026 ?
--- which has some of Minh'symb tweeks regarding check which procedure is "called" and "created" 
-/*
-  co_state_initial      CONSTANT VARCHAR2( 10 ) := 'initial';
-
-  v_lhs  parser_grammar_rules.lhs%TYPE;
-  v_rhs  parser_grammar_rules.rhs%TYPE;
-  v_proc_name     VARCHAR2(100);
-
-  v_code CLOB := EMPTY_CLOB();  -- will hold all generated procedures
-
-  ----------------------------------------------------------------------
-  -- Append altern line to the CLOB
-  ----------------------------------------------------------------------
-  PROCEDURE append_line(p_line VARCHAR2) IS
-      v_proc_name type_vc2_100;
-  BEGIN
-      IF p_line IS NOT NULL   -- as long as we have not figured out while there are empty tokenw 
-      THEN
-          v_code := v_code 
-          -- still not figured out while the toke triples " ; " have not been all detected
-          -- so if they occur replace them 
-           ||  p_line 
-           || CHR(10);
-          IF regexp_like ( p_line, '^(xparse_[_a-zA-Z0-9]+)(;)$' )
-          THEN  
-              v_proc_name := substr( p_line, 1, length( p_line) -1 );
-              gv_method_called ( v_proc_name ) := true;
-          END IF;
-      END IF;
-  END;
-
-  ----------------------------------------------------------------------
-  -- Convert RHS into PL/SQL parse code recursively
-  ----------------------------------------------------------------------
-  PROCEDURE rhs_to_code(p_rhs VARCHAR2) IS
-      v_tokens_refined parser_rule_token_col; 
--- v_return
-      v_i      PLS_INTEGER := 1;
-      -- 
-    PROCEDURE parse_token
-    AS 
-    /* what we want to achieve in case of repitition:
--- an solution example for 
---lhs: <declaration_section>
---rhs:  <declaration> {<declaration>}*
-PROCEDURE parse_declaration_section IS
-BEGIN
-   -- mandatory first occurrence
-   parse_declaration;
-
-   -- repetition: { <declaration> }*
-   WHILE is_start_of_declaration(lookahead) LOOP
-      parse_declaration;
-      -- for more robustness
-      if NOT is_valid_token (lookahead ) THEN 
-        RAISE error
-      end if
-   END LOOP;
-END;
-    *--/
-      co_repetition_code_templale  CONSTANT type_vc2_1k :=  
-      Q'[  --
-   -- mandatory first occurrence
-parse_<rule>;
--- repetition: { <rule> }*
-WHILE is_start_of_rule( lookahead ) LOOP
-  parse_<rule>;
-  -- for more robustness
-  IF NOT is_valid_token ( lookahead ) THEN 
-    RAISE_APPLICATION_ERROR( -20001, 'Invalid token '|| is_valid_token );
-  END IF;
-END LOOP;
-]';
-  BEGIN
-          IF v_i > v_tokens_refined.COUNT THEN
-              RETURN;
-          END IF;
-
-          DECLARE
-              v_tok_rec parser_rule_token_rec := v_tokens_refined (v_i);
-          BEGIN
-              CASE 
-                WHEN v_tok_rec.content =  '{' 
-                THEN
-                      append_line('   -- repetition start');
-                      append_line('   WHILE next_rule_token IN (...symbols...) LOOP');
-                      v_i := v_i + 1;
-                      WHILE v_i <= v_tokens_refined.COUNT AND v_tokens_refined(v_i).content != '}' LOOP
-                          parse_token;
-                      END LOOP;
-                      append_line('   END LOOP; -- end repetition');
-                      v_i := v_i + 1;
-                WHEN v_tok_rec.content = '[' 
-                THEN
-                      append_line('   -- optional start');
-                      append_line('   IF next_rule_token IN (...symbols...) THEN');
-                      v_i := v_i + 1;
-                      WHILE v_i <= v_tokens_refined.COUNT AND v_tokens_refined (v_i).content != ']' LOOP
-                          parse_token;
-                      END LOOP;
-                      append_line('   END IF; -- end optional');
-                      v_i := v_i + 1;
-                WHEN v_tok_rec.content = '|' 
-                THEN
-                      -- alternatives handled at parent level
-                      v_i := v_i + 1;
-                ELSE
-dbms_output.put_line ( 'Ln'||$$plsql_line||' v_tok_rec.content: ' ||v_tok_rec.content) ;       
-                      append_line('   parse_'||clean_name(v_tok_rec.content)||';');
-                      v_i := v_i + 1;
-              END CASE;
-          END;
-      END parse_token;
-
-  BEGIN
-      v_tokens_refined := tokenize_rhs_refined(p_rhs);
-      WHILE v_i <= v_tokens_refined.COUNT LOOP
-          parse_token;
-      END LOOP;
-  END rhs_to_code;
-
-BEGIN
-  FOR r IN (
-      SELECT lhs, rhs 
-      FROM parser_grammar_rules 
-      ORDER BY lhs
-    ) 
-  LOOP
-      v_lhs := clean_name(r.lhs);
-      v_rhs := r.rhs;
-      v_proc_name := LOWER( 'parse_'||v_lhs );
-      gv_method_implemented( v_proc_name ) := TRUE;
-      append_line('PROCEDURE '||v_proc_name||' IS');
-      append_line('BEGIN');
-
-      rhs_to_code(v_rhs);
-
-      append_line('END '||v_proc_name||';');
-      append_line('--');
-  END LOOP;
-
-  RETURN v_code;
-  */ 
-  BEGIN return null; 
- END get_parser_code_v2;
 --
 FUNCTION get_package_helpers 
 RETURN CLOB 
@@ -467,7 +317,8 @@ dbms_output.put_line (  'ln'||$$plsql_line );
         append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
-        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix||'' content: ''||g_tokens( g_curr_token_ix ).tok_type );' || CHR(10));
+        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix);'|| CHR(10) );
+        append_to_clob(l_body, '    g_tokens( g_curr_token_ix ).print_details;' || CHR(10) );
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
         
         -- Loop through alternatives inside Type 1
@@ -488,7 +339,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 			append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
             append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
             append_to_clob(l_body, '  BEGIN' || CHR(10));
-			append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix||'' content: ''||g_tokens( g_curr_token_ix ).tok_type );' || CHR(10));
+			append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix );' || CHR(10));
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
             
             -- Process sequence symbols inside Alternative
@@ -510,9 +361,9 @@ dbms_output.put_line (  'ln'||$$plsql_line );
                     append_to_clob(l_body, '      ' || fn_norm_as_proc_name( symb.symbol )|| '(po_success);' || CHR(10));
                 ELSE
                     -- Terminal Token validation match
-                    --append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_type = ''' || symb.symbol || ''' THEN' || CHR(10));
-                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND fn_gram_compare( pi_tok=> g_tokens(g_curr_token_ix), pi_symb=> ''' || symb.symbol || ''' ) THEN' || CHR(10));
-                    append_to_clob(l_body, '        g_curr_token_ix := g_curr_token_ix + 1;' || CHR(10));
+                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ''' || symb.symbol || ''' THEN' || CHR(10));
+                    --append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND fn_gram_compare( pi_tok=> g_tokens(g_curr_token_ix), pi_symb=> ''' || symb.symbol || ''' ) THEN' || CHR(10));
+                    append_to_clob(l_body, '        pr_increment_token_ix;' || CHR(10));
                     append_to_clob(l_body, '      ELSE' || CHR(10));
                     append_to_clob(l_body, '        po_success := FALSE;' || CHR(10));
                     append_to_clob(l_body, '      END IF;' || CHR(10));
@@ -530,8 +381,10 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
     -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
     append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
+    append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix;' || CHR(10));
     append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN);' || CHR(10));
     
+    append_to_clob(l_body, '  PROCEDURE pr_increment_token_ix AS BEGIN g_curr_token_ix := g_curr_token_ix+1; dbms_output.put_line( ''current_ix incremented to ''||g_curr_token_ix); END pr_increment_token_ix;' || CHR(10));
     append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN) IS' || CHR(10));
     append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
     append_to_clob(l_body, '  BEGIN' || CHR(10));

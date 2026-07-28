@@ -1,13 +1,9 @@
 sta "C:\Users\Bon-Minh Lam\bmlam\my_tools_READONLY\extract_from_dba_source.sql" package_body plsql_lexer lam 
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\tables\parser_grammar_rules.sql"
+sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\test-generated-parser.sql"
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_rule_util-def.sql"
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-def.sql"
-
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\parser_grammar_gen-impl.sql"
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\generated_code\20260717_plsql_excluding_sql-impl.sql"
 
 select parser_grammar_gen.fn_get_parser_package_code( p_source => 'MANUAL_TEST' , p_spec_body_mask=> 2 )  from dual
@@ -58,16 +54,20 @@ where 1=1
 --  and instr( comments, 'dedicated_to_expression ' ) > 0 
 order by rule_id desc 
   ;
-select
- r.lhs, 
-t.*
-, length( t.content ) len 
+SELECT *
+from parser_grammar_rule_ebnf
+WHERE source = 'PLSQL_EXCLUDING_SQL'
+;
+select *
+-- r.lhs, 
+--t.*
+--, length( t.content ) len 
 --, dump( t.content ) dump 
 from parser_grammar_rules r
-CROSS JOIN 
-table ( parser_grammar_gen.tokenize_rhs_refined ( r.rhs ) ) t
+--CROSS JOIN 
+--table ( parser_grammar_gen.tokenize_rhs_refined ( r.rhs ) ) t
 --where r.lhs = '<block>'
-
+where 1=1
 ;
 select *
 from user_constraints 
