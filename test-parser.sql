@@ -16,24 +16,56 @@ where 1=1
 -- lhs_root = '<<variable_or_function>>'
 order by lhs 
 ;
-select distinct substr( symbol, 2, length( symbol ) -2 ) reserved_words
+select source, count(1)
 from parser_alt_token 
 where 1=1
-  and source = 'PLSQL_EXCLUDING_SQL'
+--  and source = 'PLSQL_EXCLUDING_SQL'
   and regexp_like ( symbol, '^"[A-Z_]+"$' )
---group by source
+group by source
 ;
+-- c_rules from parser_grammar_rule . fn_get_parser_package_code 
+		WITH dist_lhs AS ( 
+			SELECT DISTINCT lhs 
+			FROM parser_alt_token 
+			WHERE source = upper( trim( 'plsql_excluding_sql' ) ) 
+		) 
+		SELECT lhs 
+			, parser_grammar_gen. fn_norm_as_proc_name ( p_input=> lhs ) lhs_procname 
+			, row_number() OVER ( PARTITION BY NULL ORDER BY lhs ) 	as seq 
+			, count(*) OVER ( PARTITION BY NULL ORDER BY lhs ) 		as tot 
+		FROM dist_lhs
+		ORDER BY lhs
+;
+-- c_alternatives from parser_grammar_rule . fn_get_parser_package_code 
+        SELECT *
+--        DISTINCT t1.symbol
+        FROM parser_alt_token t1
+        WHERE 1=1
+--        and lhs = cp_lhs 
+         AND source = 'PLSQL_EXCLUDING_SQL'
+         AND symbol like '<%>'
+--  and ( lhs like '%statment%' or symbol like '%statement%' )
+AND not exists ( select 1 from parser_alt_token t2 where t2.lhs = t1.symbol )         
+--        ORDER BY null
+--        , lhs,
+--        alt_no
+        ;
+
+
 --update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
 ;
+WITH agg AS ( 
 select t.*
-    , parser_grammar_gen. fn_norm_as_proc_name ( lhs ) lhs_1 
-    , parser_grammar_gen. fn_norm_as_proc_name ( symbol ) symb_1 
+    , count(1) over (partition by lhs, alt_no, position ) occ 
 from parser_alt_token t
 --from v_parser_alt_token
 WHERE 1=1
 --  and lower( lhs ) like '%%'
 --  and lower( symbol) like '%decla%'
 --  and source = upper( trim( 'PLSQL_EXCLUDING_SQL' ) ) 
+--order by lhs, alt_no, position 
+)
+select * from agg where occ > 1 
 ;
 SELECT t.*
 , dbms_lob.getlength( content ) len 
@@ -113,42 +145,21 @@ select * from table ( parser_rule_util. fn_1_ebnf_to_simple (
 ;
 set serveroutput on 
 
-declare 
-    x parser_grammar_rule_simple_col;
-BEGIN 
-    x := parser_rule_util. fn_ebnf_clob_to_simple ( 
-    '<term>::=<factor> { ( "*" | "/" ) <factor> }*'
-    , p_source => upper('manual_test') ) 
+WITH grama AS ( 
+    SELECT content txt 
+--    '<term>::=<factor> { ( "*" | "/" ) <factor> }*'
+    FROM temp_clob 
+    WHERE upper("REMARKS") = upper(:source)
+)
+SELECT t.*
+FROM grama 
+CROSS JOIN 
+    TABLE ( parser_rule_util. fn_ebnf_clob_to_simple ( 
+        grama.txt 
+    , p_source => :source 
+    ) ) t
     ;
-END ;
-/
 
-set serveroutput on size 1000000
-;
-DECLARE 
-    x parser_alt_token_col;
-    gram_clob   CLOB;
-BEGIN 
-    parser_rule_util. pr_set_global ( p_key=> 'max_nesting', p_value => 199 );
-    parser_rule_util. pr_set_global ( p_key=> 'nesting_dump_loop', p_value => 9 );
-    SELECT content 
-    INTO gram_clob 
-    FROM temp_clob
-    where remarks = 'PLSQL_EXCLUDING_SQL'
-    ;
-    x := 
---select * from table ( 
---parser_rule_util. fn_ebnf_clob_to_simple 
-    parser_rule_util. fn_grammar_clob_to_rule_tokens 
-    (  p_clob => gram_clob
-        , p_source => 'PLSQL_EXCLUDING_SQL'  
-        , p_persist => TRUE 
-        , p_max_nesting => 999 
-        )
--- if "select"        )
-    ;
-END;
-/
 set serveroutput on 
 ;
 --declare x clob; BEGIN 

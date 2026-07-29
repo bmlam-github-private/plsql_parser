@@ -257,6 +257,7 @@ FUNCTION fn_get_parser_package_code
         SELECT DISTINCT alt_no 
         FROM parser_alt_token 
         WHERE lhs = cp_lhs 
+		  AND source = upper( trim( p_source ) ) 
         ORDER BY alt_no;
         
     -- Cursor for symbols within altern specific alternative
@@ -265,6 +266,7 @@ FUNCTION fn_get_parser_package_code
 			, symbol_cleansed 
         FROM v_parser_alt_token 
         WHERE lhs = cp_lhs AND alt_no = cp_alt_no 
+		  AND source = upper( trim( p_source ) ) 
         ORDER BY position;
 
     -- Cursor to find distinct terminal symbols vs LHS rules

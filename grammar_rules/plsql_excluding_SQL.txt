@@ -73,7 +73,7 @@
                     | <function_call>
                     | "(" <expression> ")"
 					
-<variable_reference> ::= <identifier> ["." <field_name>]
+# too simple! <variable_reference> ::= <identifier> ["." <field_name>]
 
 <literal> ::= <number> | <string> | "TRUE" | "FALSE" | "NULL"
 
@@ -93,3 +93,92 @@
 # <other_sql_statement> ::= placeholder for SELECT / INSERT / UPDATE / DELETE / MERGE
 
 <block> ::= ["DECLARE" <declaration_section>] "BEGIN" <executable_section> ["EXCEPTION" <exception_section>] "END" ";"
+
+# supplemented on 2026.07.29 
+<declaration_section>   ::= { <declaration> }*
+
+<declaration>           ::= <variable_declaration>
+                          | <constant_declaration>
+                          | <type_declaration>
+                          | <cursor_declaration>
+                          | <exception_declaration>
+                          | <procedure_spec> ";"
+                          | <function_spec> ";"
+                          | <procedure_body>
+                          | <function_body>
+
+<variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";"
+<constant_declaration>  ::= <identifier> "CONSTANT" <data_type> ":=" <expression> ";"
+<type_declaration>      ::= "TYPE" <identifier> "IS" <type_definition> ";"
+<cursor_declaration>    ::= "CURSOR" <identifier> [ "(" <parameter_list> ")" ] "IS" <select_statement> ";"
+<exception_declaration> ::= <identifier> "EXCEPTION" ";"
+
+<procedure_spec>        ::= "PROCEDURE" <identifier> [ "(" <parameter_list> ")" ]
+<function_spec>         ::= "FUNCTION" <identifier> [ "(" <parameter_list> ")" ] "RETURN" <data_type>
+
+<parameter_list>        ::= <parameter_spec> { "," <parameter_spec> }*
+<parameter_spec>        ::= <identifier> [ "IN" | "OUT" | "IN OUT" ] <data_type> [ ":=" <expression> ]
+
+<data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] 
+                          | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+
+/* Enhanced Expression & Function Call Parsing */
+<function_call>         ::= <identifier> "(" [ <expression_list> ] ")"
+
+<variable_reference>    ::= <identifier> { "." <identifier> }* [ "(" <expression_list> ")" ]
+
+/* Specific Exceptions & Identifiers */
+<exception_name>        ::= <identifier>
+<field_name>            ::= <identifier>
+
+/* Basic SQL Statements (Fleshing out <other_sql_statement>) */
+<other_sql_statement>   ::= <select_statement> ";"
+                          | <insert_statement> ";"
+                          | <update_statement> ";"
+                          | <delete_statement> ";"
+                          | <commit_statement> ";"
+                          | <rollback_statement> ";"
+
+<commit_statement>      ::= "COMMIT"
+<rollback_statement>    ::= "ROLLBACK"
+
+# after second prompt 2026.07.29
+<trigger_time_event> ::= <trigger_timing> <trigger_event_list> "ON" <table_or_view_reference> [ "FOR EACH ROW" ] [ <trigger_when_clause> ]
+
+<trigger_timing>     ::= "BEFORE"
+                       | "AFTER"
+                       | "INSTEAD OF"
+
+<trigger_event_list> ::= <trigger_event> { "OR" <trigger_event> }*
+
+<trigger_event>      ::= "INSERT"
+                       | "DELETE"
+                       | "UPDATE" [ "OF" <column_list> ]
+
+<column_list>        ::= <identifier> { "," <identifier> }*
+
+<trigger_when_clause> ::= "WHEN" "(" <condition> ")"
+
+<table_or_view_reference> ::= <identifier> [ "." <identifier> ]
+
+<type_definition> ::= <record_type_definition>
+                    | <collection_type_definition>
+                    | <ref_cursor_type_definition>
+
+# 1. Record Types 
+<record_type_definition> ::= "RECORD" "(" <record_field_spec> { "," <record_field_spec> }* ")"
+
+<record_field_spec>      ::= <identifier> <data_type> [ "NOT NULL" ] [ ( ":=" | "DEFAULT" ) <expression> ]
+
+# 2. Collection Types (Varrays & Nested Tables / Associative Arrays) 
+<collection_type_definition> ::= "VARRAY" "(" <number_literal> ")" "OF" <data_type> [ "NOT NULL" ]
+                               | "VARYING ARRAY" "(" <number_literal> ")" "OF" <data_type> [ "NOT NULL" ]
+                               | "TABLE OF" <data_type> [ "NOT NULL" ] [ "INDEX BY" <index_by_type> ]
+
+<index_by_type>              ::= "VARCHAR2" "(" <number_literal> ")"
+                               | "PLS_INTEGER"
+                               | "BINARY_INTEGER"
+                               | "LONG"
+
+# 3. REF CURSOR Types 
+<ref_cursor_type_definition> ::= "REF CURSOR" [ "RETURN" <data_type> ]

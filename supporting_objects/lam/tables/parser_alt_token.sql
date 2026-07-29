@@ -24,6 +24,13 @@ ALTER TABLE parser_alt_token
 	ADD constraint parser_alt_token_uk1 UNIQUE ( lhs, source, alt_no, position )
 /
 
+ALTER TABLE parser_alt_token 
+	MODIFY lhs		VARCHAR2(50)
+/
+ALTER TABLE parser_alt_token 
+	MODIFY symbol		VARCHAR2(50)
+/
+	
 COMMENT ON TABLE parser_alt_token IS 'when the producion of a lhs contains alternatives, we want to 
 have a unique number for each alternative. within each alternative, we order the symbols/token of the alternative '
 /

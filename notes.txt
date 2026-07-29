@@ -335,3 +335,27 @@ With the first sets computed, we can more efficiently parse the alternatives one
   So I need to revert changes done in generator regarding using a compare function.
   Added attribute tok_value to be used for comparision. Added a convenience constractor so existing code works despite the new attribute. Added a new procedure in lexer package to enrich the original tokens to be keyword conscious, in the process also some other choirs to be done. Change in package not yet compilable!
   
+2026.07.28:
+  Tryping to parse the code below with 20260724_plsql_excluding_sql-impl (
+
+    DECLARE
+       v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; -- inline comment
+       v_num NUMBER := 123.45;
+     BEGIN
+       /* Multi line block 
+          evaluation check */
+       IF v_num <> 0 THEN
+          DBMS_OUTPUT.PUT_LINE(v_msg);
+       END IF;
+     END;
+
+ result was negative. The lang token "DECLARE" was recognized, but then PKG_DYNAMIC_PARSER tries to match the next token with "<declaration_section>". The problem is the next token is a variable declaration for the identifier "v_msg". Our lexer says tok_type is identifier. There should be first set tokens which are produced by 
+	<declaration_section> ::= <identifier> <data_type> [assignment ]...
+
+  We also need to roadmap how we derived from EBNF to alt-tokens used. It seems that the stuff for PLSQL_EXCLUDING_SQL is not persisted.
+  Basically the alt-tokens need to be as down to earth as far as the lexer can achieve abstraction-wise! The lexer can provider identifiers, literals, operators ... 
+
+2026.07.29:
+  the grammar plsql_excluding_sql was supplemented with additional rules so that all abstract rules are now resolved, still in PARSER_ALTOKEN.symbol we have <number>, <string_literal>.
+  Hang on: gemini also provided supplements for <type_definition> but I have not yet incorporated the stuff into TEMP_CLOB. 
+  On parser generator part, I need to switch to comparision function so that I can ... No. Better to do it on the lexer part: token_typ NUMBER_LITERAL should have token_value <number>, STRING_LITERAL -> <string> 
