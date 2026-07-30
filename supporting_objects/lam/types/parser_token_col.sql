@@ -1,4 +1,4 @@
-DROP TYPE parser_token_col
+DROP TYPE lexer_token_col
 ;
 
 
@@ -6,9 +6,7 @@ DROP TYPE parser_token_col
 
 
 
-
-
-CREATE OR REPLACE FORCE TYPE parser_token_rec 
+CREATE OR REPLACE FORCE TYPE lexer_token_rec 
 AS OBJECT 
 ( tok_seq 			NUMBER 
  ,tok_type			VARCHAR2(30)
@@ -18,7 +16,7 @@ AS OBJECT
  ,tok_text_long 	CLOB
  --
  -- customer constructor 
- ,CONSTRUCTOR FUNCTION parser_token_rec 
+ ,CONSTRUCTOR FUNCTION lexer_token_rec 
  (tok_seq 	NUMBER 
  ,tok_type	VARCHAR2
  ,tok_char_cnt		NUMBER
@@ -30,9 +28,9 @@ AS OBJECT
 );
 / 
 
-CREATE OR REPLACE TYPE BODY parser_token_rec 
+CREATE OR REPLACE TYPE BODY lexer_token_rec 
 AS
- CONSTRUCTOR FUNCTION parser_token_rec 
+ CONSTRUCTOR FUNCTION lexer_token_rec 
  (tok_seq 	NUMBER 
  ,tok_type	VARCHAR2
  ,tok_char_cnt		NUMBER
@@ -52,7 +50,7 @@ END;
 -- Print Method Implementation
 MEMBER PROCEDURE print_details IS
 BEGIN
-        DBMS_OUTPUT.PUT_LINE('--- parser_token_rec Details ---');
+        DBMS_OUTPUT.PUT_LINE('--- lexer_token_rec Details ---');
         DBMS_OUTPUT.PUT_LINE('tok_seq 			: ' || SELF.tok_seq );
         DBMS_OUTPUT.PUT_LINE('tok_type			: ' || SELF.tok_type);
         DBMS_OUTPUT.PUT_LINE('tok_char_cnt		: ' || SELF.tok_char_cnt		);
@@ -66,6 +64,6 @@ END print_details;
 END; 
 /
 
-CREATE OR REPLACE FORCE TYPE parser_token_col AS TABLE OF parser_token_rec
+CREATE OR REPLACE FORCE TYPE lexer_token_col AS TABLE OF lexer_token_rec
 ;
 /
