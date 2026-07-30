@@ -37,8 +37,8 @@ CREATE OR REPLACE TYPE BODY parser_alt_token_rec AS
 		v_return 	BOOLEAN := FALSE;
 	BEGIN 
 		RETURN v_return;
-	END compare_symbol
-;
+	END compare_symbol;
+END;
 /
 -- =========================================
 -- COLLECTION TYPE

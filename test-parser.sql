@@ -50,7 +50,12 @@ AND not exists ( select 1 from parser_alt_token t2 where t2.lhs = t1.symbol )
 --        , lhs,
 --        alt_no
         ;
-
+select *
+from parser_alt_token 
+where 1 = 1
+--  and lhs like '<parameter_%'
+  and lhs like '<column_list%'
+  ;
 
 --update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
 ;

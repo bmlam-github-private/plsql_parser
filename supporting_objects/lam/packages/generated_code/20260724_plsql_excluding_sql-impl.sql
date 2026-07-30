@@ -8,6 +8,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_block_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_2_4(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_2_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_column_list_0(po_success OUT BOOLEAN);
   PROCEDURE pr_column_list_1(po_success OUT BOOLEAN);
   PROCEDURE pr_column_list_rep_1_2(po_success OUT BOOLEAN);
@@ -81,6 +85,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_function_spec_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_if_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_if_statement_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_index_by_type_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_index_by_type_1(po_success OUT BOOLEAN);
   PROCEDURE pr_literal_0(po_success OUT BOOLEAN);
   PROCEDURE pr_literal_1(po_success OUT BOOLEAN);
   PROCEDURE pr_literal_2(po_success OUT BOOLEAN);
@@ -149,6 +155,21 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_raise_statement_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_range_0(po_success OUT BOOLEAN);
   PROCEDURE pr_range_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_2_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_2_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_2_6(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition_rep_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_rollback_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_rollback_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_statement_0(po_success OUT BOOLEAN);
@@ -183,6 +204,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_trigger_when_clause_1(po_success OUT BOOLEAN);
   PROCEDURE pr_type_declaration_0(po_success OUT BOOLEAN);
   PROCEDURE pr_type_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_type_definition_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_type_definition_1(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration_0(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration_1(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration_opt_1_2(po_success OUT BOOLEAN);
@@ -227,7 +250,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -239,7 +262,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -262,7 +285,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -274,7 +297,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -310,7 +333,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ["DECLARE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["DECLARE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["DECLARE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -318,7 +341,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <declaration_section>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<declaration_section>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -326,7 +349,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -338,7 +361,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ["EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -346,7 +369,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol <exception_section>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_section>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<exception_section>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -354,7 +377,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -362,7 +385,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -385,7 +408,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -401,7 +424,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -409,7 +432,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -445,7 +468,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "DECLARE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"DECLARE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"DECLARE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -468,7 +491,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -504,7 +527,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -527,7 +550,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -537,6 +560,232 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_block_opt_2_5;
+
+  PROCEDURE pr_collection_type_definition(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_collection_type_definition_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_collection_type_definition_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_collection_type_definition;
+
+  PROCEDURE pr_collection_type_definition_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "VARRAY"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"VARRAY"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <number_literal>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number_literal>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol "OF"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OF"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 7: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol "NOT
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol NULL"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'NULL"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_collection_type_definition_0;
+
+  PROCEDURE pr_collection_type_definition_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "VARRAY"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"VARRAY"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <number_literal>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number_literal>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol "OF"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OF"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 7: Symbol <collection_type_definition_opt_1>
+    IF po_success THEN
+      pr_collection_type_definition_opt_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_collection_type_definition_1;
+
+  PROCEDURE pr_collection_type_definition_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_collection_type_definition_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_collection_type_definition_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_collection_type_definition_opt_1;
+
+  PROCEDURE pr_collection_type_definition_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "NOT
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol NULL"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'NULL"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_collection_type_definition_opt_1_2;
+
+  PROCEDURE pr_collection_type_definition_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_collection_type_definition_opt_1_3;
 
   PROCEDURE pr_column_list(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -563,7 +812,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -571,7 +820,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -579,7 +828,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -587,7 +836,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -595,7 +844,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol }*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -614,7 +863,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -654,7 +903,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -662,7 +911,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -685,7 +934,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -721,7 +970,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "COMMIT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"COMMIT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"COMMIT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -740,7 +989,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "COMMIT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"COMMIT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"COMMIT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -823,7 +1072,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -831,7 +1080,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "CONSTANT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CONSTANT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -843,7 +1092,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -855,7 +1104,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -874,7 +1123,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -882,7 +1131,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "CONSTANT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CONSTANT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -894,7 +1143,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -906,7 +1155,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -942,7 +1191,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "CURSOR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CURSOR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CURSOR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -950,7 +1199,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -958,7 +1207,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -966,7 +1215,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -978,7 +1227,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -986,7 +1235,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -994,7 +1243,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1002,7 +1251,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol <select_statement>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<select_statement>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1010,7 +1259,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1029,7 +1278,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "CURSOR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CURSOR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CURSOR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1037,7 +1286,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1049,7 +1298,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1057,7 +1306,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol <select_statement>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<select_statement>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1065,7 +1314,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1101,7 +1350,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1113,7 +1362,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1132,7 +1381,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1168,7 +1417,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1176,7 +1425,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1184,7 +1433,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "%TYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%TYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"%TYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1192,7 +1441,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1200,7 +1449,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "%ROWTYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%ROWTYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"%ROWTYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1208,7 +1457,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1227,7 +1476,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1271,7 +1520,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "%TYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%TYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"%TYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1290,7 +1539,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "%ROWTYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%ROWTYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"%ROWTYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1309,7 +1558,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1392,7 +1641,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1404,7 +1653,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol }*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1474,7 +1723,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1510,7 +1759,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXECUTE
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXECUTE' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXECUTE' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1518,7 +1767,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol IMMEDIATE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'IMMEDIATE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'IMMEDIATE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1526,7 +1775,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <string_literal>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<string_literal>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<string_literal>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1534,7 +1783,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ["INTO"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["INTO"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["INTO"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1542,7 +1791,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol <variable_reference>];
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<variable_reference>];' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<variable_reference>];' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1561,7 +1810,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXECUTE
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXECUTE' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXECUTE' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1569,7 +1818,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol IMMEDIATE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'IMMEDIATE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'IMMEDIATE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1577,7 +1826,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <string_literal>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<string_literal>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<string_literal>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1589,7 +1838,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ;
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ';' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ';' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1625,7 +1874,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "INTO"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"INTO"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"INTO"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1648,7 +1897,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1684,7 +1933,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1692,7 +1941,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1700,7 +1949,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1719,7 +1968,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1727,7 +1976,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1735,7 +1984,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1771,7 +2020,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1783,7 +2032,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"THEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"THEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1806,7 +2055,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1818,7 +2067,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"THEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"THEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1858,7 +2107,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1877,7 +2126,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1917,7 +2166,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {<exception_handler>}*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{<exception_handler>}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{<exception_handler>}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -1991,7 +2240,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2031,7 +2280,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {<statement>}*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{<statement>}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{<statement>}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2105,7 +2354,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2141,7 +2390,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXIT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXIT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXIT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2149,7 +2398,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ["WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2157,7 +2406,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <condition>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<condition>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<condition>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2165,7 +2414,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2184,7 +2433,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXIT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXIT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXIT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2196,7 +2445,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2232,7 +2481,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2255,7 +2504,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2350,7 +2599,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2358,7 +2607,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <expression>}*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<expression>}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<expression>}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2413,7 +2662,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2440,7 +2689,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2539,7 +2788,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2558,7 +2807,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2594,7 +2843,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FOR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FOR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2602,7 +2851,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2610,7 +2859,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2622,7 +2871,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2634,7 +2883,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2642,7 +2891,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2650,7 +2899,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2669,7 +2918,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FOR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FOR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2677,7 +2926,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2685,7 +2934,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2697,7 +2946,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2709,7 +2958,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2717,7 +2966,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2725,7 +2974,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2765,7 +3014,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2777,7 +3026,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2789,7 +3038,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ["EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2797,7 +3046,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol <exception_section>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_section>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<exception_section>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2805,7 +3054,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2813,7 +3062,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2821,7 +3070,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2844,7 +3093,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2856,7 +3105,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2872,7 +3121,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2880,7 +3129,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2888,7 +3137,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2924,7 +3173,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2947,7 +3196,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2983,7 +3232,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2991,7 +3240,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -2999,7 +3248,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3011,7 +3260,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3019,7 +3268,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3038,7 +3287,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3046,7 +3295,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3058,7 +3307,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3109,7 +3358,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3145,7 +3394,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FUNCTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FUNCTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FUNCTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3153,7 +3402,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3161,7 +3410,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3169,7 +3418,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3181,7 +3430,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3189,7 +3438,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3197,7 +3446,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "RETURN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RETURN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RETURN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3220,7 +3469,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FUNCTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FUNCTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FUNCTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3228,7 +3477,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3240,7 +3489,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "RETURN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RETURN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RETURN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3280,7 +3529,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3292,7 +3541,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3311,7 +3560,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3347,7 +3596,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "IF"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IF"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IF"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3359,7 +3608,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"THEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"THEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3382,7 +3631,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "IF"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IF"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IF"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3394,7 +3643,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"THEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"THEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3408,6 +3657,109 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_if_statement_1;
+
+  PROCEDURE pr_index_by_type(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_index_by_type_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_index_by_type_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_index_by_type;
+
+  PROCEDURE pr_index_by_type_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "VARCHAR2"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"VARCHAR2"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <number_literal>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number_literal>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_index_by_type_0;
+
+  PROCEDURE pr_index_by_type_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "VARCHAR2"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"VARCHAR2"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <number_literal>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number_literal>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_index_by_type_1;
 
   PROCEDURE pr_literal(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -3450,7 +3802,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <number>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<number>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3458,7 +3810,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3466,7 +3818,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <string>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<string>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<string>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3474,7 +3826,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3482,7 +3834,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "TRUE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TRUE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TRUE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3490,7 +3842,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3498,7 +3850,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "FALSE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FALSE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FALSE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3506,7 +3858,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3514,7 +3866,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol "NULL"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NULL"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NULL"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3533,7 +3885,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <number>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<number>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<number>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3552,7 +3904,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <string>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<string>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<string>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3571,7 +3923,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "TRUE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TRUE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TRUE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3590,7 +3942,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FALSE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FALSE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FALSE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3609,7 +3961,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "NULL"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NULL"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NULL"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3645,7 +3997,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3657,7 +4009,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3665,7 +4017,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3673,7 +4025,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3692,7 +4044,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3704,7 +4056,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3712,7 +4064,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3720,7 +4072,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3756,7 +4108,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "NULL"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NULL"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NULL"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3764,7 +4116,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3783,7 +4135,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "NULL"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NULL"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NULL"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3791,7 +4143,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3875,7 +4227,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "+"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"+"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"+"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3883,7 +4235,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3891,7 +4243,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "-"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"-"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"-"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3899,7 +4251,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3907,7 +4259,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "*"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"*"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"*"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3915,7 +4267,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3923,7 +4275,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "/"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"/"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"/"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3931,7 +4283,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3939,7 +4291,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol "="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3947,7 +4299,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3955,7 +4307,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 11: Symbol "<>"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<>"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<>"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3963,7 +4315,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 12: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3971,7 +4323,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 13: Symbol "<"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3979,7 +4331,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 14: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3987,7 +4339,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 15: Symbol "<="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -3995,7 +4347,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 16: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4003,7 +4355,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 17: Symbol ">"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '">"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '">"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4011,7 +4363,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 18: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4019,7 +4371,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 19: Symbol ">="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '">="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '">="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4027,7 +4379,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 20: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4035,7 +4387,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 21: Symbol "AND"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"AND"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"AND"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4043,7 +4395,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 22: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4051,7 +4403,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 23: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4059,7 +4411,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 24: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4067,7 +4419,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 25: Symbol "NOT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NOT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4086,7 +4438,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "+"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"+"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"+"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4105,7 +4457,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "-"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"-"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"-"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4124,7 +4476,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "*"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"*"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"*"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4143,7 +4495,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "/"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"/"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"/"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4162,7 +4514,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4181,7 +4533,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "<>"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<>"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<>"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4200,7 +4552,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "<"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4219,7 +4571,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "<="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"<="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"<="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4238,7 +4590,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ">"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '">"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '">"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4257,7 +4609,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ">="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '">="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '">="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4276,7 +4628,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "AND"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"AND"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"AND"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4295,7 +4647,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4314,7 +4666,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "NOT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"NOT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4350,7 +4702,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <select_statement>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<select_statement>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4358,7 +4710,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4377,7 +4729,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <select_statement>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<select_statement>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4385,7 +4737,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4421,7 +4773,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PACKAGE
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PACKAGE' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PACKAGE' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4429,7 +4781,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol BODY"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'BODY"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'BODY"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4437,7 +4789,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4445,7 +4797,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4453,7 +4805,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol {<package_body_element>}*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{<package_body_element>}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{<package_body_element>}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4461,7 +4813,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4469,7 +4821,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4477,7 +4829,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4496,7 +4848,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PACKAGE
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PACKAGE' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PACKAGE' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4504,7 +4856,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol BODY"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'BODY"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'BODY"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4512,7 +4864,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4520,7 +4872,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4532,7 +4884,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4540,7 +4892,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4548,7 +4900,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4650,7 +5002,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4690,7 +5042,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4713,7 +5065,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4749,7 +5101,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PACKAGE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PACKAGE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PACKAGE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4757,7 +5109,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4765,7 +5117,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4773,7 +5125,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol {<package_element>}*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{<package_element>}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{<package_element>}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4781,7 +5133,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4789,7 +5141,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4797,7 +5149,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4816,7 +5168,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PACKAGE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PACKAGE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PACKAGE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4824,7 +5176,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4832,7 +5184,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4844,7 +5196,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4852,7 +5204,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4860,7 +5212,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4915,7 +5267,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4955,7 +5307,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4963,7 +5315,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4975,7 +5327,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol }*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5030,7 +5382,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ","
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5057,7 +5409,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5093,7 +5445,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5101,7 +5453,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5109,7 +5461,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5117,7 +5469,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5125,7 +5477,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "OUT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OUT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OUT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5133,7 +5485,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol |
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5141,7 +5493,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "IN
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5149,7 +5501,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol OUT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'OUT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'OUT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5157,7 +5509,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5169,7 +5521,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 11: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5177,7 +5529,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 12: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5189,7 +5541,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 14: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5208,7 +5560,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5264,7 +5616,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "IN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5283,7 +5635,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "OUT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OUT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OUT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5302,7 +5654,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "IN
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IN' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5310,7 +5662,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol OUT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'OUT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'OUT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5329,7 +5681,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5365,7 +5717,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5388,7 +5740,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5428,7 +5780,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5440,7 +5792,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5452,7 +5804,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ["EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5460,7 +5812,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol <exception_section>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_section>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<exception_section>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5468,7 +5820,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5476,7 +5828,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5484,7 +5836,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5507,7 +5859,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5519,7 +5871,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5535,7 +5887,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5543,7 +5895,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5551,7 +5903,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5587,7 +5939,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5610,7 +5962,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5646,7 +5998,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5654,7 +6006,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ["("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5666,7 +6018,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ")"]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5674,7 +6026,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5693,7 +6045,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5705,7 +6057,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5741,7 +6093,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5753,7 +6105,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5772,7 +6124,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5808,7 +6160,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PROCEDURE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PROCEDURE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PROCEDURE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5816,7 +6168,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5824,7 +6176,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5832,7 +6184,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5844,7 +6196,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5852,7 +6204,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5871,7 +6223,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "PROCEDURE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PROCEDURE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"PROCEDURE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5879,7 +6231,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5919,7 +6271,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5931,7 +6283,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5950,7 +6302,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5986,7 +6338,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "RAISE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RAISE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RAISE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -5994,7 +6346,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol [<exception_name>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[<exception_name>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[<exception_name>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6002,7 +6354,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6021,7 +6373,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "RAISE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RAISE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RAISE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6033,7 +6385,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6084,7 +6436,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6124,7 +6476,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ".."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '".."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '".."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6151,7 +6503,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol ".."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '".."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '".."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6165,6 +6517,670 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_range_1;
+
+  PROCEDURE pr_record_field_spec(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_record_field_spec_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_field_spec_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_record_field_spec;
+
+  PROCEDURE pr_record_field_spec_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol "NOT
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol NULL"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'NULL"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol (
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '(' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol |
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '|' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 11: Symbol "DEFAULT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"DEFAULT"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 12: Symbol )
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ')' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 13: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    -- Position 14: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_0;
+
+  PROCEDURE pr_record_field_spec_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 3: Symbol <record_field_spec_opt_1>
+    IF po_success THEN
+      pr_record_field_spec_opt_1(po_success);
+    END IF;
+    -- Position 4: Symbol <record_field_spec_opt_2>
+    IF po_success THEN
+      pr_record_field_spec_opt_2(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_1;
+
+  PROCEDURE pr_record_field_spec_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_record_field_spec_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_field_spec_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_record_field_spec_opt_1;
+
+  PROCEDURE pr_record_field_spec_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "NOT
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"NOT' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol NULL"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'NULL"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_opt_1_2;
+
+  PROCEDURE pr_record_field_spec_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_opt_1_3;
+
+  PROCEDURE pr_record_field_spec_opt_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_record_field_spec_opt_2_4(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_field_spec_opt_2_5(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_field_spec_opt_2_6(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_record_field_spec_opt_2;
+
+  PROCEDURE pr_record_field_spec_opt_2_4(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_opt_2_4;
+
+  PROCEDURE pr_record_field_spec_opt_2_5(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "DEFAULT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"DEFAULT"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_opt_2_5;
+
+  PROCEDURE pr_record_field_spec_opt_2_6(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_field_spec_opt_2_6;
+
+  PROCEDURE pr_record_type_definition(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_record_type_definition_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_type_definition_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_record_type_definition;
+
+  PROCEDURE pr_record_type_definition_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "RECORD"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RECORD"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <record_field_spec>
+    IF po_success THEN
+      pr_record_field_spec(po_success);
+    END IF;
+    -- Position 4: Symbol {
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol <record_field_spec>
+    IF po_success THEN
+      pr_record_field_spec(po_success);
+    END IF;
+    -- Position 7: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_type_definition_0;
+
+  PROCEDURE pr_record_type_definition_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "RECORD"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RECORD"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <record_field_spec>
+    IF po_success THEN
+      pr_record_field_spec(po_success);
+    END IF;
+    -- Position 4: Symbol <record_type_definition_rep_1>
+    IF po_success THEN
+      pr_record_type_definition_rep_1(po_success);
+    END IF;
+    -- Position 5: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_type_definition_1;
+
+  PROCEDURE pr_record_type_definition_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_record_type_definition_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_record_type_definition_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_record_type_definition_rep_1;
+
+  PROCEDURE pr_record_type_definition_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '","' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <record_field_spec>
+    IF po_success THEN
+      pr_record_field_spec(po_success);
+    END IF;
+    -- Position 3: Symbol <record_type_definition_rep_1>
+    IF po_success THEN
+      pr_record_type_definition_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_type_definition_rep_1_2;
+
+  PROCEDURE pr_record_type_definition_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_record_type_definition_rep_1_3;
+
+  PROCEDURE pr_ref_cursor_type_definition(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_ref_cursor_type_definition_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_ref_cursor_type_definition_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_ref_cursor_type_definition;
+
+  PROCEDURE pr_ref_cursor_type_definition_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "REF
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"REF' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol CURSOR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'CURSOR"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol "RETURN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RETURN"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 6: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_ref_cursor_type_definition_0;
+
+  PROCEDURE pr_ref_cursor_type_definition_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "REF
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"REF' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol CURSOR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'CURSOR"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <ref_cursor_type_definition_opt_1>
+    IF po_success THEN
+      pr_ref_cursor_type_definition_opt_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_ref_cursor_type_definition_1;
+
+  PROCEDURE pr_ref_cursor_type_definition_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_ref_cursor_type_definition_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_ref_cursor_type_definition_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_ref_cursor_type_definition_opt_1;
+
+  PROCEDURE pr_ref_cursor_type_definition_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "RETURN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"RETURN"' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_ref_cursor_type_definition_opt_1_2;
+
+  PROCEDURE pr_ref_cursor_type_definition_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_ref_cursor_type_definition_opt_1_3;
 
   PROCEDURE pr_rollback_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -6191,7 +7207,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "ROLLBACK"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ROLLBACK"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"ROLLBACK"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6210,7 +7226,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "ROLLBACK"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ROLLBACK"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"ROLLBACK"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6293,7 +7309,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6301,7 +7317,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6309,7 +7325,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6317,7 +7333,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6325,7 +7341,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6344,7 +7360,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6384,7 +7400,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6392,7 +7408,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6411,7 +7427,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6494,7 +7510,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "CREATE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CREATE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CREATE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6502,7 +7518,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6510,7 +7526,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "REPLACE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"REPLACE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"REPLACE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6518,7 +7534,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "TRIGGER"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TRIGGER"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TRIGGER"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6526,7 +7542,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6542,7 +7558,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6550,7 +7566,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6558,7 +7574,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6577,7 +7593,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "CREATE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CREATE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CREATE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6585,7 +7601,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6593,7 +7609,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "REPLACE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"REPLACE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"REPLACE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6601,7 +7617,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol "TRIGGER"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TRIGGER"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TRIGGER"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6609,7 +7625,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6625,7 +7641,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol "END"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6633,7 +7649,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6641,7 +7657,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6681,7 +7697,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6693,7 +7709,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ["EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '["EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6701,7 +7717,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol <exception_section>]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_section>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<exception_section>]' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6724,7 +7740,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "BEGIN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEGIN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEGIN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6768,7 +7784,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "EXCEPTION"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"EXCEPTION"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6791,7 +7807,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6827,7 +7843,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "INSERT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"INSERT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"INSERT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6846,7 +7862,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "INSERT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"INSERT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"INSERT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6886,7 +7902,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6894,7 +7910,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6906,7 +7922,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol }*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6961,7 +7977,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "OR"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"OR"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -6988,7 +8004,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7032,7 +8048,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "ON"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ON"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"ON"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7044,7 +8060,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7052,7 +8068,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol "FOR
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FOR' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7060,7 +8076,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol EACH
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EACH' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EACH' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7068,7 +8084,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 8: Symbol ROW"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'ROW"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'ROW"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7076,7 +8092,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7084,7 +8100,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7096,7 +8112,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 12: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7123,7 +8139,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "ON"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ON"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"ON"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7171,7 +8187,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "FOR
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"FOR' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7179,7 +8195,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol EACH
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EACH' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EACH' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7187,7 +8203,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ROW"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'ROW"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'ROW"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7206,7 +8222,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7257,7 +8273,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7293,7 +8309,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "BEFORE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEFORE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEFORE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7312,7 +8328,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "BEFORE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEFORE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"BEFORE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7348,7 +8364,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7356,7 +8372,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7368,7 +8384,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7387,7 +8403,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHEN"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHEN"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7395,7 +8411,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7407,7 +8423,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7443,7 +8459,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "TYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7451,7 +8467,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7459,7 +8475,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7467,15 +8483,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol <type_definition>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<type_definition>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_type_definition(po_success);
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7494,7 +8506,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "TYPE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TYPE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"TYPE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7502,7 +8514,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7510,7 +8522,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "IS"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"IS"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7518,15 +8530,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol <type_definition>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<type_definition>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_type_definition(po_success);
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7536,6 +8544,53 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_type_declaration_1;
+
+  PROCEDURE pr_type_definition(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_type_definition_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_type_definition_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_type_definition;
+
+  PROCEDURE pr_type_definition_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <record_type_definition>
+    IF po_success THEN
+      pr_record_type_definition(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_type_definition_0;
+
+  PROCEDURE pr_type_definition_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <record_type_definition>
+    IF po_success THEN
+      pr_record_type_definition(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_type_definition_1;
 
   PROCEDURE pr_variable_declaration(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -7562,7 +8617,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7570,7 +8625,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7578,7 +8633,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "CONSTANT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CONSTANT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7586,7 +8641,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7598,7 +8653,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7606,7 +8661,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7618,7 +8673,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7626,7 +8681,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7645,7 +8700,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7665,7 +8720,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7701,7 +8756,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "CONSTANT"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"CONSTANT"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7720,7 +8775,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7756,7 +8811,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol ":="
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '":="' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7779,7 +8834,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7815,7 +8870,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7823,7 +8878,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7831,7 +8886,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7839,7 +8894,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 4: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7847,7 +8902,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol }*
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '}*' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7855,7 +8910,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol [
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '[' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7863,7 +8918,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7875,7 +8930,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 9: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7883,7 +8938,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 10: Symbol ]
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ']' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7902,7 +8957,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7946,7 +9001,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"("' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7958,7 +9013,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol ")"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '")"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -7977,7 +9032,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8013,7 +9068,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"."' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8021,7 +9076,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <identifier>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '<identifier>' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8044,7 +9099,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'EPSILON' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8080,7 +9135,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHILE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHILE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHILE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8092,7 +9147,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8104,7 +9159,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8112,7 +9167,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8120,7 +9175,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8139,7 +9194,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol "WHILE"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHILE"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"WHILE"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8151,7 +9206,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol "LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8163,7 +9218,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 5: Symbol "END
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"END' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '"END' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8171,7 +9226,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol LOOP"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'LOOP"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = 'LOOP"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8179,7 +9234,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 7: Symbol ";"
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '";"' )  THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -8201,6 +9256,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_block(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_collection_type_definition(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
@@ -8252,6 +9311,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_index_by_type(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_loop_statement(po_success);
     END IF;
     IF NOT po_success THEN
@@ -8277,6 +9340,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_raise_statement(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_ref_cursor_type_definition(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option

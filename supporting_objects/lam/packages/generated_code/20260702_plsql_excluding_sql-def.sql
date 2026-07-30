@@ -7,6 +7,8 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_block(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition(po_success OUT BOOLEAN);
+  PROCEDURE pr_collection_type_definition_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_column_list(po_success OUT BOOLEAN);
   PROCEDURE pr_column_list_rep_1(po_success OUT BOOLEAN);
   PROCEDURE pr_commit_statement(po_success OUT BOOLEAN);
@@ -43,6 +45,7 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_function_spec(po_success OUT BOOLEAN);
   PROCEDURE pr_function_spec_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_if_statement(po_success OUT BOOLEAN);
+  PROCEDURE pr_index_by_type(po_success OUT BOOLEAN);
   PROCEDURE pr_literal(po_success OUT BOOLEAN);
   PROCEDURE pr_loop_statement(po_success OUT BOOLEAN);
   PROCEDURE pr_null_statement(po_success OUT BOOLEAN);
@@ -68,6 +71,13 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_raise_statement(po_success OUT BOOLEAN);
   PROCEDURE pr_raise_statement_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_range(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_field_spec_opt_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition(po_success OUT BOOLEAN);
+  PROCEDURE pr_record_type_definition_rep_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition(po_success OUT BOOLEAN);
+  PROCEDURE pr_ref_cursor_type_definition_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_rollback_statement(po_success OUT BOOLEAN);
   PROCEDURE pr_statement(po_success OUT BOOLEAN);
   PROCEDURE pr_table_or_view_reference(po_success OUT BOOLEAN);
@@ -85,6 +95,7 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_trigger_timing(po_success OUT BOOLEAN);
   PROCEDURE pr_trigger_when_clause(po_success OUT BOOLEAN);
   PROCEDURE pr_type_declaration(po_success OUT BOOLEAN);
+  PROCEDURE pr_type_definition(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration_opt_1(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_declaration_opt_2(po_success OUT BOOLEAN);
@@ -98,3 +109,5 @@ CREATE OR REPLACE PACKAGE PKG_DYNAMIC_PARSER AS
   PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN);
 END PKG_DYNAMIC_PARSER;
 /
+
+

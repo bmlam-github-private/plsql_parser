@@ -359,3 +359,12 @@ With the first sets computed, we can more efficiently parse the alternatives one
   the grammar plsql_excluding_sql was supplemented with additional rules so that all abstract rules are now resolved, still in PARSER_ALTOKEN.symbol we have <number>, <string_literal>.
   Hang on: gemini also provided supplements for <type_definition> but I have not yet incorporated the stuff into TEMP_CLOB. 
   On parser generator part, I need to switch to comparision function so that I can ... No. Better to do it on the lexer part: token_typ NUMBER_LITERAL should have token_value <number>, STRING_LITERAL -> <string> 
+
+2026.07.30:
+  In parser_alt_tokens, except <select_statement>, I cannot find any thing that my lexer tokens cannot match. However in dynamic generated package there are still code lines like this:
+  IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = '{' )  . This comes from rule <column_list>
+  Other symbols our lexer tokens cannot match yet: <exception_section>, <declaration_section>. 
+  Check grammar to see if these rules are resolved properly! 
+  Nota bene: the rules for <parameter_list> and <column_list> in the grammar looks similar, why does our EBNF expansion logic resolves {}* differently?   For parameter_list the resolution seems OK, but not for column_list !
+  Give result of both rules and expansion code to AI !
+
