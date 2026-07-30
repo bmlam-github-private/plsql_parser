@@ -8,14 +8,41 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_block_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_2_4(po_success OUT BOOLEAN);
   PROCEDURE pr_block_opt_2_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_column_list_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_column_list_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_column_list_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_column_list_rep_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_commit_statement_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_commit_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_condition_0(po_success OUT BOOLEAN);
   PROCEDURE pr_condition_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_constant_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_constant_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_cursor_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_cursor_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_cursor_declaration_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_cursor_declaration_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_data_type_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_data_type_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_data_type_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_data_type_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_data_type_opt_1_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_section_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_section_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_section_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_declaration_section_rep_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_dynamic_sql_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_dynamic_sql_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_dynamic_sql_statement_opt_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_dynamic_sql_statement_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_exception_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_exception_declaration_1(po_success OUT BOOLEAN);
   PROCEDURE pr_exception_handler_0(po_success OUT BOOLEAN);
   PROCEDURE pr_exception_handler_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_exception_name_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_exception_name_1(po_success OUT BOOLEAN);
   PROCEDURE pr_exception_section_0(po_success OUT BOOLEAN);
   PROCEDURE pr_exception_section_1(po_success OUT BOOLEAN);
   PROCEDURE pr_exception_section_rep_1_2(po_success OUT BOOLEAN);
@@ -36,12 +63,22 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_expression_list_rep_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_expression_tail_0(po_success OUT BOOLEAN);
   PROCEDURE pr_expression_tail_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_field_name_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_field_name_1(po_success OUT BOOLEAN);
   PROCEDURE pr_for_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_for_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_function_body_0(po_success OUT BOOLEAN);
   PROCEDURE pr_function_body_1(po_success OUT BOOLEAN);
   PROCEDURE pr_function_body_opt_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_function_body_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_call_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_call_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_call_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_call_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_spec_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_spec_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_spec_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_function_spec_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_if_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_if_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_literal_0(po_success OUT BOOLEAN);
@@ -68,6 +105,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_operator_11(po_success OUT BOOLEAN);
   PROCEDURE pr_operator_12(po_success OUT BOOLEAN);
   PROCEDURE pr_operator_13(po_success OUT BOOLEAN);
+  PROCEDURE pr_other_sql_statement_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_other_sql_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_package_body_0(po_success OUT BOOLEAN);
   PROCEDURE pr_package_body_1(po_success OUT BOOLEAN);
   PROCEDURE pr_package_body_element_0(po_success OUT BOOLEAN);
@@ -80,6 +119,18 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_package_spec_1(po_success OUT BOOLEAN);
   PROCEDURE pr_package_spec_rep_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_package_spec_rep_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_list_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_list_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_list_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_list_rep_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_1_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_1_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_2_6(po_success OUT BOOLEAN);
+  PROCEDURE pr_parameter_spec_opt_2_7(po_success OUT BOOLEAN);
   PROCEDURE pr_procedure_body_0(po_success OUT BOOLEAN);
   PROCEDURE pr_procedure_body_1(po_success OUT BOOLEAN);
   PROCEDURE pr_procedure_body_opt_1_2(po_success OUT BOOLEAN);
@@ -88,14 +139,24 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_procedure_call_1(po_success OUT BOOLEAN);
   PROCEDURE pr_procedure_call_opt_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_procedure_call_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_procedure_spec_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_procedure_spec_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_procedure_spec_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_procedure_spec_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_raise_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_raise_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_raise_statement_opt_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_raise_statement_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_range_0(po_success OUT BOOLEAN);
   PROCEDURE pr_range_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_rollback_statement_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_rollback_statement_1(po_success OUT BOOLEAN);
   PROCEDURE pr_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_statement_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_table_or_view_reference_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_table_or_view_reference_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_table_or_view_reference_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_table_or_view_reference_opt_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_term_0(po_success OUT BOOLEAN);
   PROCEDURE pr_term_1(po_success OUT BOOLEAN);
   PROCEDURE pr_trigger_0(po_success OUT BOOLEAN);
@@ -104,10 +165,36 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   PROCEDURE pr_trigger_body_1(po_success OUT BOOLEAN);
   PROCEDURE pr_trigger_body_opt_1_2(po_success OUT BOOLEAN);
   PROCEDURE pr_trigger_body_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_list_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_list_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_list_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_event_list_rep_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_opt_2_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_time_event_opt_2_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_timing_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_timing_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_when_clause_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_trigger_when_clause_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_type_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_type_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_0(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_1(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_opt_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_opt_2_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_declaration_opt_2_5(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_reference_0(po_success OUT BOOLEAN);
   PROCEDURE pr_variable_reference_1(po_success OUT BOOLEAN);
-  PROCEDURE pr_variable_reference_opt_1_2(po_success OUT BOOLEAN);
-  PROCEDURE pr_variable_reference_opt_1_3(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_reference_opt_2_4(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_reference_opt_2_5(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_reference_rep_1_2(po_success OUT BOOLEAN);
+  PROCEDURE pr_variable_reference_rep_1_3(po_success OUT BOOLEAN);
   PROCEDURE pr_while_statement_0(po_success OUT BOOLEAN);
   PROCEDURE pr_while_statement_1(po_success OUT BOOLEAN);
 
@@ -354,7 +441,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-     .put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "DECLARE"
     IF po_success THEN
@@ -366,11 +453,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
@@ -455,6 +538,219 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_block_opt_2_5;
 
+  PROCEDURE pr_column_list(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_column_list_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_column_list_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_column_list;
+
+  PROCEDURE pr_column_list_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol {
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_column_list_0;
+
+  PROCEDURE pr_column_list_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <column_list_rep_1>
+    IF po_success THEN
+      pr_column_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_column_list_1;
+
+  PROCEDURE pr_column_list_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_column_list_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_column_list_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_column_list_rep_1;
+
+  PROCEDURE pr_column_list_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <column_list_rep_1>
+    IF po_success THEN
+      pr_column_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_column_list_rep_1_2;
+
+  PROCEDURE pr_column_list_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_column_list_rep_1_3;
+
+  PROCEDURE pr_commit_statement(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_commit_statement_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_commit_statement_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_commit_statement;
+
+  PROCEDURE pr_commit_statement_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "COMMIT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"COMMIT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_commit_statement_0;
+
+  PROCEDURE pr_commit_statement_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "COMMIT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"COMMIT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_commit_statement_1;
+
   PROCEDURE pr_condition(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -501,6 +797,693 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_condition_1;
+
+  PROCEDURE pr_constant_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_constant_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_constant_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_constant_declaration;
+
+  PROCEDURE pr_constant_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "CONSTANT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 4: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    -- Position 6: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_constant_declaration_0;
+
+  PROCEDURE pr_constant_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "CONSTANT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 4: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    -- Position 6: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_constant_declaration_1;
+
+  PROCEDURE pr_cursor_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_cursor_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_cursor_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_cursor_declaration;
+
+  PROCEDURE pr_cursor_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "CURSOR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CURSOR"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 6: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol "IS"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol <select_statement>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_cursor_declaration_0;
+
+  PROCEDURE pr_cursor_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "CURSOR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CURSOR"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <cursor_declaration_opt_1>
+    IF po_success THEN
+      pr_cursor_declaration_opt_1(po_success);
+    END IF;
+    -- Position 4: Symbol "IS"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <select_statement>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_cursor_declaration_1;
+
+  PROCEDURE pr_cursor_declaration_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_cursor_declaration_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_cursor_declaration_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_cursor_declaration_opt_1;
+
+  PROCEDURE pr_cursor_declaration_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 3: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_cursor_declaration_opt_1_2;
+
+  PROCEDURE pr_cursor_declaration_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_cursor_declaration_opt_1_3;
+
+  PROCEDURE pr_data_type(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_data_type_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_data_type_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_data_type;
+
+  PROCEDURE pr_data_type_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "%TYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%TYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol |
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol "%ROWTYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%ROWTYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_data_type_0;
+
+  PROCEDURE pr_data_type_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <data_type_opt_1>
+    IF po_success THEN
+      pr_data_type_opt_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_data_type_1;
+
+  PROCEDURE pr_data_type_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_data_type_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_data_type_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_data_type_opt_1_4(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_data_type_opt_1;
+
+  PROCEDURE pr_data_type_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "%TYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%TYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_data_type_opt_1_2;
+
+  PROCEDURE pr_data_type_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "%ROWTYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"%ROWTYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_data_type_opt_1_3;
+
+  PROCEDURE pr_data_type_opt_1_4(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_data_type_opt_1_4;
+
+  PROCEDURE pr_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_declaration;
+
+  PROCEDURE pr_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <variable_declaration>
+    IF po_success THEN
+      pr_variable_declaration(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_0;
+
+  PROCEDURE pr_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <variable_declaration>
+    IF po_success THEN
+      pr_variable_declaration(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_1;
+
+  PROCEDURE pr_declaration_section(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_declaration_section_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_declaration_section_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_declaration_section;
+
+  PROCEDURE pr_declaration_section_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol {
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <declaration>
+    IF po_success THEN
+      pr_declaration(po_success);
+    END IF;
+    -- Position 3: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_section_0;
+
+  PROCEDURE pr_declaration_section_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <declaration_section_rep_1>
+    IF po_success THEN
+      pr_declaration_section_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_section_1;
+
+  PROCEDURE pr_declaration_section_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_declaration_section_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_declaration_section_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_declaration_section_rep_1;
+
+  PROCEDURE pr_declaration_section_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <declaration>
+    IF po_success THEN
+      pr_declaration(po_success);
+    END IF;
+    -- Position 2: Symbol <declaration_section_rep_1>
+    IF po_success THEN
+      pr_declaration_section_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_section_rep_1_2;
+
+  PROCEDURE pr_declaration_section_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_declaration_section_rep_1_3;
 
   PROCEDURE pr_dynamic_sql_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -676,6 +1659,93 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_dynamic_sql_statement_opt_1_3;
 
+  PROCEDURE pr_exception_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_exception_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_exception_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_exception_declaration;
+
+  PROCEDURE pr_exception_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "EXCEPTION"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_exception_declaration_0;
+
+  PROCEDURE pr_exception_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "EXCEPTION"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"EXCEPTION"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_exception_declaration_1;
+
   PROCEDURE pr_exception_handler(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -709,11 +1779,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <exception_name>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_name>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_exception_name(po_success);
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
@@ -748,11 +1814,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 2: Symbol <exception_name>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_name>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_exception_name(po_success);
     END IF;
     -- Position 3: Symbol "THEN"
     IF po_success THEN
@@ -770,6 +1832,61 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_exception_handler_1;
+
+  PROCEDURE pr_exception_name(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_exception_name_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_exception_name_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_exception_name;
+
+  PROCEDURE pr_exception_name_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_exception_name_0;
+
+  PROCEDURE pr_exception_name_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_exception_name_1;
 
   PROCEDURE pr_exception_section(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -1397,6 +2514,61 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_expression_tail_1;
 
+  PROCEDURE pr_field_name(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_field_name_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_field_name_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_field_name;
+
+  PROCEDURE pr_field_name_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_field_name_0;
+
+  PROCEDURE pr_field_name_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_field_name_1;
+
   PROCEDURE pr_for_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -1589,11 +2761,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <function_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<function_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_function_spec(po_success);
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
@@ -1605,11 +2773,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
@@ -1676,11 +2840,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <function_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<function_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_function_spec(po_success);
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
@@ -1692,11 +2852,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
@@ -1801,6 +2957,370 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_function_body_opt_1_3;
+
+  PROCEDURE pr_function_call(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_function_call_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_function_call_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_function_call;
+
+  PROCEDURE pr_function_call_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <expression_list>
+    IF po_success THEN
+      pr_expression_list(po_success);
+    END IF;
+    -- Position 5: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_call_0;
+
+  PROCEDURE pr_function_call_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <function_call_opt_1>
+    IF po_success THEN
+      pr_function_call_opt_1(po_success);
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_call_1;
+
+  PROCEDURE pr_function_call_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_function_call_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_function_call_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_function_call_opt_1;
+
+  PROCEDURE pr_function_call_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <expression_list>
+    IF po_success THEN
+      pr_expression_list(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_call_opt_1_2;
+
+  PROCEDURE pr_function_call_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_call_opt_1_3;
+
+  PROCEDURE pr_function_spec(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_function_spec_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_function_spec_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_function_spec;
+
+  PROCEDURE pr_function_spec_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "FUNCTION"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FUNCTION"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 6: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol "RETURN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RETURN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_spec_0;
+
+  PROCEDURE pr_function_spec_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "FUNCTION"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FUNCTION"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <function_spec_opt_1>
+    IF po_success THEN
+      pr_function_spec_opt_1(po_success);
+    END IF;
+    -- Position 4: Symbol "RETURN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"RETURN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_spec_1;
+
+  PROCEDURE pr_function_spec_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_function_spec_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_function_spec_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_function_spec_opt_1;
+
+  PROCEDURE pr_function_spec_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 3: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_spec_opt_1_2;
+
+  PROCEDURE pr_function_spec_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_function_spec_opt_1_3;
 
   PROCEDURE pr_if_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -2805,6 +4325,77 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_operator_13;
 
+  PROCEDURE pr_other_sql_statement(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_other_sql_statement_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_other_sql_statement_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_other_sql_statement;
+
+  PROCEDURE pr_other_sql_statement_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <select_statement>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_other_sql_statement_0;
+
+  PROCEDURE pr_other_sql_statement_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <select_statement>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<select_statement>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_other_sql_statement_1;
+
   PROCEDURE pr_package_body(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3095,11 +4686,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <procedure_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<procedure_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_procedure_spec(po_success);
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
@@ -3122,11 +4709,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <procedure_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<procedure_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_procedure_spec(po_success);
     END IF;
     -- Position 2: Symbol ";"
     IF po_success THEN
@@ -3343,6 +4926,479 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_package_spec_rep_1_3;
 
+  PROCEDURE pr_parameter_list(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_parameter_list_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_list_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_parameter_list;
+
+  PROCEDURE pr_parameter_list_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <parameter_spec>
+    IF po_success THEN
+      pr_parameter_spec(po_success);
+    END IF;
+    -- Position 2: Symbol {
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <parameter_spec>
+    IF po_success THEN
+      pr_parameter_spec(po_success);
+    END IF;
+    -- Position 5: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_list_0;
+
+  PROCEDURE pr_parameter_list_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <parameter_spec>
+    IF po_success THEN
+      pr_parameter_spec(po_success);
+    END IF;
+    -- Position 2: Symbol <parameter_list_rep_1>
+    IF po_success THEN
+      pr_parameter_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_list_1;
+
+  PROCEDURE pr_parameter_list_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_parameter_list_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_list_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_parameter_list_rep_1;
+
+  PROCEDURE pr_parameter_list_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ","
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '","' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <parameter_spec>
+    IF po_success THEN
+      pr_parameter_spec(po_success);
+    END IF;
+    -- Position 3: Symbol <parameter_list_rep_1>
+    IF po_success THEN
+      pr_parameter_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_list_rep_1_2;
+
+  PROCEDURE pr_parameter_list_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_list_rep_1_3;
+
+  PROCEDURE pr_parameter_spec(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_parameter_spec_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_spec_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_parameter_spec;
+
+  PROCEDURE pr_parameter_spec_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "IN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol |
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol "OUT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OUT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol |
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '|' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol "IN
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol OUT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'OUT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 11: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 12: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 13: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    -- Position 14: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_0;
+
+  PROCEDURE pr_parameter_spec_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <parameter_spec_opt_1>
+    IF po_success THEN
+      pr_parameter_spec_opt_1(po_success);
+    END IF;
+    -- Position 3: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 4: Symbol <parameter_spec_opt_2>
+    IF po_success THEN
+      pr_parameter_spec_opt_2(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_1;
+
+  PROCEDURE pr_parameter_spec_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_1_4(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_1_5(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_parameter_spec_opt_1;
+
+  PROCEDURE pr_parameter_spec_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "IN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_1_2;
+
+  PROCEDURE pr_parameter_spec_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "OUT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OUT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_1_3;
+
+  PROCEDURE pr_parameter_spec_opt_1_4(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "IN
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IN' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol OUT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'OUT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_1_4;
+
+  PROCEDURE pr_parameter_spec_opt_1_5(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_1_5;
+
+  PROCEDURE pr_parameter_spec_opt_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_2_6(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_parameter_spec_opt_2_7(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_parameter_spec_opt_2;
+
+  PROCEDURE pr_parameter_spec_opt_2_6(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_2_6;
+
+  PROCEDURE pr_parameter_spec_opt_2_7(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_parameter_spec_opt_2_7;
+
   PROCEDURE pr_procedure_body(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3368,11 +5424,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <procedure_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<procedure_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_procedure_spec(po_success);
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
@@ -3384,11 +5436,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
@@ -3455,11 +5503,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <procedure_spec>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<procedure_spec>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_procedure_spec(po_success);
     END IF;
     -- Position 2: Symbol "IS"
     IF po_success THEN
@@ -3471,11 +5515,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 3: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 4: Symbol "BEGIN"
     IF po_success THEN
@@ -3743,6 +5783,184 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_procedure_call_opt_1_3;
 
+  PROCEDURE pr_procedure_spec(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_procedure_spec_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_procedure_spec_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_procedure_spec;
+
+  PROCEDURE pr_procedure_spec_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "PROCEDURE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PROCEDURE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 6: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_procedure_spec_0;
+
+  PROCEDURE pr_procedure_spec_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "PROCEDURE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"PROCEDURE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <procedure_spec_opt_1>
+    IF po_success THEN
+      pr_procedure_spec_opt_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_procedure_spec_1;
+
+  PROCEDURE pr_procedure_spec_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_procedure_spec_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_procedure_spec_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_procedure_spec_opt_1;
+
+  PROCEDURE pr_procedure_spec_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <parameter_list>
+    IF po_success THEN
+      pr_parameter_list(po_success);
+    END IF;
+    -- Position 3: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_procedure_spec_opt_1_2;
+
+  PROCEDURE pr_procedure_spec_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_procedure_spec_opt_1_3;
+
   PROCEDURE pr_raise_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3851,11 +6069,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <exception_name>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<exception_name>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_exception_name(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
@@ -3952,6 +6166,61 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_range_1;
 
+  PROCEDURE pr_rollback_statement(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_rollback_statement_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_rollback_statement_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_rollback_statement;
+
+  PROCEDURE pr_rollback_statement_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "ROLLBACK"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ROLLBACK"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_rollback_statement_0;
+
+  PROCEDURE pr_rollback_statement_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "ROLLBACK"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ROLLBACK"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_rollback_statement_1;
+
   PROCEDURE pr_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -3998,6 +6267,160 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_statement_1;
+
+  PROCEDURE pr_table_or_view_reference(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_table_or_view_reference_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_table_or_view_reference_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_table_or_view_reference;
+
+  PROCEDURE pr_table_or_view_reference_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "."
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_table_or_view_reference_0;
+
+  PROCEDURE pr_table_or_view_reference_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <table_or_view_reference_opt_1>
+    IF po_success THEN
+      pr_table_or_view_reference_opt_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_table_or_view_reference_1;
+
+  PROCEDURE pr_table_or_view_reference_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_table_or_view_reference_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_table_or_view_reference_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_table_or_view_reference_opt_1;
+
+  PROCEDURE pr_table_or_view_reference_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "."
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_table_or_view_reference_opt_1_2;
+
+  PROCEDURE pr_table_or_view_reference_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_table_or_view_reference_opt_1_3;
 
   PROCEDURE pr_term(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -4111,11 +6534,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol <trigger_time_event>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<trigger_time_event>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_trigger_time_event(po_success);
     END IF;
     -- Position 7: Symbol <trigger_body>
     IF po_success THEN
@@ -4198,11 +6617,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     -- Position 6: Symbol <trigger_time_event>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<trigger_time_event>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_trigger_time_event(po_success);
     END IF;
     -- Position 7: Symbol <trigger_body>
     IF po_success THEN
@@ -4262,11 +6677,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 2: Symbol "BEGIN"
     IF po_success THEN
@@ -4309,11 +6720,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     po_success := TRUE;
     -- Position 1: Symbol <declaration_section>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<declaration_section>' THEN
-        pr_increment_token_ix;
-      ELSE
-        po_success := FALSE;
-      END IF;
+      pr_declaration_section(po_success);
     END IF;
     -- Position 2: Symbol "BEGIN"
     IF po_success THEN
@@ -4395,6 +6802,994 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
   END pr_trigger_body_opt_1_3;
 
+  PROCEDURE pr_trigger_event(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_event_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_event_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_event;
+
+  PROCEDURE pr_trigger_event_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "INSERT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"INSERT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_0;
+
+  PROCEDURE pr_trigger_event_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "INSERT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"INSERT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_1;
+
+  PROCEDURE pr_trigger_event_list(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_event_list_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_event_list_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_event_list;
+
+  PROCEDURE pr_trigger_event_list_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <trigger_event>
+    IF po_success THEN
+      pr_trigger_event(po_success);
+    END IF;
+    -- Position 2: Symbol {
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "OR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <trigger_event>
+    IF po_success THEN
+      pr_trigger_event(po_success);
+    END IF;
+    -- Position 5: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_list_0;
+
+  PROCEDURE pr_trigger_event_list_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <trigger_event>
+    IF po_success THEN
+      pr_trigger_event(po_success);
+    END IF;
+    -- Position 2: Symbol <trigger_event_list_rep_1>
+    IF po_success THEN
+      pr_trigger_event_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_list_1;
+
+  PROCEDURE pr_trigger_event_list_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_event_list_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_event_list_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_event_list_rep_1;
+
+  PROCEDURE pr_trigger_event_list_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "OR"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"OR"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <trigger_event>
+    IF po_success THEN
+      pr_trigger_event(po_success);
+    END IF;
+    -- Position 3: Symbol <trigger_event_list_rep_1>
+    IF po_success THEN
+      pr_trigger_event_list_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_list_rep_1_2;
+
+  PROCEDURE pr_trigger_event_list_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_event_list_rep_1_3;
+
+  PROCEDURE pr_trigger_time_event(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_time_event_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_time_event_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_time_event;
+
+  PROCEDURE pr_trigger_time_event_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <trigger_timing>
+    IF po_success THEN
+      pr_trigger_timing(po_success);
+    END IF;
+    -- Position 2: Symbol <trigger_event_list>
+    IF po_success THEN
+      pr_trigger_event_list(po_success);
+    END IF;
+    -- Position 3: Symbol "ON"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ON"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <table_or_view_reference>
+    IF po_success THEN
+      pr_table_or_view_reference(po_success);
+    END IF;
+    -- Position 5: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol "FOR
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol EACH
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EACH' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol ROW"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'ROW"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 9: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 11: Symbol <trigger_when_clause>
+    IF po_success THEN
+      pr_trigger_when_clause(po_success);
+    END IF;
+    -- Position 12: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_0;
+
+  PROCEDURE pr_trigger_time_event_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <trigger_timing>
+    IF po_success THEN
+      pr_trigger_timing(po_success);
+    END IF;
+    -- Position 2: Symbol <trigger_event_list>
+    IF po_success THEN
+      pr_trigger_event_list(po_success);
+    END IF;
+    -- Position 3: Symbol "ON"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"ON"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <table_or_view_reference>
+    IF po_success THEN
+      pr_table_or_view_reference(po_success);
+    END IF;
+    -- Position 5: Symbol <trigger_time_event_opt_1>
+    IF po_success THEN
+      pr_trigger_time_event_opt_1(po_success);
+    END IF;
+    -- Position 6: Symbol <trigger_time_event_opt_2>
+    IF po_success THEN
+      pr_trigger_time_event_opt_2(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_1;
+
+  PROCEDURE pr_trigger_time_event_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_time_event_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_time_event_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_time_event_opt_1;
+
+  PROCEDURE pr_trigger_time_event_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "FOR
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"FOR' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol EACH
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EACH' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol ROW"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'ROW"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_opt_1_2;
+
+  PROCEDURE pr_trigger_time_event_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_opt_1_3;
+
+  PROCEDURE pr_trigger_time_event_opt_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_time_event_opt_2_4(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_time_event_opt_2_5(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_time_event_opt_2;
+
+  PROCEDURE pr_trigger_time_event_opt_2_4(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <trigger_when_clause>
+    IF po_success THEN
+      pr_trigger_when_clause(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_opt_2_4;
+
+  PROCEDURE pr_trigger_time_event_opt_2_5(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_time_event_opt_2_5;
+
+  PROCEDURE pr_trigger_timing(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_timing_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_timing_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_timing;
+
+  PROCEDURE pr_trigger_timing_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "BEFORE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEFORE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_timing_0;
+
+  PROCEDURE pr_trigger_timing_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "BEFORE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"BEFORE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_timing_1;
+
+  PROCEDURE pr_trigger_when_clause(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_trigger_when_clause_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_trigger_when_clause_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_trigger_when_clause;
+
+  PROCEDURE pr_trigger_when_clause_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "WHEN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <condition>
+    IF po_success THEN
+      pr_condition(po_success);
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_when_clause_0;
+
+  PROCEDURE pr_trigger_when_clause_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "WHEN"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"WHEN"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <condition>
+    IF po_success THEN
+      pr_condition(po_success);
+    END IF;
+    -- Position 4: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_trigger_when_clause_1;
+
+  PROCEDURE pr_type_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_type_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_type_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_type_declaration;
+
+  PROCEDURE pr_type_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "TYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "IS"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <type_definition>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<type_definition>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_type_declaration_0;
+
+  PROCEDURE pr_type_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "TYPE"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"TYPE"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "IS"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"IS"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <type_definition>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<type_definition>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_type_declaration_1;
+
+  PROCEDURE pr_variable_declaration(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_variable_declaration_0(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_variable_declaration_1(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_variable_declaration;
+
+  PROCEDURE pr_variable_declaration_0(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol "CONSTANT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 6: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    -- Position 9: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_0;
+
+  PROCEDURE pr_variable_declaration_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <variable_declaration_opt_1>
+    IF po_success THEN
+      pr_variable_declaration_opt_1(po_success);
+    END IF;
+    -- Position 3: Symbol <data_type>
+    IF po_success THEN
+      pr_data_type(po_success);
+    END IF;
+    -- Position 4: Symbol <variable_declaration_opt_2>
+    IF po_success THEN
+      pr_variable_declaration_opt_2(po_success);
+    END IF;
+    -- Position 5: Symbol ";"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '";"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_1;
+
+  PROCEDURE pr_variable_declaration_opt_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_variable_declaration_opt_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_variable_declaration_opt_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_variable_declaration_opt_1;
+
+  PROCEDURE pr_variable_declaration_opt_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "CONSTANT"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"CONSTANT"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_opt_1_2;
+
+  PROCEDURE pr_variable_declaration_opt_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_opt_1_3;
+
+  PROCEDURE pr_variable_declaration_opt_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_variable_declaration_opt_2_4(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_variable_declaration_opt_2_5(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_variable_declaration_opt_2;
+
+  PROCEDURE pr_variable_declaration_opt_2_4(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol ":="
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '":="' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <expression>
+    IF po_success THEN
+      pr_expression(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_opt_2_4;
+
+  PROCEDURE pr_variable_declaration_opt_2_5(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_declaration_opt_2_5;
+
   PROCEDURE pr_variable_reference(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
@@ -4426,17 +7821,69 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
         po_success := FALSE;
       END IF;
     END IF;
-    -- Position 2: Symbol ["."
+    -- Position 2: Symbol {
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '["."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '{' THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
       END IF;
     END IF;
-    -- Position 3: Symbol <field_name>]
+    -- Position 3: Symbol "."
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<field_name>]' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 4: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 5: Symbol }*
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '}*' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 6: Symbol [
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '[' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 7: Symbol "("
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 8: Symbol <expression_list>
+    IF po_success THEN
+      pr_expression_list(po_success);
+    END IF;
+    -- Position 9: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 10: Symbol ]
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = ']' THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4461,16 +7908,20 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
         po_success := FALSE;
       END IF;
     END IF;
-    -- Position 2: Symbol <variable_reference_opt_1>
+    -- Position 2: Symbol <variable_reference_rep_1>
     IF po_success THEN
-      pr_variable_reference_opt_1(po_success);
+      pr_variable_reference_rep_1(po_success);
+    END IF;
+    -- Position 3: Symbol <variable_reference_opt_2>
+    IF po_success THEN
+      pr_variable_reference_opt_2(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
   END pr_variable_reference_1;
 
-  PROCEDURE pr_variable_reference_opt_1(po_success OUT BOOLEAN) IS
+  PROCEDURE pr_variable_reference_opt_2(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
@@ -4478,32 +7929,36 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
-      pr_variable_reference_opt_1_2(po_success);
+      pr_variable_reference_opt_2_4(po_success);
       IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
     END IF;
     IF NOT po_success THEN
-      pr_variable_reference_opt_1_3(po_success);
+      pr_variable_reference_opt_2_5(po_success);
       IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
     END IF;
-  END pr_variable_reference_opt_1;
+  END pr_variable_reference_opt_2;
 
-  PROCEDURE pr_variable_reference_opt_1_2(po_success OUT BOOLEAN) IS
+  PROCEDURE pr_variable_reference_opt_2_4(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
     dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
-    -- Position 1: Symbol "."
+    -- Position 1: Symbol "("
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"("' THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
       END IF;
     END IF;
-    -- Position 2: Symbol <field_name>
+    -- Position 2: Symbol <expression_list>
     IF po_success THEN
-      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<field_name>' THEN
+      pr_expression_list(po_success);
+    END IF;
+    -- Position 3: Symbol ")"
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '")"' THEN
         pr_increment_token_ix;
       ELSE
         po_success := FALSE;
@@ -4512,9 +7967,9 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END pr_variable_reference_opt_1_2;
+  END pr_variable_reference_opt_2_4;
 
-  PROCEDURE pr_variable_reference_opt_1_3(po_success OUT BOOLEAN) IS
+  PROCEDURE pr_variable_reference_opt_2_5(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
@@ -4531,7 +7986,74 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := l_entry_idx;
     END IF;
-  END pr_variable_reference_opt_1_3;
+  END pr_variable_reference_opt_2_5;
+
+  PROCEDURE pr_variable_reference_rep_1(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix);
+    g_tokens( g_curr_token_ix ).print_details;
+    po_success := FALSE;
+    IF NOT po_success THEN
+      pr_variable_reference_rep_1_2(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+    IF NOT po_success THEN
+      pr_variable_reference_rep_1_3(po_success);
+      IF NOT po_success THEN g_curr_token_ix := l_entry_idx; END IF;
+    END IF;
+  END pr_variable_reference_rep_1;
+
+  PROCEDURE pr_variable_reference_rep_1_2(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol "."
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '"."' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 2: Symbol <identifier>
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = '<identifier>' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    -- Position 3: Symbol <variable_reference_rep_1>
+    IF po_success THEN
+      pr_variable_reference_rep_1(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_reference_rep_1_2;
+
+  PROCEDURE pr_variable_reference_rep_1_3(po_success OUT BOOLEAN) IS
+    l_breadcrumb breadcrumb:=  breadcrumb();
+    l_entry_idx NUMBER := g_curr_token_ix;
+  BEGIN
+    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
+    po_success := TRUE;
+    -- Position 1: Symbol EPSILON
+    IF po_success THEN
+      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).tok_value = 'EPSILON' THEN
+        pr_increment_token_ix;
+      ELSE
+        po_success := FALSE;
+      END IF;
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := l_entry_idx;
+    END IF;
+  END pr_variable_reference_rep_1_3;
 
   PROCEDURE pr_while_statement(po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
@@ -4669,7 +8191,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
   END pr_while_statement_1;
 
   PROCEDURE pr_increment_token_ix AS BEGIN g_curr_token_ix := g_curr_token_ix+1; dbms_output.put_line( 'current_ix incremented to '||g_curr_token_ix); END pr_increment_token_ix;
-  PROCEDURE parse_main(p_token_stream IN parser_token_col, po_success OUT BOOLEAN) IS
+  PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN) IS
     l_breadcrumb breadcrumb:=  breadcrumb();
   BEGIN
     g_tokens := p_token_stream;
@@ -4682,11 +8204,35 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_column_list(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_commit_statement(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_constant_declaration(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_cursor_declaration(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_dynamic_sql_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_exception_declaration(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_exit_statement(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_field_name(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
@@ -4695,6 +8241,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_function_body(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_function_call(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
@@ -4707,6 +8257,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_null_statement(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_other_sql_statement(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
@@ -4726,7 +8280,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_DYNAMIC_PARSER AS
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_rollback_statement(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
       pr_trigger(po_success);
+    END IF;
+    IF NOT po_success THEN
+      g_curr_token_ix := 1; -- Reset stream index for next entry option
+      pr_type_declaration(po_success);
     END IF;
     IF NOT po_success THEN
       g_curr_token_ix := 1; -- Reset stream index for next entry option

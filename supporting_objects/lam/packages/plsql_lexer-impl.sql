@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE BODY plsql_lexer AS
 
 FUNCTION code_to_basic_tokens
 ( pi_code IN CLOB
-) RETURN parser_token_col PIPELINED 
+) RETURN lexer_token_col PIPELINED 
 IS
         v_pos          NUMBER := 1;
         v_match_pos    NUMBER;
@@ -21,15 +21,15 @@ IS
         
         -- Safe insertion helper to separate VARCHAR2 and CLOB fields
         FUNCTION consume_token(p_type IN VARCHAR2, p_text IN CLOB
-		) RETURN parser_token_rec
+		) RETURN lexer_token_rec
 		IS
-            v_rec parser_token_rec;
+            v_rec lexer_token_rec;
             v_char_len NUMBER;
         BEGIN
 			--dbms_output.put_line( $$PLSQL_UNIT||':'||$$PLSQL_LINE||' v_seq:'|| v_seq||' p_type:'|| p_type||' p_text:'|| dbms_lob.substr( p_text, 40, 1) );
 
             v_char_len := DBMS_LOB.GETLENGTH(p_text);
-            v_rec := parser_token_rec(tok_seq=> v_seq, tok_type=> p_type, tok_char_cnt=> v_char_len, tok_text_normal=> NULL, tok_text_long=> NULL);
+            v_rec := lexer_token_rec(tok_seq=> v_seq, tok_type=> p_type, tok_char_cnt=> v_char_len, tok_text_normal=> NULL, tok_text_long=> NULL);
             
             IF v_char_len <= 4000 THEN
                 v_rec.tok_text_normal := DBMS_LOB.SUBSTR(p_text, 4000, 1);
@@ -213,7 +213,7 @@ IS
         RETURN;
    END code_to_basic_tokens;
 --
-   FUNCTION basic_tokens_to_clob(pi_tokens IN parser_token_col)
+   FUNCTION basic_tokens_to_clob(pi_tokens IN lexer_token_col)
    RETURN CLOB
    IS
       v_result CLOB;
@@ -242,13 +242,13 @@ IS
 END basic_tokens_to_clob;
 -- 
 PROCEDURE pr_to_tokens_of_lang_plsql 
-	( pi_basic_tokens 		IN	parser_token_col 
+	( pi_basic_tokens 		IN	lexer_token_col 
 	 ,pi_grammar_source 	IN 	VARCHAR2 
 	 ,pi_remove_comment		IN 	NUMBER DEFAULT 0 
-	 ,po_lang_tokens 		OUT parser_token_col 
+	 ,po_lang_tokens 		OUT lexer_token_col 
 	) 
 	AS
-		v_tok_new parser_token_rec; 
+		v_tok_new lexer_token_rec; 
 		v_reserved_keywords  	sys.re$name_array ;
 		v_text_normed VARCHAR2(4000 CHAR);
 		-- 
@@ -275,7 +275,7 @@ PROCEDURE pr_to_tokens_of_lang_plsql
 		END is_keyword;
 	-- 
 	BEGIN 	-- pr_to_tokens_of_lang_plsql 
-		po_lang_tokens := parser_token_col();
+		po_lang_tokens := lexer_token_col();
 		-- 
 		SELECT DISTINCT substr( symbol, 2, length( symbol ) -2 ) reserved_words
 		BULK COLLECT 
@@ -323,13 +323,13 @@ FUNCTION code_to_lang_tokens
 	( pi_code 			IN CLOB
 	 ,pi_grammar_source IN VARCHAR2
 	 ,pi_remove_comment	IN 	NUMBER DEFAULT 0 
-	) RETURN parser_token_col
+	) RETURN lexer_token_col
 AS 
-	v_basic_tokens 	parser_token_col;  
-	v_return 		parser_token_col;  
+	v_basic_tokens 	lexer_token_col;  
+	v_return 		lexer_token_col;  
 BEGIN 
     SELECT  
-		parser_token_rec(tok_seq=> tok_seq
+		lexer_token_rec(tok_seq=> tok_seq
 		 ,tok_type=> tok_type
 		 ,tok_char_cnt=> tok_char_cnt
 		 ,tok_text_normal=> tok_text_normal
