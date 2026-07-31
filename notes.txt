@@ -368,3 +368,13 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Nota bene: the rules for <parameter_list> and <column_list> in the grammar looks similar, why does our EBNF expansion logic resolves {}* differently?   For parameter_list the resolution seems OK, but not for column_list !
   Give result of both rules and expansion code to AI !
 
+
+2026.07.31:
+  The first bug fix suggested by gemini - scan for }* as one single token closing { crashed with nesting level exception. 
+  Another idea I have is to replace the rule to 
+   <column_list>        ::= <identifier> | <identifier> "," <column_list>
+
+  But this is not yet tested and not uploaded to TEMP_CLOB. 
+
+  Another idea is for the generator to skip all rows in PARSER_ALT_TOKEN with ALT_NO=0 when it is not the only rule in generator package. This is also to be verified.
+
