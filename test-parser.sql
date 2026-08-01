@@ -167,7 +167,11 @@ CROSS JOIN
 set serveroutput on 
 ;
 --declare x clob; BEGIN 
-    select parser_grammar_gen. fn_get_parser_package_code ( p_source => 'PLSQL_EXCLUDING_SQL' , p_spec_body_mask => 2 ) 
+    select parser_grammar_gen. fn_get_parser_package_code ( 
+--        p_source => 'PLSQL_EXCLUDING_SQL' 
+        p_source => 'VARIABLE_DECLARATION' , p_package_name => 'MINI_PARSER' 
+        , p_spec_body_mask => 0 
+        ) 
 --    into x 
     from dual
     ;

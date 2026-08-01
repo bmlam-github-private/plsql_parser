@@ -653,6 +653,7 @@ ipr_detect_infinite_loop;
     END flatten_alternatives;
 
 BEGIN
+	dbms_output.put_line ( UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))|| ' p_lhs: '||  p_lhs|| ' p_rhs: '||  p_rhs );
     -- Tokenize and initialize Phase 1
 	g_curr_lhs := p_lhs;
 	g_curr_rhs := p_rhs;
@@ -731,7 +732,7 @@ BEGIN
     v_lines := f_apex_split_clob ( p_clob => p_clob , p_sep=> chr(10) );
     --
 	--dbms_output.put_line ( 'Ln'||$$plsql_line|| ' xx: '||  xx );
-	dbms_output.put_line ( 'Ln'||$$plsql_line|| ' v_lines.count: '||  v_lines.count );
+	dbms_output.put_line ( UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))|| ' v_lines.count: '||  v_lines.count );
 	FOR ln_ix IN 1 .. v_lines.count 
 	LOOP 
 		v_line := v_lines( ln_ix );

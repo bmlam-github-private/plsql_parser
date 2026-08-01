@@ -1,0 +1,24 @@
+<declaration_section>   ::= { <declaration> }*
+<declaration>           ::= <variable_declaration>
+                          | <constant_declaration>
+                          | <type_declaration>
+                          | <cursor_declaration>
+                          | <exception_declaration>
+<variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";"
+<constant_declaration>  ::= <identifier> "CONSTANT" <data_type> ":=" <expression> ";"
+<type_declaration>      ::= "TYPE" <identifier> "IS" <type_definition> ";"
+<exception_declaration> ::= <identifier> "EXCEPTION" ";"
+<parameter_list>        ::= <parameter_spec> { "," <parameter_spec> }*
+<parameter_spec>        ::= <identifier> [ "IN" | "OUT" | "IN OUT" ] <data_type> [ ":=" <expression> ]
+<data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] 
+                          | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+<type_definition> ::= <record_type_definition>
+                    | <ref_cursor_type_definition>
+<index_by_type>              ::= "VARCHAR2" "(" <number_literal> ")"
+                               | "PLS_INTEGER"
+                               | "BINARY_INTEGER"
+                               | "LONG"
+<record_type_definition> ::= "RECORD" "(" <record_field_spec> { "," <record_field_spec> }* ")"
+<record_field_spec>      ::= <identifier> <data_type> [ "NOT NULL" ] [ ( ":=" | "DEFAULT" ) <expression> ]
+[ "INDEX BY" <index_by_type> ]
+<ref_cursor_type_definition> ::= "REF CURSOR" [ "RETURN" <data_type> ]

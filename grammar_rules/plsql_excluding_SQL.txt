@@ -155,7 +155,9 @@
                        | "DELETE"
                        | "UPDATE" [ "OF" <column_list> ]
 
-<column_list>        ::= <identifier> { "," <identifier> }*
+# our EBNF resolver could resolve this correctly: <column_list>        ::= <identifier> { "," <identifier> }*
+
+<column_list>        ::= <identifier> | <identifier> "," <column_list>
 
 <trigger_when_clause> ::= "WHEN" "(" <condition> ")"
 

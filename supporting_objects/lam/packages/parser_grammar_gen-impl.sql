@@ -242,7 +242,7 @@ FUNCTION fn_get_parser_package_code
 		WITH dist_lhs AS ( 
 			SELECT DISTINCT lhs 
 			FROM parser_alt_token 
-			WHERE source = upper( trim( p_source ) ) 
+			WHERE upper( source ) = upper( trim( p_source ) ) 
 		) 
 		SELECT lhs 
 			, parser_grammar_gen. fn_norm_as_proc_name ( p_input=> lhs ) lhs_procname 
@@ -257,7 +257,7 @@ FUNCTION fn_get_parser_package_code
 		SELECT DISTINCT alt_no 
 		FROM parser_alt_token 
 		WHERE lhs = cp_lhs 
-		  AND source = upper( trim( p_source ) ) 
+		  AND upper( source ) = upper( trim( p_source ) ) 
 		  AND alt_no > 0		-- exclude the original rule, since if not more, the original will be cloned as rule 1.
         ORDER BY alt_no;
         
@@ -266,8 +266,9 @@ FUNCTION fn_get_parser_package_code
         SELECT position, symbol 
 			, symbol_cleansed 
         FROM v_parser_alt_token 
-        WHERE lhs = cp_lhs AND alt_no = cp_alt_no 
-		  AND source = upper( trim( p_source ) ) 
+        WHERE lhs = cp_lhs 
+		  AND alt_no = cp_alt_no 
+		  AND upper( source ) = upper( trim( p_source ) ) 
         ORDER BY position;
 
     -- Cursor to find distinct terminal symbols vs LHS rules
@@ -355,7 +356,11 @@ dbms_output.put_line (  'ln'||$$plsql_line );
                 SELECT COUNT(*) 
 				INTO l_all_lhs 
 				FROM (
-					SELECT DISTINCT lhs FROM parser_alt_token )
+					SELECT 
+						DISTINCT lhs 
+					FROM parser_alt_token 
+					WHERE upper( source ) = upper( trim( p_source ) ) 
+					)
 					WHERE lhs = symb.symbol 
 					;
                 
@@ -366,7 +371,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
                     -- Terminal Token validation match
                     append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol ( ''' || symb.symbol || ''' )  THEN' || CHR(10));
                     --append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND fn_gram_compare( pi_tok=> g_tokens(g_curr_token_ix), pi_symb=> ''' || symb.symbol || ''' ) THEN' || CHR(10));
-                    append_to_clob(l_body, '        pr_increment_token_ix;' || CHR(10));
+                    append_to_clob(l_body, '        pr_increment_token_ix( ''' || symb.symbol || ''' );' || CHR(10));
                     append_to_clob(l_body, '      ELSE' || CHR(10));
                     append_to_clob(l_body, '        po_success := FALSE;' || CHR(10));
                     append_to_clob(l_body, '      END IF;' || CHR(10));
@@ -384,10 +389,21 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
     -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
     append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
-    append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix;' || CHR(10));
+    append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix( p_symob VARCHAR2 );' || CHR(10));
     append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN);' || CHR(10));
     
-    append_to_clob(l_body, '  PROCEDURE pr_increment_token_ix AS BEGIN g_curr_token_ix := g_curr_token_ix+1; dbms_output.put_line( ''current_ix incremented to ''||g_curr_token_ix); END pr_increment_token_ix;' || CHR(10));
+    append_to_clob(l_body, 
+q'[PROCEDURE pr_increment_token_ix(p_symbol IN VARCHAR2) AS 
+BEGIN 
+  IF p_symbol = 'EPSILON' THEN
+    -- Do NOT advance token index for Epsilon (empty string)
+    dbms_output.put_line('EPSILON matched: current_ix remains ' || g_curr_token_ix);
+  ELSE
+    g_curr_token_ix := g_curr_token_ix + 1; 
+    dbms_output.put_line('current_ix incremented to ' || g_curr_token_ix); 
+  END IF;
+END pr_increment_token_ix;]'
+		|| CHR(10));
     append_to_clob(l_body, '  PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN) IS' || CHR(10));
     append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
     append_to_clob(l_body, '  BEGIN' || CHR(10));
@@ -398,11 +414,13 @@ dbms_output.put_line (  'ln'||$$plsql_line );
     -- Identify top level rules using an anti-join query
     FOR top_rule IN (
         SELECT DISTINCT lhs 
-        FROM parser_alt_token
-        WHERE lhs NOT IN (
+        FROM parser_alt_token t1 
+        WHERE upper( t1.source ) = upper( trim( p_source ) ) 
+		  AND lhs NOT IN (
             SELECT DISTINCT symbol 
-            FROM parser_alt_token 
-            WHERE symbol IS NOT NULL
+            FROM parser_alt_token t2 
+            WHERE t2.symbol IS NOT NULL
+			  AND upper( t2.source ) = upper( trim( p_source ) ) 
         )
         ORDER BY lhs
     ) LOOP

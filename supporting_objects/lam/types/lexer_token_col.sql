@@ -82,6 +82,9 @@ BEGIN
 	WHEN pi_symbol  = self.tok_value 
 	THEN 			
 		v_return := TRUE;
+	WHEN pi_symbol  = self.tok_value 
+	THEN 			
+		v_return := TRUE;
 	ELSE 
 		v_return := FALSE; 
 	END CASE;
