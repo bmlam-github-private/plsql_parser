@@ -14,32 +14,17 @@ CREATE OR REPLACE FORCE TYPE parser_alt_token_rec AS OBJECT (
     position NUMBER(2,0),
     symbol VARCHAR2(50),
     source VARCHAR2(800)
-    --
-	,MEMBER FUNCTION compare_symbol 
-        ( pi_symbol 	IN VARCHAR2 
-		)
-    RETURN BOOLEAN 
 );
 /
 
 
-
-
-
-
-
-CREATE OR REPLACE TYPE BODY parser_alt_token_rec AS 
-    MEMBER FUNCTION compare_symbol 
-	( pi_symbol 	IN VARCHAR2 
-	)
-    RETURN BOOLEAN 
-	AS 
-		v_return 	BOOLEAN := FALSE;
-	BEGIN 
-		RETURN v_return;
-	END compare_symbol;
-END;
+-- There was something in TYPBE BODY, but later it proved to be obsolete! 
+--CREATE OR REPLACE TYPE BODY parser_alt_token_rec AS 
+--END;
+--/
+DROP TYPE BODY parser_alt_token_rec
 /
+
 -- =========================================
 -- COLLECTION TYPE
 -- =========================================

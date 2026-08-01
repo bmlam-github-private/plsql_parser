@@ -254,10 +254,11 @@ FUNCTION fn_get_parser_package_code
         
     -- Cursor for alternatives of altern specific LHS (Type 2)
     CURSOR c_alternatives(cp_lhs VARCHAR2) IS
-        SELECT DISTINCT alt_no 
-        FROM parser_alt_token 
-        WHERE lhs = cp_lhs 
+		SELECT DISTINCT alt_no 
+		FROM parser_alt_token 
+		WHERE lhs = cp_lhs 
 		  AND source = upper( trim( p_source ) ) 
+		  AND alt_no > 0		-- exclude the original rule, since if not more, the original will be cloned as rule 1.
         ORDER BY alt_no;
         
     -- Cursor for symbols within altern specific alternative
@@ -319,7 +320,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
         append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
-        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix);'|| CHR(10) );
+        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line||'':'' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||'': g_curr_token_ix:''||   g_curr_token_ix);'|| CHR(10) );
         append_to_clob(l_body, '    g_tokens( g_curr_token_ix ).print_details;' || CHR(10) );
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
         
@@ -363,7 +364,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
                     append_to_clob(l_body, '      ' || fn_norm_as_proc_name( symb.symbol )|| '(po_success);' || CHR(10));
                 ELSE
                     -- Terminal Token validation match
-                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol = ''' || symb.symbol || ''' )  THEN' || CHR(10));
+                    append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND g_tokens(g_curr_token_ix).compare_symbol ( ''' || symb.symbol || ''' )  THEN' || CHR(10));
                     --append_to_clob(l_body, '      IF g_tokens.EXISTS(g_curr_token_ix) AND fn_gram_compare( pi_tok=> g_tokens(g_curr_token_ix), pi_symb=> ''' || symb.symbol || ''' ) THEN' || CHR(10));
                     append_to_clob(l_body, '        pr_increment_token_ix;' || CHR(10));
                     append_to_clob(l_body, '      ELSE' || CHR(10));

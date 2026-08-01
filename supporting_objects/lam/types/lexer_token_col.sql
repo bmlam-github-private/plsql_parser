@@ -25,6 +25,11 @@ AS OBJECT
  ) RETURN SELF AS RESULT 
  -- Print Method Implementation
  ,MEMBER PROCEDURE print_details 
+    --
+ ,MEMBER FUNCTION compare_symbol 
+        ( pi_symbol 	IN VARCHAR2 
+		)
+    RETURN BOOLEAN 
 );
 / 
 
@@ -61,6 +66,30 @@ BEGIN
 		END IF;
 END print_details;
 -- 
+MEMBER FUNCTION compare_symbol 
+( pi_symbol 	IN VARCHAR2 
+)
+RETURN BOOLEAN 
+AS 
+	v_return 	BOOLEAN := FALSE;
+BEGIN 
+	dbms_output.put_line( $$PLSQL_UNIT||' pi_symbol: '||pi_symbol );
+	CASE 
+	WHEN pi_symbol  		= '<identifier>'
+		AND self.tok_type 	= '<identifier>'
+	THEN 			
+		v_return := TRUE;
+	WHEN pi_symbol  = self.tok_value 
+	THEN 			
+		v_return := TRUE;
+	ELSE 
+		v_return := FALSE; 
+	END CASE;
+	-- 
+	dbms_output.put_line( $$PLSQL_UNIT||' v_return: '||CASE v_return WHEN TRUE THEN '1' WHEN FALSE THEN 0 ELSE '?' END );
+	RETURN v_return;
+END compare_symbol;
+--
 END; 
 /
 

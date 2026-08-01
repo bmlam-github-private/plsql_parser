@@ -374,7 +374,12 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Another idea I have is to replace the rule to 
    <column_list>        ::= <identifier> | <identifier> "," <column_list>
 
-  But this is not yet tested and not uploaded to TEMP_CLOB. 
+  But this is not yet tested and not uploaded to TEMP_CLOB. Also I discarded edit regarding this in plsql_excluding_sql.txt 
 
   Another idea is for the generator to skip all rows in PARSER_ALT_TOKEN with ALT_NO=0 when it is not the only rule in generator package. This is also to be verified.
+
+2026.08.01:
+  It turns out my EBNF conversion logic always creates at least 1 derived rule, be it the same as alt_no = 0. Of course! 
+
+  It looks like the grammar rule is faulty: <variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";". It looks for an optional terminal CONSTANT, while for constant there is a separate rule. However, our EBNF conversion might be faulty, tool. It should have created an alternative rule does does not require CONSTANT.
 

@@ -6,8 +6,6 @@ sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\generated_code\20260717_plsql_excluding_sql-impl.sql"
 
-select parser_grammar_gen.fn_get_parser_package_code( p_source => 'MANUAL_TEST' , p_spec_body_mask=> 2 )  from dual
-;
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
 SELECT *
@@ -55,7 +53,7 @@ select
 from parser_alt_token 
 where 1 = 1
 --  and lhs like '<parameter_%'
-  and lhs like '<column_list%'
+  and lhs like '<declaration%'
   ;
 
 --update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'

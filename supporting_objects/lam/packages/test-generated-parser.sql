@@ -1,10 +1,13 @@
+begin dbms_session.reset_package;
+end;
+/
 set serveroutput on 
 DECLARE   
-   v_lang_tokens parser_token_col;
+   v_lang_tokens lexer_token_col;
    v_success BOOLEAN; 
 BEGIN 
     SELECT  
-		parser_token_rec(tok_seq=> tok_seq
+		lexer_token_rec(tok_seq=> tok_seq
 		 ,tok_type=> tok_type
 		 ,tok_char_cnt=> tok_char_cnt
 		 ,tok_text_normal=> tok_text_normal
