@@ -321,8 +321,6 @@ dbms_output.put_line (  'ln'||$$plsql_line );
         append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
         append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
         append_to_clob(l_body, '  BEGIN' || CHR(10));
-        append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line||'':'' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||'': g_curr_token_ix:''||   g_curr_token_ix);'|| CHR(10) );
-        append_to_clob(l_body, '    g_tokens( g_curr_token_ix ).print_details;' || CHR(10) );
         append_to_clob(l_body, '    po_success := FALSE;' || CHR(10));
         
         -- Loop through alternatives inside Type 1
@@ -343,7 +341,6 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 			append_to_clob(l_body, '    l_breadcrumb breadcrumb:=  breadcrumb();' || CHR(10));
             append_to_clob(l_body, '    l_entry_idx NUMBER := g_curr_token_ix;' || CHR(10));
             append_to_clob(l_body, '  BEGIN' || CHR(10));
-			append_to_clob(l_body, '    dbms_output.put_line( $$plsql_unit||'':''||$$plsql_line ||''  g_curr_token_ix: ''||g_curr_token_ix );' || CHR(10));
             append_to_clob(l_body, '    po_success := TRUE;' || CHR(10));
             
             -- Process sequence symbols inside Alternative
@@ -389,7 +386,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
     -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
     append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
-    append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix( p_symob VARCHAR2 );' || CHR(10));
+    append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix( p_symbol VARCHAR2 );' || CHR(10));
     append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN);' || CHR(10));
     
     append_to_clob(l_body, 

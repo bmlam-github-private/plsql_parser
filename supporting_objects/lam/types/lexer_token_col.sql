@@ -73,7 +73,8 @@ RETURN BOOLEAN
 AS 
 	v_return 	BOOLEAN := FALSE;
 BEGIN 
-	dbms_output.put_line( $$PLSQL_UNIT||' pi_symbol: '||pi_symbol );
+	dbms_output.put_line( $$PLSQL_UNIT||' Matching symbol: '||pi_symbol );
+	self.print_details;
 	CASE 
 	WHEN pi_symbol  		= '<identifier>'
 		AND self.tok_type 	= '<identifier>'
@@ -82,14 +83,22 @@ BEGIN
 	WHEN pi_symbol  = self.tok_value 
 	THEN 			
 		v_return := TRUE;
-	WHEN pi_symbol  = self.tok_value 
+	WHEN pi_symbol  = 'EPSILON'
 	THEN 			
 		v_return := TRUE;
 	ELSE 
 		v_return := FALSE; 
 	END CASE;
 	-- 
-	dbms_output.put_line( $$PLSQL_UNIT||' v_return: '||CASE v_return WHEN TRUE THEN '1' WHEN FALSE THEN 0 ELSE '?' END );
+	dbms_output.put_line( $$PLSQL_UNIT||' '||
+		CASE v_return 
+			WHEN TRUE 
+			THEN '********* returning TRUE *****: '
+			WHEN FALSE 
+			THEN 'returning False'
+			ELSE 'return NULL!'
+		END 
+		);
 	RETURN v_return;
 END compare_symbol;
 --

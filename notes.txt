@@ -383,3 +383,13 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
   It looks like the grammar rule is faulty: <variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";". It looks for an optional terminal CONSTANT, while for constant there is a separate rule. However, our EBNF conversion might be faulty, tool. It should have created an alternative rule does does not require CONSTANT.
 
+2026.08.07:
+  In the rule we got from AI, the following syntax is correct: 
+    <data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+  It should be
+    <data_type>             ::= <identifier> "%" [ "TYPE" | "ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+
+  Still debugging the mini_parser alias rule variable_declaration. Need to enhance lexer_token_rec .compare to output the call stack, demo code in 
+    C:\Users\Bon-Minh Lam\plsql_parser\general_plsql_demo\print_call_stack.sql
+
+  Need to recompile parser_grammar_gen where some dbms_output was removed. 

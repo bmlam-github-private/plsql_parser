@@ -5,12 +5,8 @@ DECLARE
     v_grammar CLOB := 
 	q'{
 <variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";"
-<data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] 
-                          | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
-<index_by_type>              ::= "VARCHAR2" "(" <number_literal> ")"
-                               | "PLS_INTEGER"
-                               | "BINARY_INTEGER"
-                               | "LONG"
+<data_type>             ::= <identifier> "%" [ "TYPE" | "ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+<index_by_type>         ::= "VARCHAR2" "(" <number_literal> ")" | "PLS_INTEGER" | "BINARY_INTEGER" | "LONG"
 <ref_cursor_type_definition> ::= "REF CURSOR" [ "RETURN" <data_type> ]
 	}' ;
 BEGIN 
