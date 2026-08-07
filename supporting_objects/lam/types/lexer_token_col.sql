@@ -6,6 +6,8 @@ DROP TYPE lexer_token_col
 
 
 
+
+
 CREATE OR REPLACE FORCE TYPE lexer_token_rec 
 AS OBJECT 
 ( tok_seq 			NUMBER 
@@ -25,6 +27,8 @@ AS OBJECT
  ) RETURN SELF AS RESULT 
  -- Print Method Implementation
  ,MEMBER PROCEDURE print_details 
+ ( self IN lexer_token_rec 
+ )
     --
  ,MEMBER FUNCTION compare_symbol 
         ( pi_symbol 	IN VARCHAR2 
@@ -32,6 +36,7 @@ AS OBJECT
     RETURN BOOLEAN 
 );
 / 
+
 
 CREATE OR REPLACE TYPE BODY lexer_token_rec 
 AS
@@ -53,7 +58,9 @@ AS
 	RETURN; 
 END; 
 -- Print Method Implementation
-MEMBER PROCEDURE print_details IS
+MEMBER PROCEDURE print_details 
+( self IN lexer_token_rec )
+IS
 BEGIN
         DBMS_OUTPUT.PUT_LINE('--- lexer_token_rec Details ---');
         DBMS_OUTPUT.PUT_LINE('tok_seq 			: ' || SELF.tok_seq );
@@ -74,7 +81,34 @@ AS
 	v_return 	BOOLEAN := FALSE;
 BEGIN 
 	dbms_output.put_line( $$PLSQL_UNIT||' Matching symbol: '||pi_symbol );
-	self.print_details;
+	print_details;
+	-- print call stack BEGIN 
+	DECLARE 
+		v_current_level NUMBER;
+		v_padding_level NUMBER;
+		v_line 			NUMBER;
+		v_subprogram	VARCHAR2( 100 CHAR);
+	BEGIN  
+				v_current_level := UTL_CALL_STACK.dynamic_depth();
+				DBMS_OUTPUT.put_line('Current nesting level: ' || v_current_level);			  DBMS_OUTPUT.put_line('--- Call Stack ---');
+			  -- it seems idx starts at 0, while for humans top level start at 1 ! 
+			  FOR idx IN REVERSE 1 ..  v_current_level 
+			  LOOP
+				-- Concatenate unit and subprogram name for readability
+				v_subprogram := UTL_CALL_STACK.concatenate_subprogram(
+								  UTL_CALL_STACK.subprogram(idx)
+								);
+				v_line       := UTL_CALL_STACK.unit_line(idx);
+				v_padding_level := v_current_level - idx + 1;
+				DBMS_OUTPUT.put_line(
+				  lpad('->',  v_padding_level*2, ' ') || 
+				  ' Ln:'     || v_line || 
+				  ' :'  || v_subprogram
+				);
+			  END LOOP;
+	END print_call_stack ; 
+	-- print call stack END  
+	--
 	CASE 
 	WHEN pi_symbol  		= '<identifier>'
 		AND self.tok_type 	= '<identifier>'
@@ -84,6 +118,21 @@ BEGIN
 	THEN 			
 		v_return := TRUE;
 	WHEN pi_symbol  = 'EPSILON'
+	THEN 			
+		v_return := TRUE;
+	WHEN upper(pi_symbol)  -- this cover the case when tok_type is NUM_LITERAL, STR_LITERAL and the input symbol is <NUM_LITERAL> respectively <STR_LITERAL> 
+		IN ( 'impossible dummy symbol'
+			 ,'<NUMBER_LITERAL>'
+		   )
+	  AND regexp_replace( upper(pi_symbol), '^(<)(.*)(>)$', '\2' )  =  self.tok_type 
+	THEN 			
+		v_return := TRUE;
+	WHEN self.tok_type 
+		IN ( 'impossible dummy type'
+	  		,'SPECIAL_CHAR' 
+	  		,'SPECIAL_CHAR_DBL' 
+			)
+	  AND '"'||self.tok_value||'"' = pi_symbol 
 	THEN 			
 		v_return := TRUE;
 	ELSE 

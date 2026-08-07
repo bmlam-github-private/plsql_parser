@@ -23,9 +23,6 @@ AS
 			BEGIN
 				v_current_level := UTL_CALL_STACK.dynamic_depth();
 				DBMS_OUTPUT.put_line('Current nesting level: ' || v_current_level);			  DBMS_OUTPUT.put_line('--- Call Stack ---');
-
-			  -- Dynamic depth 3 = Level 3 subprogram
-			  -- Dynamic depth 4 = Level 2 subprogram
 			  -- it seems idx starts at 0, while for humans top level start at 1 ! 
 			  FOR idx IN REVERSE 1 ..  v_current_level 
 			  LOOP

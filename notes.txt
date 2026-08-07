@@ -393,3 +393,5 @@ With the first sets computed, we can more efficiently parse the alternatives one
     C:\Users\Bon-Minh Lam\plsql_parser\general_plsql_demo\print_call_stack.sql
 
   Need to recompile parser_grammar_gen where some dbms_output was removed. 
+
+  At Macbear, integrated the debugging code into lexer_token_rec. compare method. Last road block was double_special charater as symbol. Compiled fix in compare method. to be tested!
