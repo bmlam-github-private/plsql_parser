@@ -19,7 +19,7 @@ BEGIN
         plsql_lexer.code_to_lang_tokens ( 
        '       v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; 
      '
-		,pi_grammar_source => 'MINI_PARSER'
+		,pi_grammar_source => upper( 'variable_declaration' )
 		,pi_remove_comment => 1 
      )
  );
@@ -27,3 +27,13 @@ BEGIN
    dbms_output.put_line ( 'v_succes:' ||case v_success when true then 'true' when false then 'false' else '?' end );
 END;
 /
+
+SELECT *
+    FROM TABLE ( 
+        plsql_lexer.code_to_lang_tokens ( 
+       '       v_msg VARCHAR2(100) := q''!It''s a "Q" string delimiter block!''; 
+     '
+		,pi_grammar_source => upper( 'variable_declaration' )
+		,pi_remove_comment => 1 
+     ) )
+;

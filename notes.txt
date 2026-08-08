@@ -395,3 +395,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Need to recompile parser_grammar_gen where some dbms_output was removed. 
 
   At Macbear, integrated the debugging code into lexer_token_rec. compare method. Last road block was double_special charater as symbol. Compiled fix in compare method. to be tested!
+
+2026.08.08:
+  A short lab before dinner prep. The mini-parser test last hit error as the lexer token string_literal was not matched to symbol <exrpession>. In the grammar, there is no resolution for <expression>. Might help to add rules for expression to our mini grammar.
+
+

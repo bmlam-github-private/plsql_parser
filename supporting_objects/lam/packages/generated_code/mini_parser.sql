@@ -46,8 +46,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_data_type_1(po_success);
@@ -63,7 +61,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
@@ -94,7 +91,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
@@ -141,8 +137,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_data_type_opt_1_3(po_success);
@@ -162,7 +156,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "TYPE"
     IF po_success THEN
@@ -181,7 +174,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "ROWTYPE"
     IF po_success THEN
@@ -200,7 +192,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
@@ -219,8 +210,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_data_type_opt_2_6(po_success);
@@ -236,7 +225,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol ","
     IF po_success THEN
@@ -263,7 +251,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
@@ -282,8 +269,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_index_by_type_1(po_success);
@@ -307,7 +292,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "VARCHAR2"
     IF po_success THEN
@@ -350,7 +334,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "PLS_INTEGER"
     IF po_success THEN
@@ -369,7 +352,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "BINARY_INTEGER"
     IF po_success THEN
@@ -388,7 +370,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "LONG"
     IF po_success THEN
@@ -407,8 +388,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_ref_cursor_type_definition_1(po_success);
@@ -420,7 +399,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "REF
     IF po_success THEN
@@ -451,8 +429,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_ref_cursor_type_definition_opt_1_2(po_success);
@@ -468,7 +444,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "RETURN"
     IF po_success THEN
@@ -491,7 +466,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
@@ -510,8 +484,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_variable_declaration_1(po_success);
@@ -523,7 +495,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol <identifier>
     IF po_success THEN
@@ -562,8 +533,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_variable_declaration_opt_1_2(po_success);
@@ -579,7 +548,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol "CONSTANT"
     IF po_success THEN
@@ -598,7 +566,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN
@@ -617,8 +584,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line||':' ||UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))||': g_curr_token_ix:'||   g_curr_token_ix);
-    g_tokens( g_curr_token_ix ).print_details;
     po_success := FALSE;
     IF NOT po_success THEN
       pr_variable_declaration_opt_2_4(po_success);
@@ -634,7 +599,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol ":="
     IF po_success THEN
@@ -661,7 +625,6 @@ CREATE OR REPLACE PACKAGE BODY MINI_PARSER AS
     l_breadcrumb breadcrumb:=  breadcrumb();
     l_entry_idx NUMBER := g_curr_token_ix;
   BEGIN
-    dbms_output.put_line( $$plsql_unit||':'||$$plsql_line ||'  g_curr_token_ix: '||g_curr_token_ix );
     po_success := TRUE;
     -- Position 1: Symbol EPSILON
     IF po_success THEN

@@ -4,8 +4,6 @@ sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\test-gen
 
 sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql"
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\generated_code\20260717_plsql_excluding_sql-impl.sql"
-
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
 SELECT *
@@ -18,7 +16,7 @@ select source, count(1)
 from parser_alt_token 
 where 1=1
 --  and source = 'PLSQL_EXCLUDING_SQL'
-  and regexp_like ( symbol, '^"[A-Z_]+"$' )
+--  and regexp_like ( symbol, '^"[A-Z_]+"$' )
 group by source
 ;
 -- c_rules from parser_grammar_rule . fn_get_parser_package_code 
@@ -52,8 +50,12 @@ select
 *--json_arrayagg( json_object (*) ) 
 from parser_alt_token 
 where 1 = 1
+  AND upper(source) = upper( 'variable_declaration' )
 --  and lhs like '<parameter_%'
-  and lhs like '<declaration%'
+--  and lhs like '<declaration%'
+--  and instr( symbol , 'express' ) > 0
+  and instr( lhs, 'express' ) > 0
+order by lhs, alt_no, position
   ;
 
 --update parser_alt_token set source = 'PLSQL_EXCLUDING_SQL'
@@ -170,7 +172,7 @@ set serveroutput on
     select parser_grammar_gen. fn_get_parser_package_code ( 
 --        p_source => 'PLSQL_EXCLUDING_SQL' 
         p_source => 'VARIABLE_DECLARATION' , p_package_name => 'MINI_PARSER' 
-        , p_spec_body_mask => 0 
+        , p_spec_body_mask => 0
         ) 
 --    into x 
     from dual
