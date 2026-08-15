@@ -384,7 +384,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
   It looks like the grammar rule is faulty: <variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";". It looks for an optional terminal CONSTANT, while for constant there is a separate rule. However, our EBNF conversion might be faulty, tool. It should have created an alternative rule does does not require CONSTANT.
 
 2026.08.07:
-  In the rule we got from AI, the following syntax is correct: 
+  In the rule we got from AI, the following syntax is incorrect: 
     <data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
   It should be
     <data_type>             ::= <identifier> "%" [ "TYPE" | "ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
@@ -399,4 +399,15 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.08.08:
   A short lab before dinner prep. The mini-parser test last hit error as the lexer token string_literal was not matched to symbol <exrpession>. In the grammar, there is no resolution for <expression>. Might help to add rules for expression to our mini grammar.
 
+2026.08.15:
+  I got confused about which grammar source I was using to test declaration_section. Right now I cannot find the original grammar source, It does not seem to be declartion_section.txt, and it is also not this?
 
+    q'{
+<variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";"
+<data_type>             ::= <identifier> "%" [ "TYPE" | "ROWTYPE" ] | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+<index_by_type>         ::= "VARCHAR2" "(" <number_literal> ")" | "PLS_INTEGER" | "BINARY_INTEGER" | "LONG"
+<ref_cursor_type_definition> ::= "REF CURSOR" [ "RETURN" <data_type> ]
+  }' ;
+
+  Probably I need to log the manipulation operation on parser_alt_token in parser_grammar_util, add ins_mod_ts to parser_alt_token! 
+  

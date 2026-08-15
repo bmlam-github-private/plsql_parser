@@ -54,7 +54,7 @@ where 1 = 1
 --  and lhs like '<parameter_%'
 --  and lhs like '<declaration%'
 --  and instr( symbol , 'express' ) > 0
-  and instr( lhs, 'express' ) > 0
+--  and instr( lhs, 'express' ) > 0
 order by lhs, alt_no, position
   ;
 
