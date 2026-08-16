@@ -411,3 +411,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
   Probably I need to log the manipulation operation on parser_alt_token in parser_grammar_util, add ins_mod_ts to parser_alt_token! 
   
+2026.08.16:
+  Added table parser_grammar_rule_log to document rule expansion result. 
+  Debugging why the top rule express ran into infinite loop in parser_rule_util. 

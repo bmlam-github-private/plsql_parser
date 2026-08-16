@@ -198,4 +198,25 @@ SELECT *
      ) )
 ;
 
-sta "C:\Users\Bon-Minh Lam\plsql_parser\supporting_objects\lam\packages\test-generated-parser.sql"
+select *
+FROM parser_grammar_rule_log
+;
+desc parser_alt_token
+;
+-- trasient result of fn_grammar_clob_to_rule_tokens
+set serveroutput on 
+SELECT *
+FROM TABLE( parser_rule_util. FN_EBNF_CLOB_TO_SIMPLE (	q'{
+#  Top-level rule
+<expression>           ::= <logical_and_expr> { "OR" <logical_and_expr> }
+<logical_and_expr>     ::= <logical_not_expr> { "AND" <logical_not_expr> }
+<logical_not_expr>     ::= [ "NOT" ] <relational_expr>
+# Relational operations now consume scalar expressions instead of top-level <expression> 
+<relational_expr>      ::= <additive_expr> [ <relational_op> <additive_expr> | <is_null_op> | <between_op> | <in_op> | <like_op> ]
+# IN list uses scalar/additive expression instead of full <expression> 
+<in_op>                ::= [ "NOT" ] "IN" "(" ( <additive_expr> { "," <additive_expr> } | <subquery> ) ")"
+# Function arguments use scalar/additive expressions or explicitly parenthesized expressions 
+<variable_or_function> ::= <identifier> [ "(" [ <additive_expr> { "," <additive_expr> } ] ")" ]	}' 
+    , p_source => upper( 'variable_declartion' )
+    ) )
+    ;

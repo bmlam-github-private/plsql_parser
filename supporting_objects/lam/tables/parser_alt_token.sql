@@ -20,6 +20,14 @@ ALTER TABLE parser_alt_token
 	ADD ( source VARCHAR2 ( 200 CHAR ) NOT NULL )
 /
 
+UPDATE parser_alt_token SET source = trim( upper( source) )
+WHERE source <> trim( upper( source) )
+;
+
+ALTER TABLE parser_alt_token 
+	ADD  CONSTRAINT parser_alt_token_source_ck CHECK ( source = trim( upper( source) ) )
+/
+
 ALTER TABLE parser_alt_token 
 	ADD constraint parser_alt_token_uk1 UNIQUE ( lhs, source, alt_no, position )
 /
