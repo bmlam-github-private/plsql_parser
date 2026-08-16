@@ -414,3 +414,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.08.16:
   Added table parser_grammar_rule_log to document rule expansion result. 
   Debugging why the top rule express ran into infinite loop in parser_rule_util. 
+
+  Ask gemini to provide a new implementation of fn_1_ebnf_to_simple. Stuff in folder scratch_pad. Need to adapt it to my types. 
+  Nota bene: do not confuse the resulting rows with alt-tokens. Each row return by fn_1_ebnf_to_simple is a separate rule even if the lhs is the same! When converted to tokens, we should see different subrules with different names!
+  
+  

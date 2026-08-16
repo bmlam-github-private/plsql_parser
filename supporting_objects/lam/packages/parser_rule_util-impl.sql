@@ -87,7 +87,7 @@ AS
     -- Recursive procedure to parse bracket blocks out of token arrays
 
     -- PHASE 1: Recursive extraction of outermost [] and {}* brackets
-    PROCEDURE process_token_brackets(p_tokens IN OUT token_list) IS
+    PROCEDURE process_token_brackets(pio_tokens IN OUT token_list) IS
         v_open_idx       NUMBER := 0;
         v_close_idx      NUMBER := 0;
         v_bracket_type   VARCHAR2(1);
@@ -107,7 +107,7 @@ AS
 					dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
 							||' nesting: '||g_curr_nesting_level 
 							||' i: '||i 
-							||' p_tokens(i):' || p_tokens(i)
+							||' pio_tokens(i):' || pio_tokens(i)
 							||' g_curr_lhs: '|| g_curr_lhs
 							||' g_curr_rhs: '|| g_curr_rhs
 						);
@@ -124,34 +124,35 @@ AS
 				END IF;
 			END IF;
 		END ipr_detect_infinite_loop;
-    BEGIN
-			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' g_curr_nesting_level: '||g_curr_nesting_level||' p_tokens: '||p_tokens.count||' first: '|| p_tokens(1)||' last: '|| p_tokens(p_tokens.last)	);		
+    BEGIN	-- process_token_brackets
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' g_curr_nesting_level: '||g_curr_nesting_level||' pio_tokens: '||pio_tokens.count||' first: '|| pio_tokens(1)||' last: '|| pio_tokens(pio_tokens.last)	);		
 		-- 
         -- Scan tokens to find the first outermost opening bracket sequence
-        FOR i IN 1..p_tokens.COUNT LOOP
-            IF p_tokens(i) IN ('[', '{') AND v_level = 0 THEN
+        FOR i IN 1..pio_tokens.COUNT LOOP
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' pio_tokens('||i||'): '||pio_tokens(i)	);		
+            IF pio_tokens(i) IN ('[', '{') AND v_level = 0 THEN
                 v_open_idx := i;
-                v_bracket_type := p_tokens(i);
+                v_bracket_type := pio_tokens(i);
                 v_level := 1;
-            ELSIF p_tokens(i) IN ('[', '{') THEN
+            ELSIF pio_tokens(i) IN ('[', '{') THEN
                 v_level := v_level + 1;
-            ELSIF p_tokens(i) IN (']', '}') THEN
+            ELSIF pio_tokens(i) IN (']', '}') THEN
                 v_level := v_level - 1;
-                IF v_level = 0 AND p_tokens(i) = CASE v_bracket_type WHEN '[' THEN ']' WHEN '{' THEN '}' END THEN
+                IF v_level = 0 AND pio_tokens(i) = CASE v_bracket_type WHEN '[' THEN ']' WHEN '{' THEN '}' END THEN
                     v_close_idx := i;
                     EXIT;
                 END IF;
             END IF;
         END LOOP;
-		dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' v_bracket_type: '|| v_bracket_type||' v_close_idx: '||v_close_idx	);
+		dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' v_bracket_type: '|| v_level||' v_level: '|| v_bracket_type||' v_open_idx/v_close_idx: '||v_open_idx||'/'||v_close_idx	);
 
         -- If an outermost bracket pair was isolated
         IF v_open_idx > 0 THEN
             FOR i IN (v_open_idx + 1)..(v_close_idx - 1) LOOP
-                v_inner_tokens(v_inner_tokens.COUNT + 1) := p_tokens(i);
+                v_inner_tokens(v_inner_tokens.COUNT + 1) := pio_tokens(i);
             END LOOP;
             
-			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line							||' nesting: '||g_curr_nesting_level 							||' v_bracket_type: '|| v_bracket_type						);
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' nesting: '||g_curr_nesting_level ||' v_bracket_type: '|| v_bracket_type						);
             v_suffix_ix := v_suffix_ix + 1;
 
             IF v_bracket_type = '[' THEN
@@ -177,7 +178,9 @@ AS
                 v_skip_until := v_close_idx;
                 
             ELSIF v_bracket_type = '{' THEN
-                IF p_tokens.EXISTS(v_close_idx + 1) AND p_tokens(v_close_idx + 1) = '*' THEN
+                IF pio_tokens.EXISTS(v_close_idx + 1) AND pio_tokens(v_close_idx + 1) = '*' 
+				-- optional sequence of tokens which repeats itself 
+				THEN
                     v_new_rule_name := '<'||f_trim_angle_brackes( p_lhs )||'_rep_' || v_suffix_ix || '>';
                     
                     v_working_rules.EXTEND;
@@ -204,35 +207,54 @@ AS
                     
                     v_skip_until := v_close_idx + 1;
                 ELSE
-                    v_skip_until := v_close_idx;
-                    v_new_rule_name := '{'; 
+					-- Plain group: replace { A }` with ( A ) in place
+					v_new_tokens.DELETE;
+					v_new_idx := 1;
+					FOR i IN 1..pio_tokens.COUNT LOOP
+						IF i = v_open_idx THEN
+							v_new_tokens(v_new_idx) := '(';
+						ELSIF i = v_close_idx THEN
+							v_new_tokens(v_new_idx) := ')';
+						ELSE
+							v_new_tokens(v_new_idx) := pio_tokens(i);
+						END IF;
+						v_new_idx := v_new_idx + 1;
+					END LOOP;
+					pio_tokens := v_new_tokens;
                 END IF;
             END IF;
+		dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
+							||' nesting: '||g_curr_nesting_level 
+							||' v_new_rule_name: '|| v_new_rule_name
+						);
 
             -- Re-stitch the parent rule tokens, injecting the new rule pointer tag
-            FOR i IN 1..p_tokens.COUNT LOOP
+            FOR i IN 1..pio_tokens.COUNT LOOP
                 IF i < v_open_idx THEN
-                    v_new_tokens(v_new_idx) := p_tokens(i);
+                    v_new_tokens(v_new_idx) := pio_tokens(i);
                     v_new_idx := v_new_idx + 1;
                 ELSIF i = v_open_idx THEN
                     v_new_tokens(v_new_idx) := v_new_rule_name;
                     v_new_idx := v_new_idx + 1;
                 ELSIF i > v_skip_until THEN
-                    v_new_tokens(v_new_idx) := p_tokens(i);
+                    v_new_tokens(v_new_idx) := pio_tokens(i);
                     v_new_idx := v_new_idx + 1;
                 END IF;
             END LOOP;
             
-            p_tokens := v_new_tokens;
+            pio_tokens := v_new_tokens;
+FOR i in 1 .. pio_tokens.count LOOP 
+			dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' pio_tokens('||i||'): '||pio_tokens(i)	);		
+END LOOP;			
             
             -- Recurse to handle any other bracket definitions inside this array block
 ipr_detect_infinite_loop;			
-            process_token_brackets(p_tokens);
+            process_token_brackets(pio_tokens);
         END IF;
     END process_token_brackets;
 
     -- PHASE 2: Recursively expand internal alternatives ( | ) and parenthesized groups ( )
-    PROCEDURE flatten_alternatives(p_lhs VARCHAR2, p_tokens token_list) IS
+    PROCEDURE flatten_alternatives(p_lhs VARCHAR2, pio_tokens token_list) IS
         v_open_group  NUMBER := 0;
         v_close_group NUMBER := 0;
         v_level       NUMBER := 0;
@@ -248,13 +270,13 @@ ipr_detect_infinite_loop;
     BEGIN
         -- Find the first outermost parenthesized alternative group or structural unparenthesized pipe
         -- Strategy: Look for an explicit '(' block. If none exists, look for a top-level naked '|'
-        FOR i IN 1..p_tokens.COUNT LOOP
-            IF p_tokens(i) = '(' AND v_level = 0 THEN
+        FOR i IN 1..pio_tokens.COUNT LOOP
+            IF pio_tokens(i) = '(' AND v_level = 0 THEN
                 v_open_group := i;
                 v_level := 1;
-            ELSIF p_tokens(i) = '(' THEN
+            ELSIF pio_tokens(i) = '(' THEN
                 v_level := v_level + 1;
-            ELSIF p_tokens(i) = ')' THEN
+            ELSIF pio_tokens(i) = ')' THEN
                 v_level := v_level - 1;
                 IF v_level = 0 THEN
                     v_close_group := i;
@@ -267,24 +289,24 @@ ipr_detect_infinite_loop;
         IF v_open_group > 0 THEN
             -- Isolate prefix and suffix segments around the group
             FOR i IN 1..(v_open_group - 1) LOOP
-                v_prefix(v_prefix.COUNT + 1) := p_tokens(i);
+                v_prefix(v_prefix.COUNT + 1) := pio_tokens(i);
             END LOOP;
-            FOR i IN (v_close_group + 1)..p_tokens.COUNT LOOP
-                v_suffix(v_suffix.COUNT + 1) := p_tokens(i);
+            FOR i IN (v_close_group + 1)..pio_tokens.COUNT LOOP
+                v_suffix(v_suffix.COUNT + 1) := pio_tokens(i);
             END LOOP;
 
             -- Segment internal items inside the group split by its primary internal pipes
             v_level := 0;
             v_choices(1) := token_list();
             FOR i IN (v_open_group + 1)..(v_close_group - 1) LOOP
-                IF p_tokens(i) = '(' THEN v_level := v_level + 1; END IF;
-                IF p_tokens(i) = ')' THEN v_level := v_level - 1; END IF;
+                IF pio_tokens(i) = '(' THEN v_level := v_level + 1; END IF;
+                IF pio_tokens(i) = ')' THEN v_level := v_level - 1; END IF;
                 
-                IF p_tokens(i) = '|' AND v_level = 0 THEN
+                IF pio_tokens(i) = '|' AND v_level = 0 THEN
                     v_current_ch := v_current_ch + 1;
                     v_choices(v_current_ch) := token_list();
                 ELSE
-                    v_choices(v_current_ch)(v_choices(v_current_ch).COUNT + 1) := p_tokens(i);
+                    v_choices(v_current_ch)(v_choices(v_current_ch).COUNT + 1) := pio_tokens(i);
                 END IF;
             END LOOP;
 
@@ -307,12 +329,12 @@ ipr_detect_infinite_loop;
         v_current_ch := 1;
         v_choices.DELETE;
         v_choices(1) := token_list();
-        FOR i IN 1..p_tokens.COUNT LOOP
-            IF p_tokens(i) = '|' THEN
+        FOR i IN 1..pio_tokens.COUNT LOOP
+            IF pio_tokens(i) = '|' THEN
                 v_current_ch := v_current_ch + 1;
                 v_choices(v_current_ch) := token_list();
             ELSE
-                v_choices(v_current_ch)(v_choices(v_current_ch).COUNT + 1) := p_tokens(i);
+                v_choices(v_current_ch)(v_choices(v_current_ch).COUNT + 1) := pio_tokens(i);
             END IF;
         END LOOP;
 
@@ -327,7 +349,7 @@ ipr_detect_infinite_loop;
         -- Scenario C: Pure, flattened simple rule structure. Append to final table stack.
         v_final_rules.EXTEND;
         v_final_rules(v_final_rules.LAST).lhs := p_lhs;
-        v_final_rules(v_final_rules.LAST).tokens := p_tokens;
+        v_final_rules(v_final_rules.LAST).tokens := pio_tokens;
     END flatten_alternatives;
 
 BEGIN
