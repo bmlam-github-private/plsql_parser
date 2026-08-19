@@ -1,0 +1,101 @@
+# block
+block = "DECLARE" declarations? "BEGIN" statements "EXCEPTION" exception_handlers? "END" [block_name]? ";" ;
+
+declarations = (variable_declaration | cursor_declaration | type_declaration | subprogram_declaration)* ;
+statements = (assignment | if_stmt | loop_stmt | procedure_call | sql_stmt | null_stmt | return_stmt | raise_stmt | block)+ ;
+exception_handlers = (when_others | when_specific)* ;
+
+# declarations
+variable_declaration = identifier ("," identifier)* ":" type ["NOT NULL" [":= " expression]] ";" ;
+type = "NUMBER" | "VARCHAR2" ["(" length ")"] | "DATE" | "BOOLEAN" | "RECORD" | "%TYPE" | "%ROWTYPE" | custom_type ;
+cursor_declaration = "CURSOR" identifier ["(" [parameter ("," parameter)*] ")"] ["IS" select_stmt] ";" ;
+parameter = identifier "IN" | "OUT" | "IN OUT" type ;
+type_declaration = "TYPE" identifier "IS" ("RECORD" "(" field ("," field)* ")" | "TABLE OF" type) ";" ;
+field = identifier type ;
+subprogram_declaration = (procedure_decl | function_decl) ;
+procedure_decl = "PROCEDURE" identifier ["(" [parameter ("," parameter)*] ")"] ["IS" | "AS"] block ;
+function_decl = "FUNCTION" identifier ["(" [parameter ("," parameter)*] ")"] "RETURN" type ["IS" | "AS"] block ;
+
+# Statements
+assignment = identifier ":=" expression ";" ;
+if_stmt = "IF" condition "THEN" statements
+           ("ELSIF" condition "THEN" statements)*
+           ["ELSE" statements] "END IF" ";" ;
+loop_stmt = ("LOOP" statements "END LOOP" ";" |
+             "WHILE" condition "LOOP" statements "END LOOP" ";" |
+             "FOR" identifier "IN" (range | cursor_loop) "LOOP" statements "END LOOP" ";" |
+             "FORALL" identifier "IN" range "LOOP" statements "END LOOP" ";") ;
+range = [reverse?] expression ".." expression ;
+cursor_loop = identifier | "(" select_stmt ")" ;
+procedure_call = identifier ["(" [argument ("," argument)*] ")"] ";" ;
+sql_stmt = (select_stmt | insert_stmt | update_stmt | delete_stmt | merge_stmt) ";" ;
+null_stmt = "NULL" ";" ;
+return_stmt = "RETURN" expression ";" ;
+raise_stmt = "RAISE" [identifier | error_code] ";" ;
+
+# conditions 
+condition = expression ("=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" | "LIKE" | "IN" | "BETWEEN" | "IS NULL" | "IS NOT NULL") expression |
+            "NOT" condition | condition ("AND" | "OR") condition | "(" condition ")" ;
+expression = term (("+" | "-" | "||") term)* ;
+term = factor (("*" | "/" | "MOD") factor)* ;
+factor = ["+" | "-"] (literal | identifier | function_call | "(" expression ")") ;
+literal = number | string | "NULL" | "TRUE" | "FALSE" | date_literal ;
+
+# exception handler
+when_others = "WHEN OTHERS THEN" statements ;
+when_specific = "WHEN" (error_code | identifier) ["OR" (error_code | identifier)]* "THEN" statements ;
+error_code = "NO_DATA_FOUND" | "TOO_MANY_ROWS" | "DUP_VAL_ON_INDEX" | "ZERO_DIVIDE" | "VALUE_ERROR" | "INVALID_NUMBER" | "INVALID_CURSOR" | "-20001".."-20999" ;
+
+# embedded SQL Statements 
+select_stmt = "SELECT" ["DISTINCT" | "ALL"] column ("," column)* "FROM" table
+              ["WHERE" condition]
+              ["GROUP BY" column ("," column)*]
+              ["HAVING" condition]
+              ["ORDER BY" column ["ASC" | "DESC"] ("," column ["ASC" | "DESC"])*] ;
+column = "*" | expression ["AS" identifier] | identifier ;
+table = identifier ["@" database_link] | "(" select_stmt ")" ["WITH READ ONLY"] ;
+insert_stmt = "INSERT INTO" table ["(" column ("," column)* ")"] "VALUES" "(" expression ("," expression)* ")" ;
+update_stmt = "UPDATE" table "SET" column "=" expression ("," column "=" expression)* ["WHERE" condition] ;
+delete_stmt = "DELETE FROM" table ["WHERE" condition] ;
+merge_stmt = "MERGE INTO" table "USING" (table | "(" select_stmt ")") "ON" "(" condition ")"
+             "WHEN MATCHED THEN UPDATE SET" column "=" expression ("," column "=" expression)*
+             ["WHERE" condition]
+             "WHEN NOT MATCHED THEN INSERT" ["(" column ("," column)* ")"] "VALUES" "(" expression ("," expression)* ")" ;
+
+# identifiers and literals
+identifier = letter (letter | digit | "_" | "$" | "#")* ;
+number = digit+ ["." digit+] ["E" ["+" | "-"] digit+] ;
+string = "'" (character | "''")* "'" ;
+date_literal = "DATE '" yyyy "-" mm "-" dd "'" ;
+character = ? any printable character except single quote ? ;
+letter = "A".."Z" | "a".."z" ;
+digit = "0".."9" ;
+
+# packages 
+package_spec = "CREATE OR REPLACE PACKAGE" identifier ["AUTHID" ("CURRENT_USER" | "DEFINER")] "IS"
+               (variable_declaration | type_declaration | cursor_declaration | subprogram_declaration)* "END" identifier ";" ;
+package_body = "CREATE OR REPLACE PACKAGE BODY" identifier "IS"
+               (variable_declaration | subprogram_declaration)* ["BEGIN" statements] "END" identifier ";" ;
+
+# triggers 
+trigger = "CREATE OR REPLACE TRIGGER" identifier
+          ["BEFORE" | "AFTER" | "INSTEAD OF"]
+          (insert_event | update_event | delete_event | all_event)
+          ["OF" column ("," column)*]
+          ["ON" table | "ON" database]
+          ["FOR EACH ROW"]
+          ["WHEN" "(" condition ")"]
+          [block] ;
+insert_event = "INSERT" ;
+update_event = "UPDATE" ;
+delete_event = "DELETE" ;
+all_event = "ALL" ;
+
+
+# dynamic SQL 
+execute_immediate = "EXECUTE IMMEDIATE" (string | bind_variable) ["INTO" bind_variable ("," bind_variable)*] ["USING" bind_variable ("," bind_variable)*] ";" ;
+open_for = "OPEN" cursor_variable "FOR" (string | bind_variable) ["USING" bind_variable ("," bind_variable)*] ";" ;
+bind_variable = ":" identifier ;
+
+
+
