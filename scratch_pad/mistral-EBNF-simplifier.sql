@@ -1,18 +1,18 @@
-set serveroutput on 
-DECLARE
-    -- Input: The EBNF rule to expand
+create or replace procedure weird_code 
+    as 
+--
     v_ebnf_rule VARCHAR2(4000) := 'block = "DECLARE" (declarations? "BEGIN")+ statements ("EXCEPTION" exception_handlers?)+ "END" [block_name]? ";"';
-
-    -- Output: Table to hold the expanded rules
-    TYPE t_rules IS TABLE OF VARCHAR2(4000);
-    v_expanded_rules t_rules := t_rules();
+--
+    type test_type_rules is table of varchar2(4000);
+    v_expanded_rules test_type_rules := test_type_rules();
+    -- Input: The EBNF rule to expand
 
     -- Helper: Split a string by a delimiter, respecting quotes and brackets
     FUNCTION split_by_delimiter(
         p_string IN VARCHAR2,
         p_delim  IN VARCHAR2
-    ) RETURN t_rules IS
-        v_result t_rules := t_rules();
+    ) RETURN test_type_rules IS
+        v_result test_type_rules := test_type_rules();
         v_start NUMBER := 1;
         v_end NUMBER;
         v_in_quotes BOOLEAN := FALSE;
@@ -71,13 +71,13 @@ DECLARE
     END unquote;
 
     -- Helper: Expand a single EBNF expression (alternatives, optionals, repetitions, groupings)
-    FUNCTION expand_expression(p_expr IN VARCHAR2) RETURN t_rules IS
-        v_result t_rules := t_rules();
-        v_parts t_rules;
+    FUNCTION expand_expression(p_expr IN VARCHAR2) RETURN test_type_rules IS
+        v_result test_type_rules := test_type_rules();
+        v_parts test_type_rules;
         v_part VARCHAR2(4000);
-        v_alternatives t_rules;
-        v_expanded t_rules;
-        v_temp t_rules;
+        v_alternatives test_type_rules;
+        v_expanded test_type_rules;
+        v_temp test_type_rules;
         v_i NUMBER;
         v_j NUMBER;
         v_k NUMBER;
@@ -166,7 +166,7 @@ DECLARE
         v_parts := split_by_delimiter(p_expr, ' ');
         IF v_parts.COUNT > 1 THEN
             -- Split into tokens (terminals, non-terminals, or sub-expressions)
-            v_temp := t_rules();
+            v_temp := test_type_rules();
             v_temp.EXTEND;
             v_temp(v_temp.COUNT) := '';
             FOR i IN 1..v_parts.COUNT LOOP
@@ -201,7 +201,7 @@ DECLARE
         v_lhs VARCHAR2(100);
         v_rhs VARCHAR2(4000);
         v_equals_pos NUMBER;
-        v_expanded t_rules;
+        v_expanded test_type_rules;
         v_i NUMBER;
     BEGIN
         -- Split into LHS and RHS
@@ -230,5 +230,5 @@ BEGIN
     FOR i IN 1..v_expanded_rules.COUNT LOOP
         DBMS_OUTPUT.PUT_LINE(v_expanded_rules(i));
     END LOOP;
-END;
+end;
 /

@@ -421,3 +421,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
 2026.08.19:
   code from mistral to be stored into database table and extracted, maybe the bad chars will be gone!
+
+2026.08.20:
+  Really weird, after replacing DECLARE with CREATE OR REPLACE PROCEDURE weird_code, the Null error line 1 disappeared!
