@@ -280,6 +280,7 @@ begin
     v_code := chr_counter.first;
     while v_code is not null loop 
         dbms_output.put_line( v_code||': '||chr_counter(v_code) );
+        dbms_output.put_line( 'ascii val: '|| ascii(v_code) );
         v_code := chr_counter.next( v_code );
     end loop;
 end;

@@ -419,3 +419,5 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Nota bene: do not confuse the resulting rows with alt-tokens. Each row return by fn_1_ebnf_to_simple is a separate rule even if the lhs is the same! When converted to tokens, we should see different subrules with different names!
   
   
+2026.08.19:
+  code from mistral to be stored into database table and extracted, maybe the bad chars will be gone!
