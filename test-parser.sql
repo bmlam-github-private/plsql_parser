@@ -220,3 +220,17 @@ FROM TABLE( parser_rule_util. FN_EBNF_CLOB_TO_SIMPLE (	q'{
     , p_source => upper( 'variable_declartion' )
     ) )
     ;
+
+set serveroutput on 
+--declare 
+--    n number;
+--    --v_rule_v1 varchar2( 1000 ) := 'block = [ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"';
+--    v_rule_v1 varchar2( 1000 ) := '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"';
+--    v_res sys.odciVarchar2List; 
+--BEGIN     
+--    v_res := test_mistral ( v_rule_v1 ) ;
+--END;
+--/
+select *
+    from table ( test_mistral ( '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"' ) )
+    ;

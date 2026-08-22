@@ -427,3 +427,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.08.21:
   Research if DELETE is really a reason I had to refrain from making the functions return sys.odcivarchar2list!
+
+2026.08.22:
+  I am seeing really inexplicable behaviors of ATP 
+  * suddenlty
