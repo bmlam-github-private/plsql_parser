@@ -447,3 +447,17 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Got 2 erorrs: 1) starting the tool with /NOLOG. 2) "set cloudconfig". Gemini says I need an older 
   I tried to use the 24.3 cli binary, change into the bin directory, /nolog works. but the problem is opening the wallet! 
 
+  Well, the mistral "tokenizer" returns so disastrous result that we cannot really use to tokens to simplify an rule. 
+  Back to parser_rule_util which 
+	* interprets square bracketing well, the stuff inside is treated as optional.
+    * fails on curly bracketing: it makes some kind of effort to treat it as 0 to n repetition, but the resulting notation is wrong. 
+	  For: <logical_and_expr> { "OR" <logical_and_expr> }
+	  Result is only one rule: <logical_and_expr> "OR" <logical_and_expr> <logical_and_expr>  "OR" <logical_and_expr> )    *Note the closing round bracket out of the blue! 
+	  According to gemini, the rule <expr> ::= <a> { "OR" <b> }
+	    should be converted to 
+		  <expr> 	::= <a> <b_list>
+		  <b_list> 	::= "OR" <b> b_list | epsilon 
+		  
+    To make things easier, we should ensure that a rhs does not nest alternative, within alternative, at most one level of square bracket or curly brackets exist! 
+	
+	  

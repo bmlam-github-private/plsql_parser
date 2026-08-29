@@ -3,6 +3,12 @@ AS
 -- 
 TYPE table_of_vc4k 	IS TABLE OF VARCHAR2(4000);
 -- 
+FUNCTION split_by_delimiter(
+    p_string IN VARCHAR2,
+    p_delim  IN VARCHAR2
+) RETURN table_of_vc4k 
+;
+-- 
 FUNCTION expand_expression
 	( p_expr IN VARCHAR2
 	 ,p_nesting	IN NUMBER 

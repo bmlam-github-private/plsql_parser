@@ -1,4 +1,4 @@
-CREATE OR REPLACE procedure test_mistral
+CREATE OR REPLACE procedure test_expand_expr 
 ( p_string VARCHAR2 )
 AS
 	v_result mistral_ebnf_simplifier.table_of_vc4k;

@@ -231,6 +231,7 @@ set serveroutput on
 --    v_res := test_mistral ( v_rule_v1 ) ;
 --END;
 --/
-select *
-    from table ( test_mistral ( '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"' ) )
-    ;
+begin 
+    test_mistral ( '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"' ) ;
+end;
+/
