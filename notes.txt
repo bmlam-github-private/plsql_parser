@@ -430,4 +430,20 @@ With the first sets computed, we can more efficiently parse the alternatives one
 
 2026.08.22:
   I am seeing really inexplicable behaviors of ATP 
-  * suddenlty
+  * suddenly this error pops up 
+	declare 
+		*
+	ERROR in Zeile 1:
+		null
+  * Table function returns 0 rows 
+  I wonder if the ATP is hitting an undocumented limitation.
+
+  In terms of parser, the fundamental question how least complex a ebnf rule must be so that the simplification procedure can handle? 
+  * can it take a mix of optionals (pipe) and repitition at the same time 
+  * or the input rule must be either this or that?
+
+2026.08.29:
+  Since I suspect the weird Oracle error is due a bug in sqldeveloper, I look for an additional tool so I can better analyse the cause. I fouind Oracle CLI in 24.3 package. To be up-to-date, I instaLLED sqldeveloper 26.2 , but this package no longer contains the CLI. I had to download SQLCL separately and also JRE 17.0.5 ! 
+  Got 2 erorrs: 1) starting the tool with /NOLOG. 2) "set cloudconfig". Gemini says I need an older 
+  I tried to use the 24.3 cli binary, change into the bin directory, /nolog works. but the problem is opening the wallet! 
+
