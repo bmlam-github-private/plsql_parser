@@ -54,8 +54,11 @@ BEGIN
             v_in_parens := v_in_parens - 1;
         -- Split only if not in quotes, brackets, or parentheses
         ELSIF v_char = p_delim AND NOT v_in_quotes AND v_in_brackets = 0 AND v_in_parens = 0 THEN
-            v_result_local_type.EXTEND;
-            v_result_local_type(v_result_local_type.COUNT) := SUBSTR(p_string, v_start, i - v_start);
+			v_elem := SUBSTR(p_string, v_start, i - v_start);
+			IF trim( v_elem ) IS NOT NULL 
+			THEN 
+				v_result_local_type.EXTEND;
+				v_result_local_type(v_result_local_type.COUNT) := trim(v_lem);
             v_start := i + 1;
         END IF;
     END LOOP;

@@ -221,17 +221,18 @@ FROM TABLE( parser_rule_util. FN_EBNF_CLOB_TO_SIMPLE (	q'{
     ) )
     ;
 
-set serveroutput on 
---declare 
---    n number;
---    --v_rule_v1 varchar2( 1000 ) := 'block = [ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"';
---    v_rule_v1 varchar2( 1000 ) := '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"';
---    v_res sys.odciVarchar2List; 
---BEGIN     
---    v_res := test_mistral ( v_rule_v1 ) ;
---END;
---/
+set serveroutput on -- to debug fn_1_ebnf_to_simple
+declare x parser_grammar_rule_simple_col;
 begin 
-    test_mistral ( '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"' ) ;
+    x := parser_rule_util.fn_1_ebnf_to_simple ( p_lhs=> '<expression>', p_rhs=> '<logical_and_expr> { "OR" <logical_and_expr> }' , P_source=> 'basic_test' ) ;
 end;
 /
+
+select * 
+from table ( parser_rule_util.fn_1_ebnf_to_simple ( p_lhs=> 'plsql_block', p_rhs=> '[ "DECLARE" declarations ] "BEGIN" statements ("EXCEPTION" exception_handlers+) "END" [block_name] ";"' , P_source=> 'basic_test' ) )
+;
+select * 
+from table ( parser_rule_util.fn_1_ebnf_to_simple ( p_lhs=> '<expression>', p_rhs=> '<logical_and_expr> { "OR" <logical_and_expr> }' , P_source=> 'basic_test' ) )
+order by subrule_no 
+;
+

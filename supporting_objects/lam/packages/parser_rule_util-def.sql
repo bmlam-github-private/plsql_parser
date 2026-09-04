@@ -7,6 +7,11 @@ PROCEDURE pr_set_global
 )
 ;
 -- 
+-- function to show the result of get_tokens for debugging 
+FUNCTION get_tokens_dbx(p_str VARCHAR2) 
+RETURN sys.odcivarchar2List
+;
+-- 
 FUNCTION fn_1_ebnf_to_simple 
 (   p_lhs 		IN VARCHAR2
    ,p_rhs 		IN VARCHAR2

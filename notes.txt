@@ -460,4 +460,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 		  
     To make things easier, we should ensure that a rhs does not nest alternative, within alternative, at most one level of square bracket or curly brackets exist! 
 	
-	  
+2026.09.04:
+	Fixed a bug in in parser_rule_util.fn_1_ebnf_to_simple. Asterix is an Oracle special thing to denote repitition. EBNF has no use for it, neither for round brackets. 
+	
