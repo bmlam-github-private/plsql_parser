@@ -1,0 +1,6 @@
+
+method_declaration ::= "PROCEDURE" identifier [ parameter_declaration ] ";"
+					| "FUNCTION" identifier [ parameter_declaration ] ";"
+					
+<parameter_spec>        ::= <identifier> [ "IN" | "OUT" | "IN OUT" ] <data_type> [ ":=" <expression> ]
+

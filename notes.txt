@@ -463,3 +463,5 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.09.04:
 	Fixed a bug in in parser_rule_util.fn_1_ebnf_to_simple. Asterix is an Oracle special thing to denote repitition. EBNF has no use for it, neither for round brackets. 
 	
+2026.09.05:
+  The grammars we have sofar are to complex per rule. We need to breakdown to smaller pieces of more simple form , such as declaration, begen_end_block which contains exception section 

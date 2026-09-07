@@ -1,0 +1,78 @@
+
+select *
+from table ( 
+	p_source => 'manual_declaration_test'
+	p_clob => 
+	q'[
+	<declaration_section>   ::= { <declaration> }*
+<declaration>           ::= <variable_declaration>
+                          | <constant_declaration>
+                          | <type_declaration>
+                          | <cursor_declaration>
+                          | <exception_declaration>
+<variable_declaration>  ::= <identifier> [ "CONSTANT" ] <data_type> [ ":=" <expression> ] ";"
+<constant_declaration>  ::= <identifier> "CONSTANT" <data_type> ":=" <expression> ";"
+<type_declaration>      ::= "TYPE" <identifier> "IS" <type_definition> ";"
+<exception_declaration> ::= <identifier> "EXCEPTION" ";"
+<parameter_list>        ::= <parameter_spec> { "," <parameter_spec> }*
+<parameter_spec>        ::= <identifier> [ "IN" | "OUT" | "IN OUT" ] <data_type> [ ":=" <expression> ]
+<data_type>             ::= <identifier> [ "%TYPE" | "%ROWTYPE" ] 
+                          | <identifier> "(" <number_literal> [ "," <number_literal> ] ")"
+<type_definition> ::= <record_type_definition>
+                    | <ref_cursor_type_definition>
+<index_by_type>              ::= "VARCHAR2" "(" <number_literal> ")"
+                               | "PLS_INTEGER"
+                               | "BINARY_INTEGER"
+                               | "LONG"
+<record_type_definition> ::= "RECORD" "(" <record_field_spec> { "," <record_field_spec> }* ")"
+<record_field_spec>      ::= <identifier> <data_type> [ "NOT NULL" ] [ ( ":=" | "DEFAULT" ) <expression> ]
+[ "INDEX BY" <index_by_type> ]
+<ref_cursor_type_definition> ::= "REF CURSOR" [ "RETURN" <data_type> ]
+
+# added 2026.08.15 , see if the mini parser for declaration_section will be self-sufficient 
+
+<expression>           ::= <logical_and_expr> { "OR" <logical_and_expr> }
+
+<logical_and_expr>     ::= <logical_not_expr> { "AND" <logical_not_expr> }
+
+<logical_not_expr>     ::= [ "NOT" ] <relational_expr>
+
+<relational_expr>      ::= <additive_expr> [ <relational_op> <additive_expr> 
+                                           | <is_null_op> 
+                                           | <between_op> 
+                                           | <in_op> 
+                                           | <like_op> ]
+
+<relational_op>        ::= "=" | "<>" | "!=" | "<" | ">" | "<=" | ">="
+
+<is_null_op>           ::= "IS" [ "NOT" ] "NULL"
+
+<between_op>           ::= [ "NOT" ] "BETWEEN" <additive_expr> "AND" <additive_expr>
+
+<in_op>                ::= [ "NOT" ] "IN" "(" ( <expression> { "," <expression> } | <subquery> ) ")"
+
+<like_op>              ::= [ "NOT" ] "LIKE" <additive_expr> [ "ESCAPE" <additive_expr> ]
+
+<additive_expr>        ::= <multiplicative_expr> { ( "+" | "-" | "||" ) <multiplicative_expr> }
+
+<multiplicative_expr>  ::= <exponent_expr> { ( "*" | "/" ) <exponent_expr> }
+
+<exponent_expr>        ::= <unary_expr> { "**" <unary_expr> }
+
+<unary_expr>           ::= [ "+" | "-" ] <primary>
+
+<primary>              ::= <literal>
+                         | <variable_or_function>
+                         | <case_expression>
+                         | "(" <expression> ")"
+                         | "(" <subquery> ")"
+
+<variable_or_function> ::= <identifier> [ "(" [ <expression> { "," <expression> } ] ")" ]
+
+<literal>              ::= <numeric_literal> | <string_literal> | "TRUE" | "FALSE" | "NULL"
+
+
+
+	]'
+) )
+;
