@@ -465,3 +465,14 @@ With the first sets computed, we can more efficiently parse the alternatives one
 	
 2026.09.05:
   The grammars we have sofar are to complex per rule. We need to breakdown to smaller pieces of more simple form , such as declaration, begen_end_block which contains exception section 
+
+2026.09.09:
+  on expansion of EBNF these strategies are sensible:
+  * implement a check to make sure that any type of brackets ( round, square, curly ) is nested at most in one level. i.e. ( a [ b {c} ] ) is ok, but not ( a [ b ( x ) ] ). Raise an error in case.
+  * while expanding look for any of these open brackets from left to right, on occurrence , scan for the first matching closing bracket. remove the tokens from the current rhs and push them as new rhs on the the stack (working or temp rules), using grp | opt | rep  as lhs suffix. put this new rule as substitute in the current rhs. We probably need to extend size of lhs column. 
+  * The scan for closing brackets reduced the numbers of symbols in the current rhs size, but we stay with the current scan poostion and bump it just by 1. 
+  * process the stacked rules
+  The current code from gemini likely works this way but has a few bugs to be sorted out.
+
+  Implemented parser_rule_util. check_messy_brackets. to be compiled and tested.
+  
