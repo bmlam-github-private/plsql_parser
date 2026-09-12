@@ -829,13 +829,13 @@ ipr_detect_infinite_loop;
 END process_token_brackets_self_contained;
 -- 
 FUNCTION f_extract_rule_lines (
-    p_grammar       CLOB 
+    p_grammar_clob	CLOB 
 ) RETURN APEX_T_VARCHAR2
 AS 
     v_lines_org     APEX_T_VARCHAR2;
     v_return        APEX_T_VARCHAR2 := APEX_T_VARCHAR2();
 BEGIN 
-    v_lines_org := f_apex_split_clob( p_clob=> p_clob, p_sep=> chr(10));
+    v_lines_org := f_apex_split_clob( p_clob=> p_grammar_clob, p_sep=> chr(10));
     FOR i IN 1 .. v_lines_org.count 
     LOOP 
         IF substr( ltrim( v_lines_org (i) ), 1, 1 ) = '#' THEN null; -- skip line
@@ -849,35 +849,40 @@ BEGIN
 END f_extract_rule_lines;
 --
 PROCEDURE check_messy_brackets (
-    p_grammar       CLOB 
+    p_grammar_clob	CLOB 
 ) AS 
     v_lines_excluding_comments APEX_T_VARCHAR2 := APEX_T_VARCHAR2();
+    v_line_trailer  VARCHAR2(4000);
+    v_found_the_one 		NUMBER;
+    v_found_one_of_others 	NUMBER;
 BEGIN 
     -- 
-    v_lines_excluding_comments := f_extract_rule_lines( p_clob=> p_clob );
-    v_line_trailer  VARCHAR2(4000);
+    v_lines_excluding_comments := f_extract_rule_lines( p_grammar_clob=> p_grammar_clob );
     -- 
     -- check for brackets 
     -- 
     FOR r_bracket_opposites IN ( 
-        SELECT              '?' AS mine, '??' oppenents FROM dual WHERE 1=0 
+        SELECT              '?' AS the_one, '??' the_others FROM dual WHERE 1=0 
         UNION ALL   SELECT '(',          '[{'           FROM dual 
         UNION ALL   SELECT '[',          '({'           FROM dual 
         UNION ALL   SELECT '{',          '(['           FROM dual 
     ) LOOP 
         FOR ln_ix IN 1 .. v_lines_excluding_comments.count 
         LOOP 
-            v_found := instr( v_lines_excluding_comments(ln_ix), r_bracket_opposites.main );
-            IF v_found > 0
-                v_line_trailer := substr( v_lines_excluding_comments(ln_ix), v_found + 1);
-                FOR ch_ix IN 1 .. length( v_line_trailer) 
-                LOOP 
-                    IF instr(  r_bracket_opposites.oppenents, substr( v_line_trailer, ch_ix, 1))
-                    THEN 
-                        RAISE_APPLICATION_ERROR( -20001, 'Rule has "' ||r_bracket_opposites.main||' interspersed with one of either "' ||r_bracket_opposites.oppenents||'" !')
-                    END IF;
-                END loop; -- Over characters in line trailer 
-            END;
+            v_found_the_one := find_non_quoted_bracket( p_bracket=> r_bracket_opposites.the_one, p_string=> v_lines_excluding_comments(ln_ix) );
+            IF v_found_the_one > 0
+			THEN 
+                -- v_line_trailer := substr( v_lines_excluding_comments(ln_ix), v_found_the_one + 1);
+				v_found_one_of_others := 
+					find_non_quoted_bracket_in_list 
+						( p_bracket_list=> r_bracket_opposites.the_others
+						, p_string 		=> v_lines_excluding_comments(ln_ix)
+						, p_scan_from 	=> v_found_the_one + 1
+						);
+				IF v_found_one_of_others > 0 THEN 
+					RAISE_APPLICATION_ERROR( -20001, 'Rule has "' ||r_bracket_opposites.the_one||' interspersed with one of either "' ||r_bracket_opposites.the_others||'" !');
+				END IF;
+            END IF;
         END LOOP; -- Over lines  
     END LOOP; -- Over bracket lists 
 END check_messy_brackets;
@@ -885,61 +890,57 @@ END check_messy_brackets;
 FUNCTION find_non_quoted_bracket 
 ( p_bracket     VARCHAR2
  ,p_string      VARCHAR2 
+ ,p_scan_from   NUMBER DEFAULT 1 
 ) RETURN NUMBER  
-/* In EBFN round/square/curly brackets have special meaning. But the same characters may be a literal, which must double-quoted. 
-   This founction should ignore double-quotes bracket.
-   Test cases: 
-   p_bracket    p_string            return 
-   round        a ( b )             3
-   round open   a "("" b )          0 
-   round close  a ( b ")"           0 
-*/
 AS  
-    v_return NUMBER := 0;
     v_work_string   VARCHAR2(4000) := p_string || '"';  -- cater for the awkward case last character is missing
-    v_bracket_found     NUMBER ;
+    v_bracket_found     NUMBER := 0;
     v_dq_bracket_found  NUMBER ;
-    v_scan_from         NUMBER := 1;
+    v_scan_from         NUMBER := p_scan_from;
 BEGIN 
+	dbms_output.put_line ( $$PLSQL_UNIT||':'||$$plsql_line||' p_bracket:'|| p_bracket );
     WHILE v_scan_from < length( p_string )
     LOOP 
         v_bracket_found := instr( v_work_string, p_bracket, v_scan_from );
+	--dbms_output.put_line ( $$PLSQL_UNIT||':'||$$plsql_line|| ' v_scan_from:'|| v_scan_from|| ' v_bracket_found:'|| v_bracket_found );
         IF v_bracket_found > 0 THEN 
             v_dq_bracket_found := instr( v_work_string, '"'||p_bracket||'"', v_scan_from );
+	--dbms_output.put_line ( $$PLSQL_UNIT||':'||$$plsql_line|| ' v_scan_from:'|| v_scan_from|| ' v_dq_bracket_found:'|| v_dq_bracket_found );
             CASE 
             WHEN v_dq_bracket_found = 0   -- no double-quoted bracket 
             THEN
-                v_return := 
-                EXIT;
+                EXIT;		-- the loop 
             WHEN v_dq_bracket_found = v_bracket_found - 1    -- bracket found is double-quoted  
             THEN 
                 v_scan_from := v_dq_bracket_found + 3;
+				v_bracket_found := 0 ;
             END CASE;
         ELSE -- bracket not found at all 
             EXIT;
         END IF;
     END LOOP;
     -- 
-    RETURN v_return;
+    RETURN v_bracket_found;
 END find_non_quoted_bracket ;
 --
 FUNCTION find_non_quoted_bracket_in_list 
 ( p_bracket_list    VARCHAR2
  ,p_string          VARCHAR2 
+ ,p_scan_from   NUMBER DEFAULT 1 
 ) RETURN NUMBER  
 /* based on find_non_quoted_bracket, but input is a set of bracket characters
 */ 
 AS 
     v_return NUMBER;
 BEGIN 
-    FOR i IN 1 .. length( p_bracket_list ) 
+    FOR ch_ix IN 1 .. length( p_bracket_list ) 
     LOOP 
-        v_return := find_non_quoted_bracket ( p_bracket=> substr( p_bracket, i, 1) ), p_string=> p_string );
+        v_return := find_non_quoted_bracket ( p_bracket=> substr( p_bracket_list, ch_ix, 1) , p_string=> p_string , p_scan_from=> p_scan_from );
         EXIT WHEN v_return > 0 ;
     END LOOP;
     -- 
     RETURN v_return;
-END find_non_quoted_bracket ;
+END find_non_quoted_bracket_in_list ;
 -- 
 END;	-- package 
 /

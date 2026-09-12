@@ -36,6 +36,30 @@ FUNCTION fn_grammar_clob_to_rule_tokens
 RETURN parser_alt_token_col
 ;
 --
+FUNCTION find_non_quoted_bracket 
+( p_bracket     VARCHAR2
+ ,p_string      VARCHAR2 
+ ,p_scan_from   NUMBER DEFAULT 1 
+) RETURN NUMBER  
+/* In EBFN round/square/curly brackets have special meaning. But the same characters may be a literal, which must double-quoted. 
+   This founction should ignore double-quotes bracket.
+   Test cases: 
+   p_bracket    p_string            return 
+   round        a ( b )             3
+   round open   a "(" b )           0 
+   round close  a ( b ")"           0 
+*/
+;
+--
+FUNCTION find_non_quoted_bracket_in_list 
+( p_bracket_list    VARCHAR2
+ ,p_string          VARCHAR2 
+ ,p_scan_from   NUMBER DEFAULT 1 
+) RETURN NUMBER  
+/* based on find_non_quoted_bracket, but input is a set of bracket characters
+*/ 
+;
+--
 end;
 /
 

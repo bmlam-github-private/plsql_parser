@@ -235,4 +235,15 @@ select *
 from table ( parser_rule_util.fn_1_ebnf_to_simple ( p_lhs=> '<expression>', p_rhs=> '<logical_and_expr> { "OR" <logical_and_expr> }' , P_source=> 'basic_test' ) )
 order by subrule_no 
 ;
-
+WITH test_cases AS ( 
+    SELECT 'xx' str, '.' bracket , 0 expected from dual where 1=0
+    UNION ALL SELECT 'a ( b )',     '(' ,   3   from dual 
+    UNION ALL SELECT 'a "(" b )',   '(',    0   from dual 
+    UNION ALL SELECT 'a ( b ")"',   ')',    0   from dual 
+    UNION ALL SELECT 'a ( b ")" )', ')',    11  from dual 
+    UNION ALL SELECT 'a [ b "]" ]', ']',    11  from dual 
+) 
+SELECT tc.*
+, parser_rule_util.find_non_quoted_bracket ( p_bracket=> tc.bracket, p_string=> tc.str ) as res_gotten 
+FROM test_cases tc 
+;
