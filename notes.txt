@@ -475,4 +475,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
   The current code from gemini likely works this way but has a few bugs to be sorted out.
 
   Implemented parser_rule_util. check_messy_brackets. to be compiled and tested.
+
+2026.09.10:
+  check_messy_brackets needs to be modified to use find_non_quoted_bracket_in_list !
   

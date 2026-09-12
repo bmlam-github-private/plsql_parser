@@ -881,6 +881,66 @@ BEGIN
         END LOOP; -- Over lines  
     END LOOP; -- Over bracket lists 
 END check_messy_brackets;
+-- 
+FUNCTION find_non_quoted_bracket 
+( p_bracket     VARCHAR2
+ ,p_string      VARCHAR2 
+) RETURN NUMBER  
+/* In EBFN round/square/curly brackets have special meaning. But the same characters may be a literal, which must double-quoted. 
+   This founction should ignore double-quotes bracket.
+   Test cases: 
+   p_bracket    p_string            return 
+   round        a ( b )             3
+   round open   a "("" b )          0 
+   round close  a ( b ")"           0 
+*/
+AS  
+    v_return NUMBER := 0;
+    v_work_string   VARCHAR2(4000) := p_string || '"';  -- cater for the awkward case last character is missing
+    v_bracket_found     NUMBER ;
+    v_dq_bracket_found  NUMBER ;
+    v_scan_from         NUMBER := 1;
+BEGIN 
+    WHILE v_scan_from < length( p_string )
+    LOOP 
+        v_bracket_found := instr( v_work_string, p_bracket, v_scan_from );
+        IF v_bracket_found > 0 THEN 
+            v_dq_bracket_found := instr( v_work_string, '"'||p_bracket||'"', v_scan_from );
+            CASE 
+            WHEN v_dq_bracket_found = 0   -- no double-quoted bracket 
+            THEN
+                v_return := 
+                EXIT;
+            WHEN v_dq_bracket_found = v_bracket_found - 1    -- bracket found is double-quoted  
+            THEN 
+                v_scan_from := v_dq_bracket_found + 3;
+            END CASE;
+        ELSE -- bracket not found at all 
+            EXIT;
+        END IF;
+    END LOOP;
+    -- 
+    RETURN v_return;
+END find_non_quoted_bracket ;
+--
+FUNCTION find_non_quoted_bracket_in_list 
+( p_bracket_list    VARCHAR2
+ ,p_string          VARCHAR2 
+) RETURN NUMBER  
+/* based on find_non_quoted_bracket, but input is a set of bracket characters
+*/ 
+AS 
+    v_return NUMBER;
+BEGIN 
+    FOR i IN 1 .. length( p_bracket_list ) 
+    LOOP 
+        v_return := find_non_quoted_bracket ( p_bracket=> substr( p_bracket, i, 1) ), p_string=> p_string );
+        EXIT WHEN v_return > 0 ;
+    END LOOP;
+    -- 
+    RETURN v_return;
+END find_non_quoted_bracket ;
+-- 
 END;	-- package 
 /
 
