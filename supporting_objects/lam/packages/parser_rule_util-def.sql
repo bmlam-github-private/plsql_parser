@@ -60,6 +60,13 @@ FUNCTION find_non_quoted_bracket_in_list
 */ 
 ;
 --
+PROCEDURE check_messy_brackets (
+    p_grammar_clob	CLOB 
+)
+/* make different type of brackets are not interspersed, which would require an algorithm less intuitive to be understood
+*/ 
+;
+--
 end;
 /
 

@@ -247,3 +247,27 @@ SELECT tc.*
 , parser_rule_util.find_non_quoted_bracket ( p_bracket=> tc.bracket, p_string=> tc.str ) as res_gotten 
 FROM test_cases tc 
 ;
+-- list of brackets 
+WITH test_cases AS ( 
+    SELECT 'xx' str, '.' brackets , 0 expected from dual where 1=0
+    UNION ALL SELECT 'a ( b )',     '[(' ,   3   from dual 
+    UNION ALL SELECT 'a "(" b )',   '(}',    0   from dual 
+    UNION ALL SELECT 'a ( b ")"',   '{}',    0   from dual 
+    UNION ALL SELECT 'a ( b ")" )', ')]',   11   from dual 
+    UNION ALL SELECT 'a "]" b "]" ]',']',   13   from dual 
+) 
+SELECT tc.*
+, parser_rule_util.find_non_quoted_bracket_in_list ( p_bracket_list=> tc.brackets, p_string=> tc.str ) as res_gotten 
+FROM test_cases tc 
+;
+
+begin 
+  parser_rule_util.check_messy_brackets ( 
+    p_grammar_clob =>
+q'[ rule_1 ::= "A" ( opt_1 | opt_2  )
+rule_2 ::= "A" ( expr [ "B" ] )
+# comment 1
+]'
+);
+END;
+/

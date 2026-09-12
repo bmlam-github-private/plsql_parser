@@ -104,7 +104,7 @@ AS
     v_working_rules  rule_table := rule_table();
     v_final_rules    rule_table := rule_table();
     
-    v_current_idx    NUMBER := 1;
+    v_rule_idx    NUMBER := 1;
     v_suffix_ix      NUMBER := 0;      -- Suffix counter for <opt_n> and <rep_n>
     v_rule_seq       NUMBER := 1;      -- Sequential identifier for the table
     v_initial_tokens token_list;
@@ -113,7 +113,7 @@ AS
     -- Recursive procedure to parse bracket blocks out of token arrays
 
     -- PHASE 1 Helper: Recursive extraction of outermost [] and {}* brackets
-    PROCEDURE process_token_brackets(pio_tokens IN OUT token_list) IS
+    PROCEDURE xxx_process_token_brackets(pio_tokens IN OUT token_list) IS
         v_open_idx       NUMBER := 0;
         v_close_idx      NUMBER := 0;
         v_bracket_type   VARCHAR2(1);
@@ -231,8 +231,7 @@ AS
                     v_working_rules(v_working_rules.LAST).tokens(v_inner_tokens.COUNT + 5) := ')';
                     
                     v_skip_until := v_close_idx + 1;
-				/* wrong interpreation of curly brackets. We do not use Round brackets !
-                ELSE
+                ELSE  -- got round bracket 
 					-- Plain group: replace { A }` with ( A ) in place
 					v_new_tokens.DELETE;
 					v_new_idx := 1;
@@ -247,8 +246,6 @@ AS
 						v_new_idx := v_new_idx + 1;
 					END LOOP;
 					pio_tokens := v_new_tokens;
-                END IF;
-				wrong interpreation of curly brackets. We do not use Round brackets ! */ 
             END IF;
 		dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line
 							||' nesting: '||g_curr_nesting_level 
@@ -273,9 +270,9 @@ AS
             
             -- Recurse to handle any other bracket definitions inside this array block
 ipr_detect_infinite_loop;			
-            process_token_brackets(pio_tokens);
+            xxx_process_token_brackets(pio_tokens);
         END IF;
-    END process_token_brackets;
+    END xxx_process_token_brackets;
 
     -- PHASE 2: Recursively expand internal alternatives ( | ) and parenthesized groups ( )
     PROCEDURE flatten_alternatives(p_lhs VARCHAR2, pio_tokens token_list) IS
@@ -376,7 +373,7 @@ ipr_detect_infinite_loop;
         v_final_rules(v_final_rules.LAST).tokens := pio_tokens;
     END flatten_alternatives;
 
-BEGIN
+BEGIN -- fn_1_ebnf_to_simple
 	dbms_output.put_line ( UTL_CALL_STACK.CONCATENATE_SUBPROGRAM(UTL_CALL_STACK.SUBPROGRAM(1))|| ' p_lhs: '||  p_lhs|| ' p_rhs: '||  p_rhs );
     -- get_tokens and initialize Phase 1
 	g_curr_lhs := p_lhs;
@@ -386,9 +383,14 @@ BEGIN
     v_working_rules(v_working_rules.LAST).lhs := TRIM(p_lhs);
     v_working_rules(v_working_rules.LAST).tokens := v_initial_tokens;
     
-    WHILE v_current_idx <= v_working_rules.COUNT LOOP
-        process_token_brackets(v_working_rules(v_current_idx).tokens);
-        v_current_idx := v_current_idx + 1;
+    WHILE v_rule_idx <= v_working_rules.COUNT LOOP
+	/*
+        process_token_brackets_self_contained
+			( p_lhs=> v_working_rules(v_rule_idx).lhs 
+			 ,pio_tokens => 
+			);
+			*/ 
+	   v_rule_idx := v_rule_idx + 1;
     END LOOP;
     
     -- Execute Phase 2 across all rules discovered in Phase 1
@@ -880,7 +882,8 @@ BEGIN
 						, p_scan_from 	=> v_found_the_one + 1
 						);
 				IF v_found_one_of_others > 0 THEN 
-					RAISE_APPLICATION_ERROR( -20001, 'Rule has "' ||r_bracket_opposites.the_one||' interspersed with one of either "' ||r_bracket_opposites.the_others||'" !');
+					RAISE_APPLICATION_ERROR( -20001, 'Rule shown below has "' ||r_bracket_opposites.the_one||' interspersed with one of either "' ||r_bracket_opposites.the_others
+						||'" !'||chr(10)|| v_lines_excluding_comments(ln_ix));
 				END IF;
             END IF;
         END LOOP; -- Over lines  
