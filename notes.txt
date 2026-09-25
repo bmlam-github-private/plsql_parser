@@ -469,20 +469,23 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.09.09:
   on expansion of EBNF these strategies are sensible:
   * implement a check to make sure that any type of brackets ( round, square, curly ) is nested at most in one level. i.e. ( a [ b {c} ] ) is ok, but not ( a [ b ( x ) ] ). Raise an error in case.
-  * while expanding look for any of these open brackets from left to right, on occurrence , scan for the first matching closing bracket. remove the tokens from the current rhs and push them as new rhs on the the stack (working or temp rules), using grp | opt | rep  as lhs suffix. put this new rule as substitute in the current rhs. We probably need to extend size of lhs column. Examples 
-	**expr_x ::= ( "A" "B" | "C" ) expr_d 				
-	  derives 2 subrules 
-		expr_x 			::= expr_x_opt_1 expr_d 
-		expr_x_alt_1	::= "A" "B" | "C" 
-	  expr_x_opt_1 will derived to sub-subrules, but we do not elaborate for new 
-	** expr_x ::= [ "A" "B" ] "C" expr_d 				
-	  derives 2 subrules 
-		expr_x:= 		expr_x_opt_1 "C" expr_d 				
-		expr_x_opt_1 := "A" "B" | epsilon 
-	** expr_x ::= { "A" } "C" expr_d 				
-	  derives 2 subrules 
-	  expr_x ::= 				expr_x_rep_1 "C" expr_d 				
-	  expr_x_rep_1 ::= "A" expr_x_rep_1 | epsilon    !! temporarily expr_x_rep_1 was {"A"}
+  * while expanding look for any of these open brackets from left to right, on occurrence , scan for the first matching closing bracket. remove the tokens from the current rhs and push them as new rhs on the the stack (working or temp rules), using altlst (list of alternatives)| occ01 (occurrence 0 or 1 )| iter0n  as lhs suffix. put this new rule as substitute in the current rhs. We probably need to extend size of lhs column. Examples 
+
+	** expr_x ::= ( "A" "B" | "C" ) expr_d 				
+	  produces 2 subrules 
+		expr_x 			::= expr_x_altlst_1 expr_d 
+		expr_x_altlst_1	::= "A" "B" | "C" 
+	  expr_x_altlst_1 will produce further sub-subrules, but we do not elaborate for new 
+
+	** expr_x ::= 			[ "A" "B" ] "C" expr_d 				
+	  produces 2 subrules 
+		expr_x ::= 			expr_x_occ01_1 "C" expr_d 				
+		expr_x_occ01_1::= 	"A" "B" | epsilon 
+
+	** expr_x ::= 			"HEAD" column { "," column  } expr_d 				
+	  produces 2 subrules 
+	  expr_x ::= 			"HEAD" column expr_x_it0n_1 expr_d 				
+	  expr_x_it0n_1 ::= 	"," column expr_x_it0n_1 | epsilon    
 	  
   * The scan for closing brackets reduced the numbers of symbols in the current rhs size, but we stay with the current scan poostion and bump it just by 1. 
   * process the stacked rules
@@ -496,3 +499,10 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.09.12:
    The current working SQLDeveloper on my nipogi box is 26.2.0
    Desk test how to deal with brackets 
+   
+2026.09.25:
+   Reviewed the reasoning on bracket expansion under 2026.09.09. 
+   Maybe we can do without check_messy_brackets, which scan a string and distinction of brackets being EBNF components or part of terminal symbols is a bit tricky. While the expansion code deals with array of tokens. 
+   Obviously, we will remove the tokens of a matching bracket pair with a new subrule, while moving the removed tokens to the rhs of the new subrule. This way the tokens of CURRENT rhs has been reduced. We resume the scan of the current rhs from the next position.
+   After the CURRENT rule has been fully scanned, we recursively process the pushed subrules
+   This way the recursion may be quite awesome, but conceptually it is 	CLEAN! 
