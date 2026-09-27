@@ -511,3 +511,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
   Layout idea of ebnf expansion in recursive-ebnf-expn-design.txt.
   We should use standalone method to implement the code in modular way and test each method separately! 
   
+  Tested function f_extract_ebnf_tokens.
+  Coded function  f_extract_rules_from_grammar need to compile/test. 
+  
+  In the end we want to process a  clob as grammar and see that the rules are nicely expanded and return from a TABLE function 
+  
