@@ -506,3 +506,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
    Obviously, we will remove the tokens of a matching bracket pair with a new subrule, while moving the removed tokens to the rhs of the new subrule. This way the tokens of CURRENT rhs has been reduced. We resume the scan of the current rhs from the next position.
    After the CURRENT rule has been fully scanned, we recursively process the pushed subrules
    This way the recursion may be quite awesome, but conceptually it is 	CLEAN! 
+
+2026.09.27:
+  Layout idea of ebnf expansion in recursive-ebnf-expn-design.txt.
+  We should use standalone method to implement the code in modular way and test each method separately! 
+  

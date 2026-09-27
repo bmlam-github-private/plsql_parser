@@ -1,0 +1,50 @@
+Signature 
+FUNCTION fn_1_ebnf_to_simple
+(   p_lhs       IN VARCHAR2
+   ,p_rhs       IN VARCHAR2
+   ,p_source    IN VARCHAR2
+)
+RETURN parser_grammar_rule_simple_col
+--
+    v_return 		parser_grammar_rule_simple_col :=  parser_grammar_rule_simple_col();
+    v_work_rules 	parser_grammar_rule_simple_col :=  parser_grammar_rule_simple_col();
+
+
+
+1. Tokenize p_rhs . Use temporarily temp_get_ebnf_tokens to verify
+2. 
+2.1.A 
+	Check if p_rhs is "simple", i.e. bracketwise
+    a. rhs contains only alternatives separated by pipe tokens
+	b. first token is open square and last is close square with no other brackets 
+	c. first token is open curly and last is close curly with no other brackets 
+	
+	CASE a. Flatten_alternatives 
+			Replace each alternative in p_rhs with a subrule, add subrule to v_return.
+	        Add the subrules to v_return 
+	CASE b. expand_occ01 rule 
+			Replace bracket pair with _occ01_<seq> in current rhs , add to v_return 
+			Add subrule with p_lhs _occ01_<seq> , p_rhs equals content within bracket plus epsilon as alternative , add to v_return 
+	CASE c. expand it0n rule 
+			Replace bracket pair with _it0n_<seq> in current p_rhs, add to v_return 
+			Add subrule with p_lhs _it0n_<seq>, p_rhs  equals content within bracket plus epsilon as alternative, add to v_return 
+			
+	NOTE : in a rule with epsilon as one COMPLETE alternative, no expansion must be performed! 
+
+	In all 3 cases, there is no further recursion !
+
+2.1.B 
+	Scan for first ( outermost ) bracket which is open  round or square or curly
+	If none is found, push the current rule to v_work_rules
+	If open round is found, scan until first matching close is found 
+		replace in current rhs the bracket pair with _alt_<seq>, add to v_work_rules 
+		Add _alt_<seq> as rhs , rhs = content of bracket pairs omitting the brackets, add to v_work_rules 
+	If open square is found, scan until first matching close is found 
+		Replace bracket pair with _occ01_<seq> in current rhs, add rule to v_wrok_ruels 
+		Add _occ01_<seq> as rhs , rhs = content of bracket, add to v_work_rules 
+	If open curly is found, scan until first matching close is found 
+		Replace bracket pair with _it0n_<seq> in current rhs, add rule to v_wrok_ruels 
+		Add _it0n_<seq> as rhs , rhs = content of bracket, add to v_work_rules 
+		
+2.2 
+	Recursively process v_work_rules
