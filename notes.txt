@@ -516,3 +516,5 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
   In the end we want to process a  clob as grammar and see that the rules are nicely expanded and return from a TABLE function 
   
+2026.10.03 
+  Still debugging f_extract_rules_from_grammar ! Maybe send it to AI.
