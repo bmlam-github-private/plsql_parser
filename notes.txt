@@ -524,6 +524,9 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
 2026.10.10
   Tested f_grammar_2_simple_rules with column_expression example ( found as comment in source code of f_grammar_2_simple_rules ). Things look OK.
+  Tested f_grammar_2_rule_tokens same example. Visual check of result seems ok. Need to take a DEEP dive to 
+  * generate parser package 
+  * fire the parser package to verify 
   
 
   
