@@ -55,13 +55,14 @@ BEGIN
 	LOOP 
 		v_line := v_lines( ln_ix );
         -- Skip empty lines
-        IF v_line IS NULL 
+        IF regexp_like( v_line , '^\s*$' ) 	-- empty or has only whitespace , somehow , it did not work! 
+			OR trim( v_line ) IS NULL 		-- workaround possible regexp_like  BUG
 			OR regexp_like( v_line, '\s*#' )  		-- line is a comment;
 		THEN
             CONTINUE;
         END IF;
 		--
-	dbms_output.put_line ( 'Ln'||$$plsql_line|| rpad( ' ', 40, '* ' ) ||' ln_ix: '|| ln_ix||chr(10)||' v_line: '|| v_line );
+	dbms_output.put_line ( 'Ln'||$$plsql_line|| rpad( ' ', 40, '* ' ) ||' ln_ix: '|| ln_ix||chr(10)||' v_line: '|| CASE WHEN v_line IS NOT NULL THEN v_line ELSE 'null' end );
 		IF v_state = co_state_exp_beg
 		THEN 
 			v_lhs_rhs_sep_pos := INSTR(v_line, '::=');

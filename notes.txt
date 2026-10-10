@@ -522,5 +522,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.10.09
   f_extract_rules_from_grammar finally works. But when looking for rule end semicolon, we need to make sure nothing follows the semicolon till end of end. Otherwise we risk mingle two rules into one! 
   
+2026.10.10
+  Tested f_grammar_2_simple_rules with column_expression example ( found as comment in source code of f_grammar_2_simple_rules ). Things look OK.
+  
 
   

@@ -3,7 +3,14 @@ CREATE OR REPLACE FUNCTION f_extract_ebnf_tokens (
 ) RETURN sys.odcivarchar2List 
 IS
 /* extract tokens of an EBNF rhs. Notably double-quoted brackets are recognized as symbols.
-   Unquoted brackets ( round, square, curly ) are treated as building part of EBNF rule 
+   Unquoted brackets ( round, square, curly ) are treated as building part of EBNF rule
+
+   Test Example     
+SELECT * FROM TABLE ( f_extract_ebnf_tokens ( 
+	q'[  ( "A" "B" | "(" "{" "C" ")" "}" ) expr_d 	[ "expendable" ] "|" { "," column } 
+	]'
+	) )
+;
 */ 
     v_return sys.odcivarchar2List :=sys.odcivarchar2List();
     -- Regex matches: <non-terminals>, "strings", words, brackets, pipes, or single symbols
@@ -19,11 +26,3 @@ BEGIN
     RETURN v_return;
 END;
 /
-
-/*
-SELECT * FROM TABLE ( f_extract_ebnf_tokens ( 
-	q'[  ( "A" "B" | "(" "{" "C" ")" "}" ) expr_d 	[ "expendable" ] "|" { "," column } 
-	]'
-	) )
-;
-*/
