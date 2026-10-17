@@ -201,8 +201,6 @@ SELECT *
 select *
 FROM parser_grammar_rule_log
 ;
-desc parser_alt_token
-;
 -- trasient result of fn_grammar_clob_to_rule_tokens
 set serveroutput on 
 SELECT *

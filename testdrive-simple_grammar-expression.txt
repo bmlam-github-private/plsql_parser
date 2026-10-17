@@ -1,0 +1,21 @@
+Simple grammar rules for EXPRESSION 
+
+	# Main Expression Structure 
+	expression     = term { ( "+" | "-" ) term } ;
+
+	# Terms handle multiplication and division (higher precedence) 
+	term           = factor { ( "*" | "/" ) factor } ;
+
+	# Factors handle unary signs, parentheses, variables, and numbers (highest precedence) 
+	factor         = [ "+" | "-" ] ( number_literal | variable | "(" expression ")" ) ;
+
+Valide examples of expression 
+
+	a1 + b2 / (c - 3 * a1)
+	(a + b) * ( a / b - 2 ) - ( a * b ) 
+
+Step 1: Convert the grammar to alt_tokens and persist in table 
+
+Step 2: Generate PLSQL package from the grammar alt_tokens 
+
+Step 3: Test the generated package 

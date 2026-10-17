@@ -528,5 +528,9 @@ With the first sets computed, we can more efficiently parse the alternatives one
   * generate parser package 
   * fire the parser package to verify 
   
-
+2026.10.17
+  Need a procedure (similar to parser_rule_util. fn_grammar_clob_to_rule_tokens to convert a grammar into alt_tokens and also persist the alt_tokens. 
+  In addition both grammar CLOB and persisted alt_tokens should be historized in PARSER_GRAMMAR_RULE_LOG. The logic is also in parser_rule_util. fn_grammar_clob_to_rule_tokens with input option p_persist TRUE.
+  
+  Then have a look at testdrive-simple_grammar-expression.txt 
   
