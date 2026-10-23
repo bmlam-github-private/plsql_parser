@@ -534,3 +534,9 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
   Then have a look at testdrive-simple_grammar-expression.txt 
   
+2026.10.23 
+  Per prompt in previous diary entry, procedures/pr_refresh_rat_of_grammar is being worked on. 
+  
+  As for comfy test driver, we shall run the testdrive script in the shared session, to do checks, open the queries collection script in np++, open an unshared session and copy/paste the queries from np++ to the unshared session, since content in the unshared session cannot be directly linked to a file! 
+  
+  

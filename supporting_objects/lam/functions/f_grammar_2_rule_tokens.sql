@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION f_grammar_2_rule_tokens
-(   p_grammar   IN CLOB
-   ,p_source    IN VARCHAR2
+(   p_grammar   	IN CLOB
+   ,p_source_key    IN VARCHAR2
 )
 RETURN parser_alt_token_col
 AS 
@@ -21,10 +21,10 @@ NOTA BENE: rule alt_no is not to be used if higher alt_no exist(s) !
 	v_source_normed 	parser_grammar_rule_simple.source%TYPE;
 	vtab_simple_rules 	parser_grammar_rule_simple_col;
 BEGIN 
-	v_source_normed := trim( upper ( p_source ) );
+	v_source_normed := trim( upper ( p_source_key ) );
 	vtab_simple_rules := f_grammar_2_simple_rules
 		( p_grammar =>	p_grammar 
-		 ,p_source  =>  v_source_normed
+		 ,p_source_key  =>  v_source_normed
 		);
 	-- 
 	FOR r_simple_rule IN  	( 
@@ -42,7 +42,7 @@ BEGIN
 				 ,alt_no => r_simple_rule.subrule_no 
 				 ,position => r_tok.seq 
 				 ,symbol => r_tok.symbol 
-				 ,source => p_source 
+				 ,source => p_source_key 
 				 ); 
 		END LOOP; -- over sequenced tokens of RHS 
 	END LOOP; -- over simple rules 

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION f_grammar_2_simple_rules 
 ( p_grammar  	CLOB 
- ,p_source		VARCHAR2 
+ ,p_source_key		VARCHAR2 
 ) RETURN parser_grammar_rule_simple_col
 AS 
 /*  convert a EBNF grammar to simple BNF rules 
@@ -21,7 +21,7 @@ Example input grammar:
 	v_ebnf_rule 		parser_rule_from_grammar_rec;
 	v_source_normed 	parser_grammar_rule_simple.source%TYPE;
 BEGIN 
-	v_source_normed := trim( upper ( p_source ) );
+	v_source_normed := trim( upper ( p_source_key ) );
 	vtab_ebnf_rules := f_extract_rules_from_grammar ( p_grammar=> p_grammar );
 	-- 
 	FOR i IN 1 .. vtab_ebnf_rules.count 
