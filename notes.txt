@@ -544,3 +544,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
   &"C:\Program Files\sqldeveloper\sqldeveloper\bin\sql.exe" -cloudconfig "C:\Users\Public\Wallet_bmlamatp2-20260207.zip" lam/SECRET@bmlamatp2_high
 
   Also the SET CLOUDCONFIG line in login.sql is fixed. The path in users\public must not be quoted! 
+  
+  19:08
+  Could compile the generated package ok. Next error is last plsql block in testdrive script 
+  

@@ -14,6 +14,7 @@ BEGIN
 			( p_grammar 	=> p_grammar 
 			 ,p_source_key 	=> v_source_key
 			);
+dbms_output.put_line ( 'Ln'||$$plsql_line||' xx: '			|| vtab_simple_rule.count );
 	IF vtab_simple_rule.count = 0 
 	THEN 
 		RAISE_APPLICATION_ERROR( -20001, 'Grammar did not yield any simple rules' );

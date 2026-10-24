@@ -26,6 +26,7 @@ FUNCTION fn_get_parser_package_code
 	(p_source			IN VARCHAR2 
 	,p_package_name 	IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
 	,p_spec_body_mask 	IN INTEGER DEFAULT 2 -- 0 both, 1-spec only, 2-body only
+	,p_append_slash 	IN INTEGER DEFAULT 1 -- > 0 appends a slash for SQL . To compile the code as dynamic SQL, the terminating slash will hurt
 	) RETURN CLOB 
 	;
 END;

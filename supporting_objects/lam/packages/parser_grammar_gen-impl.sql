@@ -232,6 +232,7 @@ FUNCTION fn_get_parser_package_code
 	(p_source			IN VARCHAR2 
 	,p_package_name 	IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
 	,p_spec_body_mask 	IN INTEGER DEFAULT 2 -- 0 both, 1-spec only, 2-body only
+	,p_append_slash 	IN INTEGER DEFAULT 1 -- > 0 appends a slash for SQL 
 ) RETURN CLOB IS
     l_clob        CLOB;
     l_spec        CLOB;
@@ -290,7 +291,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
 
     -- 1. BUILD PACKAGE SPECIFICATION HEADERS
     append_to_clob(l_spec, 'CREATE OR REPLACE PACKAGE ' || p_package_name || ' AS' || CHR(10));
-    append_to_clob(l_spec, '  -- Global collection type for tokens' || CHR(10));
+    append_to_clob(l_spec, '  /* Global collection type for tokens */' || CHR(10));
     append_to_clob(l_spec, '  g_tokens         lexer_token_col;' || CHR(10));
     append_to_clob(l_spec, '  g_curr_token_ix  NUMBER := 1;' || CHR(10) || CHR(10));
 
@@ -385,7 +386,7 @@ dbms_output.put_line (  'ln'||$$plsql_line );
     END LOOP;
 
     -- 4. BONUS: DETERMINE TOP-LEVEL RULES & GENERATE MAIN SUBPROGRAM
-    append_to_clob(l_spec, CHR(10) || '  -- Main entry point for top-level parsing rules' || CHR(10));
+    append_to_clob(l_spec, CHR(10) || '  /* Main entry point for top-level parsing rules */' || CHR(10));
     append_to_clob(l_spec, '  PROCEDURE pr_increment_token_ix( p_symbol VARCHAR2 );' || CHR(10));
     append_to_clob(l_spec, '  PROCEDURE parse_main(p_token_stream IN lexer_token_col, po_success OUT BOOLEAN);' || CHR(10));
     
@@ -422,7 +423,7 @@ END pr_increment_token_ix;]'
         ORDER BY lhs
     ) LOOP
         append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
-        append_to_clob(l_body, '      g_curr_token_ix := 1; -- Reset stream index for next entry option' || CHR(10));
+        append_to_clob(l_body, '      g_curr_token_ix := 1; /* Reset stream index for next entry option */' || CHR(10));
         append_to_clob(l_body, '      ' || fn_norm_as_proc_name( top_rule.lhs )|| '(po_success);' || CHR(10));
         append_to_clob(l_body, '    END IF;' || CHR(10));
     END LOOP;
@@ -430,8 +431,12 @@ END pr_increment_token_ix;]'
     append_to_clob(l_body, '  END parse_main;' || CHR(10) || CHR(10));
 
     -- 5. CLOSE OUT STRINGS
-    append_to_clob(l_spec, 'END ' || p_package_name || ';' || co_nl ||'/'|| co_nl );
-    append_to_clob(l_body, 'END ' || p_package_name || ';' || co_nl ||'/'|| co_nl );
+    append_to_clob(l_spec, 'END ' || p_package_name || ';' || co_nl 
+		|| CASE WHEN p_append_slash > 0 THEN '/'|| co_nl END 
+		);
+    append_to_clob(l_body, 'END ' || p_package_name || ';' || co_nl 
+		|| CASE WHEN p_append_slash > 0 THEN '/'|| co_nl END 
+	);
 
     -- Combine into final CLOB
 	IF p_spec_body_mask IN ( 0 , 1 ) 

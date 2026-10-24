@@ -6,6 +6,15 @@ sta "C:\Users\Bon-Minh Lam\plsql_parser\scratch_pad\gemini_dynamic_generator.sql
 
 --rename parser_grammar_rules to parser_grammar_rule_ebnf
 ;
+
+SELECT *
+from log_table
+order by id desc fetch first 100 rows only 
+;
+SELECT *
+from long_log
+order by id desc fetch first 100 rows only 
+;
 SELECT *
 fROM parser_grammar_rule_simple 
 where 1=1
@@ -262,13 +271,27 @@ SELECT tc.*
 FROM test_cases tc 
 ;
 
-begin 
-  parser_rule_util.check_messy_brackets ( 
-    p_grammar_clob =>
-q'[ rule_1 ::= "A" ( opt_1 | opt_2  )
-rule_2 ::= "A" ( expr [ "B" ] )
-# comment 1
-]'
-);
+
+
+
+
+
+
+DECLARE  
+ v_source_key VARCHar2( 100 ) := upper( trim ('test_simple_expression' ) )
+    ;
+ v_grammar CLOB := q'[
+# Main Expression Structure 
+expression     ::= term { ( "+" | "-" ) term } ;
+# Terms handle multiplication and division (higher precedence) 
+term           ::= factor { ( "*" | "/" ) factor } ;
+# Factors handle unary signs, parentheses, variables, and numbers (highest precedence) 
+factor         ::= [ "+" | "-" ] ( number_literal | variable | "(" expression ")" ) ;
+	]';
+BEGIN 
+	pr_refresh_rat_of_grammar 
+		( p_grammar 	=> v_grammar 
+		 ,p_source_key 	=> v_source_key
+		);
 END;
 /
