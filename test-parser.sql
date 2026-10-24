@@ -15,7 +15,7 @@ order by lhs
 select source, count(1)
 from parser_alt_token 
 where 1=1
---  and source = 'PLSQL_EXCLUDING_SQL'
+--  and source =  UPPER( 'test_simple_expression' )
 --  and regexp_like ( symbol, '^"[A-Z_]+"$' )
 group by source
 ;

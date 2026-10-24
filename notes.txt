@@ -539,4 +539,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
   As for comfy test driver, we shall run the testdrive script in the shared session, to do checks, open the queries collection script in np++, open an unshared session and copy/paste the queries from np++ to the unshared session, since content in the unshared session cannot be directly linked to a file! 
   
-  
+2026.10.24
+  This command on POWER SHELL got me connected! 
+  &"C:\Program Files\sqldeveloper\sqldeveloper\bin\sql.exe" -cloudconfig "C:\Users\Public\Wallet_bmlamatp2-20260207.zip" lam/SECRET@bmlamatp2_high
+
+  Also the SET CLOUDCONFIG line in login.sql is fixed. The path in users\public must not be quoted! 

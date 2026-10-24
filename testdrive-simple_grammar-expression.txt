@@ -1,13 +1,13 @@
 Simple grammar rules for EXPRESSION 
 
 	# Main Expression Structure 
-	expression     = term { ( "+" | "-" ) term } ;
+	expression     ::= term { ( "+" | "-" ) term } ;
 
 	# Terms handle multiplication and division (higher precedence) 
-	term           = factor { ( "*" | "/" ) factor } ;
+	term           ::= factor { ( "*" | "/" ) factor } ;
 
 	# Factors handle unary signs, parentheses, variables, and numbers (highest precedence) 
-	factor         = [ "+" | "-" ] ( number_literal | variable | "(" expression ")" ) ;
+	factor         ::= [ "+" | "-" ] ( number_literal | variable | "(" expression ")" ) ;
 
 Valide examples of expression 
 

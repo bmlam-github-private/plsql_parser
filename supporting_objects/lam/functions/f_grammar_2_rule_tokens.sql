@@ -27,25 +27,10 @@ BEGIN
 		 ,p_source_key  =>  v_source_normed
 		);
 	-- 
-	FOR r_simple_rule IN  	( 
-		SELECT * 
-		FROM TABLE( vtab_simple_rules ) 
-	) LOOP 
-		FOR r_tok IN (
-			SELECT t.column_value	AS symbol 
-				,rownum 			AS seq 
-			FROM TABLE ( fn_split_by_whitespaces ( r_simple_rule.rhs ) ) t
-		) LOOP 
-			vtab_return.extend ;
-			vtab_return( vtab_return.last ) := parser_alt_token_rec 
-				( lhs => r_simple_rule.lhs 
-				 ,alt_no => r_simple_rule.subrule_no 
-				 ,position => r_tok.seq 
-				 ,symbol => r_tok.symbol 
-				 ,source => p_source_key 
-				 ); 
-		END LOOP; -- over sequenced tokens of RHS 
-	END LOOP; -- over simple rules 
+	vtab_return := f_simp_rules_to_alt_tokens 
+		(  p_tab_simple_rules =>	vtab_simple_rules 
+		  ,p_source_key	=>			v_source_normed
+		);
 	-- 
 	RETURN vtab_return; 
 END;
