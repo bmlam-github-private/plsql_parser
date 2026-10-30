@@ -548,3 +548,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
   19:08
   Could compile the generated package ok. Next error is last plsql block in testdrive script 
   
+2026.10.30
+  The block of test compile of example expression code did complete. Found out while the parser generator package has a parse_main procedure, it does not call the "root" rule. According to Gemini, it is better to explicitly name the root rule, so we need to include this in the signature of
+	parser_grammar_gen. fn_get_parser_package_code 
+  

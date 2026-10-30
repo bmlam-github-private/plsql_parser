@@ -1,7 +1,8 @@
 VAR source_key	VARCHAR2 
 VAR grammar 	VARCHAR2 
-VAR package_name	VARCHAR2 
-VAR test_code_1		VARCHAR2 
+VAR package_name		VARCHAR2 
+VAR test_compile_status	VARCHAR2 
+VAR test_code_1			VARCHAR2 
 
 
 
@@ -73,7 +74,7 @@ dbms_output.disable;
 	--
 	v_body := parser_grammar_gen. fn_get_parser_package_code ( 
         p_source => :source_key , p_package_name => :package_name 
-        , p_spec_body_mask => 1
+        , p_spec_body_mask => 2 
 		, p_append_slash => 0 
         ) ;
     BEGIN 		
@@ -94,14 +95,26 @@ PRINT :package_name
 
 PAUSE 
 
-PROMPT Testing code parser package 
 
+SET SERVEROUTPUT ON 
+
+PROMPT Testing code parser package 
 DECLARE 
-	vtab_lexer_token lexer_toker_col;
+	vtab_lexer_token lexer_token_col;
+	v_success	BOOLEAN; 
 BEGIN 
 	vtab_lexer_token := plsql_lexer. code_to_lang_tokens
 		( pi_code => :test_code_1
 		 ,pi_grammar_source => :source_key 
 		);
+	--
+	pkg_test_simple_expression.parse_main    
+		( p_token_stream => vtab_lexer_token
+		 ,po_success	 => v_success
+		 );
+	:test_compile_status := 'Test compile success: '|| case v_success WHEN TRUE THEN 'YES' ELSE 'NO' END ;
 END;
 /		
+
+PROMPT Test compile status
+PRINT :test_compile_status 
