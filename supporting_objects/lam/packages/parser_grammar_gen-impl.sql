@@ -233,6 +233,7 @@ FUNCTION fn_get_parser_package_code
 	,p_package_name 	IN VARCHAR2 DEFAULT 'PKG_DYNAMIC_PARSER'
 	,p_spec_body_mask 	IN INTEGER DEFAULT 2 -- 0 both, 1-spec only, 2-body only
 	,p_append_slash 	IN INTEGER DEFAULT 1 -- > 0 appends a slash for SQL 
+	,p_root_rule        IN VARCHAR2 DEFAULT NULL 
 ) RETURN CLOB IS
     l_clob        CLOB;
     l_spec        CLOB;
@@ -259,7 +260,7 @@ FUNCTION fn_get_parser_package_code
 		FROM parser_alt_token 
 		WHERE lhs = cp_lhs 
 		  AND upper( source ) = upper( trim( p_source ) ) 
-		  AND alt_no > 0		-- exclude the original rule, since if not more, the original will be cloned as rule 1.
+		  AND alt_no > 0		-- exclude the original rule, since if not, the original will be cloned as rule 1.
         ORDER BY alt_no;
         
     -- Cursor for symbols within altern specific alternative
@@ -408,25 +409,30 @@ END pr_increment_token_ix;]'
     append_to_clob(l_body, '    g_tokens := p_token_stream;' || CHR(10));
     append_to_clob(l_body, '    g_curr_token_ix := 1;' || CHR(10));
     append_to_clob(l_body, '    po_success := FALSE;' || CHR(10) || CHR(10));
-    
-    -- Identify top level rules using an anti-join query
-    FOR top_rule IN (
-        SELECT DISTINCT lhs 
-        FROM parser_alt_token t1 
-        WHERE upper( t1.source ) = upper( trim( p_source ) ) 
-		  AND lhs NOT IN (
-            SELECT DISTINCT symbol 
-            FROM parser_alt_token t2 
-            WHERE t2.symbol IS NOT NULL
-			  AND upper( t2.source ) = upper( trim( p_source ) ) 
-        )
-        ORDER BY lhs
-    ) LOOP
-        append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
-        append_to_clob(l_body, '      g_curr_token_ix := 1; /* Reset stream index for next entry option */' || CHR(10));
-        append_to_clob(l_body, '      ' || fn_norm_as_proc_name( top_rule.lhs )|| '(po_success);' || CHR(10));
-        append_to_clob(l_body, '    END IF;' || CHR(10));
-    END LOOP;
+
+	IF p_root_rule IS NOT NULL -- if a top rule is explicitly given 
+	THEN 
+		append_to_clob(l_body, '      ' || fn_norm_as_proc_name( p_root_rule )|| '(po_success);' || CHR(10));
+	ELSE 
+		-- Identify top level rules using an anti-join query
+		FOR top_rule IN (
+			SELECT DISTINCT lhs 
+			FROM parser_alt_token t1 
+			WHERE upper( t1.source ) = upper( trim( p_source ) ) 
+			  AND lhs NOT IN (
+				SELECT DISTINCT symbol 
+				FROM parser_alt_token t2 
+				WHERE t2.symbol IS NOT NULL
+				  AND upper( t2.source ) = upper( trim( p_source ) ) 
+			)
+			ORDER BY lhs
+		) LOOP
+			append_to_clob(l_body, '    IF NOT po_success THEN' || CHR(10));
+			append_to_clob(l_body, '      g_curr_token_ix := 1; /* Reset stream index for next entry option */' || CHR(10));
+			append_to_clob(l_body, '      ' || fn_norm_as_proc_name( top_rule.lhs )|| '(po_success);' || CHR(10));
+			append_to_clob(l_body, '    END IF;' || CHR(10));
+		END LOOP;
+	END IF;
     
     append_to_clob(l_body, '  END parse_main;' || CHR(10) || CHR(10));
 

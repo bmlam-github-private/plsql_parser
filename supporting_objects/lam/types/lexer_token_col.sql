@@ -110,7 +110,7 @@ BEGIN
 	-- print call stack END  
 	--
 	CASE 
-	WHEN pi_symbol  		= '<identifier>'
+	WHEN pi_symbol  		IN ( '<identifier>', 'identifier' )
 		AND self.tok_type 	= '<identifier>'
 	THEN 			
 		v_return := TRUE;

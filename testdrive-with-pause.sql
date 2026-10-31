@@ -18,11 +18,21 @@ BEGIN
     DBMS_output.put_line( 'source_key: '||upper( :source_key ) );
 	:grammar := q'[
 # Main Expression Structure 
-expression     ::= term { ( "+" | "-" ) term } ;
+expression      ::= term
+                  | expression "+" term
+                  | expression "-" term ;
 # Terms handle multiplication and division (higher precedence) 
-term           ::= factor { ( "*" | "/" ) factor } ;
+term            ::= factor
+                  | term "*" factor
+                  | term "/" factor ;
 # Factors handle unary signs, parentheses, variables, and numbers (highest precedence) 
-factor         ::= [ "+" | "-" ] ( number_literal | variable | "(" expression ")" ) ;
+factor          ::= "+" primary
+                  | "-" primary
+                  | primary ;
+
+primary         ::= number_literal 
+                  | identifier 
+                  | "(" expression ")" ;expression     ::= term { ( "+" | "-" ) term } ;
 	]';
 	--
 	:test_code_1 := 'a1 + b2 / (c - 3 * a1)';
@@ -76,6 +86,7 @@ dbms_output.disable;
         p_source => :source_key , p_package_name => :package_name 
         , p_spec_body_mask => 2 
 		, p_append_slash => 0 
+		, p_root_rule	=> 'expression' 
         ) ;
     BEGIN 		
 		EXECUTE IMMEDIATE v_body; 
@@ -96,7 +107,15 @@ PRINT :package_name
 PAUSE 
 
 
-SET SERVEROUTPUT ON 
+SET SERVEROUTPUT ON SIZE 100000 
+
+spool "c:\users\Bon-Minh Lam\plsql_parser\test-generated-parser.txt"
+
+Prompt Grammar: 
+print :grammar 
+
+Prompt test_code_1: 
+print :test_code_1 
 
 PROMPT Testing code parser package 
 DECLARE 
@@ -115,6 +134,6 @@ BEGIN
 	:test_compile_status := 'Test compile success: '|| case v_success WHEN TRUE THEN 'YES' ELSE 'NO' END ;
 END;
 /		
-
+SPOOL OFF 
 PROMPT Test compile status
 PRINT :test_compile_status 
