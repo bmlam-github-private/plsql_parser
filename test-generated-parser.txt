@@ -25,7 +25,7 @@ test_code_1:
 
 TEST_CODE_1
 --------------------------------------------------------------------------------
-a1 + b2 / (c - 3 * a1)
+a1 + b2 / ( (c - 3 * a1) )
 
 Testing code parser package
 [Breadcrumb] CONSTRUCTOR invoked at line: 576 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN

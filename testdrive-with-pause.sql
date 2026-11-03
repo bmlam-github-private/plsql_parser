@@ -35,7 +35,7 @@ primary         ::= number_literal
                   | "(" expression ")" ;expression     ::= term { ( "+" | "-" ) term } ;
 	]';
 	--
-	:test_code_1 := 'a1 + b2 / (c - 3 * a1)';
+	:test_code_1 := 'a1 + b2 / ( (c - 3 * a1) )';
 END;
 /
 
@@ -108,8 +108,12 @@ PAUSE
 
 
 SET SERVEROUTPUT ON SIZE 100000 
+col spool_file new_value spool_file 
+SELECT 'c:\users\Bon-Minh Lam\plsql_parser\test-generated-parser.txt' AS spool_file 
+FROM dual
+;
 
-spool "c:\users\Bon-Minh Lam\plsql_parser\test-generated-parser.txt"
+spool &spool_file 
 
 Prompt Grammar: 
 print :grammar 
@@ -135,5 +139,11 @@ BEGIN
 END;
 /		
 SPOOL OFF 
+
+PROMPT ***********************************************************************
+PROMPT Result spooled to &spool_file
+PROMPT ***********************************************************************
+
 PROMPT Test compile status
 PRINT :test_compile_status 
+
