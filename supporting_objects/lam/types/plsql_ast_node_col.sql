@@ -13,6 +13,7 @@ AS OBJECT
 (  node_id         NUMBER 
   ,parent_node_id  NUMBER 
   ,node_type       VARCHAR2(100) 
+  ,node_keyword    VARCHAR2(100) 				-- e.g. SELECT, UPDATE, EXCEPTION, PROCEDURE , but not for "()" which is ParenthesizedExpr
   ,node_value      CLOB 
   ,sibling_order   NUMBER 
   ,source_line     NUMBER                         -- Start line

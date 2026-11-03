@@ -1,17 +1,17 @@
--- idea: remove Expansion of identifier number <string> etc 
--- 2026.06.26: Nothing done yet!
--- 2026.11.03: Removed arrow brackets and quote SQL keywords
-
+# 2026.11.03: Removed arrow brackets and quote SQL keywords
+#
 select_statement ::= [with_clause] query_block { set_operator  query_block} [ order_by_clause ] [for_update_clause]
-
+;
 with_clause ::= "WITH" with_item {"," with_item}
+;
 with_item ::= identifier [ "(" column_list ")" ] "AS" "("  subquery  ")"
+;
 set_operator  ::= "UNION" ["ALL"]
               | "INTERSECT"
               | "MINUS"
-
+;
 subquery  ::= query_block { set_operator  query_block}
-
+;
 query_block ::= "SELECT" [ "DISTINCT" | "UNIQUE" | "ALL" ]
                 select_list    
                 "FROM" table_reference_list
@@ -19,102 +19,100 @@ query_block ::= "SELECT" [ "DISTINCT" | "UNIQUE" | "ALL" ]
                 [group_by_clause]
                 [having_clause]
                 [hierarchical_query_clause]
-
+;
 select_list    ::= select_item {"," select_item}
-
-select_item ::= arith_expression [alias]
-                | "*"
-
-alias ::= identifier | '"' identifier '"'
-
+;
+select_item ::= arith_expression [alias] | "*"
+;
+alias ::= identifier
+;
 table_reference_list ::= table_reference {"," table_reference}
-
+;
 table_reference ::= table_factor {join_clause}
-
+;
 table_factor ::= table_name  [ alias ]
                | "("  subquery  ")" [alias]
-
-join_clause ::= join_type "JOIN" table_factor
-                  "ON" condition
+;
+join_clause ::= join_type "JOIN" table_factor "ON" condition
                 | join_type "JOIN" table_factor
-                  "USING" "(" column_list ")"
-
+;				
+# NATURAL JOIN is not considered yet! 
 join_type ::= "INNER"
               | "LEFT" ["OUTER"]
               | "RIGHT" ["OUTER"]
               | "FULL"  ["OUTER"]
               | "CROSS"
-
+;
 where_clause  ::= "WHERE" condition
-
+;
 group_by_clause ::= "GROUP" "BY" group_by_list
-
+;
 group_by_list ::= group_by_item {"," group_by_item}
-
+;
 group_by_item ::= arith_expression
                 | "ROLLUP" "(" expression_list ")"
                 | "CUBE" "(" expression_list ")"
-
+;
 having_clause ::= "HAVING" condition
-
+;
 hierarchical_query_clause ::= "START" "WITH" condition
                               "CONNECT" "BY" ["NOCYCLE"] condition
-
+;
 order_by_clause  ::= "ORDER" "BY" order_by_list
-
+;
 order_by_list ::= order_by_item {"," order_by_item}
-
+;
 order_by_item ::= arith_expression ["ASC" | "DESC"] ["NULLS" "FIRST" | "NULLS" "LAST"]
-
+;
 for_update_clause ::= "FOR" "UPDATE" [ "OF" column_list ]
                      ["NOWAIT" | "WAIT" number | "SKIP" "LOCKED" ]
-
+;
 column_list ::= identifier {"," identifier}
-
+;
 condition ::= logical_term {"OR" logical_term}
-
+;
 logical_term ::= logical_factor {"AND" logical_factor}
-
+;
 logical_factor ::= ["NOT"] logical_predicate
-
+;
 logical_predicate ::= comparison
                   | between_predicate
                   | in_predicate
                   | exists_predicate
                   | like_predicate
                   | is_null_predicate
-
+;
 comparison ::= arithmetic_expr comp_op arithmetic_expr ["(+)"]
-
+;
 comp_op ::= "=" | "!=" | "<>" | "<" | ">" | "<=" | ">="
-
+;
 between_predicate ::= arithmetic_expr ["NOT"] "BETWEEN" arithmetic_expr "AND" arithmetic_expr
-
+;
 in_predicate ::= arithmetic_expr ["NOT"] "IN" "(" (expression_list |  subquery ) ")"
-
+;
 exists_predicate ::= "EXISTS" "("  subquery  ")"
-
+;
 like_predicate ::= arithmetic_expr ["NOT"] "LIKE" arithmetic_expr
-
+;
 is_null_predicate ::= arithmetic_expr "IS" ["NOT"] "NULL"
-
+;
 arithmetic_expr ::= term { ( "+" | "-" ) term }*
-
+;
 term ::= factor { ( "*" | "/" ) factor }*
-
+;
 factor ::= literal
            | column_reference
            | function_call
            | case_expression
            | "(" arith_expression ")"
            | "("  subquery  ")"
-
+;
 function_call ::= identifier "(" [expression_list] ")" [analytic_clause]
-
+;
 analytic_clause ::= "OVER" "(" [partition_clause] [ order_by_clause ] ")"
-
+;
 partition_clause ::= "PARTITION" "BY" expression_list
-
+;
 case_expression ::= "CASE"
                     {"WHEN" condition "THEN" arith_expression}+
                     ["ELSE" arith_expression]
@@ -123,18 +121,18 @@ case_expression ::= "CASE"
                     {"WHEN" arith_expression "THEN" arith_expression}+
                     ["ELSE" arith_expression]
                     "END"
-
+;
 decode_function ::= "DECODE" "(" arith_expression "," expression_list ")"
-
+;
 nvl_function ::= "NVL" "(" arith_expression "," arith_expression ")"
-
+;
 column_reference ::= [identifier "."] identifier
-
+;
 table_name  ::= identifier
-
+;
 expression_list ::= arith_expression {"," arith_expression}
-
+;
 literal ::= number_literal
             | string_literal
             | "NULL"
-
+;			
