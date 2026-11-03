@@ -43,7 +43,7 @@ select_list    ::= select_item {"," select_item}
 ;
 select_item ::= arith_expression [alias] | "*"
 ;
-alias ::= identifier 
+alias ::= identifier
 ;
 table_reference_list ::= table_reference {"," table_reference}
 ;
@@ -186,6 +186,7 @@ PAUSE
 	
 
 
+
 PROMPT Generating code parser package 
 DECLARE 	
 	v_spec		CLOB; 
@@ -214,7 +215,7 @@ dbms_output.disable;
         p_source => :source_key , p_package_name => :package_name 
         , p_spec_body_mask => 2 
 		, p_append_slash => 0 
-		, p_root_rule	=> 'expression' 
+		, p_root_rule	=> 'select_statement' 
         ) ;
     BEGIN 		
 		EXECUTE IMMEDIATE v_body; 
@@ -239,12 +240,12 @@ SET SERVEROUTPUT ON SIZE 100000
 col spool_file 		new_value spool_file 
 col package_name 	new_value package_name
 
-SELECT 'c:\users\Bon-Minh Lam\plsql_parser\test-generated-parser.txt' AS spool_file 
+SELECT '"c:\users\Bon-Minh Lam\plsql_parser\test-generated-parser.txt"' AS spool_file 
 	,:package_name AS package_name 
 FROM dual
 ;
 
-spool "&spool_file" 
+spool &spool_file
 
 Prompt Grammar: 
 print :grammar 

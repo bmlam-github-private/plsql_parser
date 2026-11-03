@@ -574,4 +574,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
   How populate: it is better to have internal record type and an array of records to represent the nodes,
   before persisting to a table.
   
+2026.11.03 
+  After moving the recursive procedure to handle EBNF bracket out of fn_1_ebnf_to_simple into a self-contained version, in fn_1_ebnf_to_simple, the recursive procedure was NEVER envoked.
+  The simple expression grammar works because the does not contain the relevant brackets and only alternatives have to be flattened? 
+  Now the recursion self-contained version is initially kicked-off. Lets see how it works out
   

@@ -3,123 +3,69 @@ Grammar:
 GRAMMAR
 --------------------------------------------------------------------------------
 
-# Main Expression Structure 
-expression      ::= term
-                  | expression "+" term
-                  | expression "-" term ;
-# Terms handle multiplication and division (higher precedence) 
-term            ::= factor
-                  | term "*" factor
-                  | term "/" factor ;
-# Factors handle unary signs, parentheses, variables, and numbers (highest precedence) 
-factor          ::= "+" primary
-                  | "-" primary
-                  | primary ;
-
-primary         ::= number_literal 
-                  | identifier 
-                  | "(" expression ")" ;expression     ::= term { ( "+" | "-" ) term } ;
-	
+# 2026.11.03: Removed arrow brackets and quote SQL keywords
+#
+select_statement 
 
 test_code_1:
 
 TEST_CODE_1
 --------------------------------------------------------------------------------
-a1 + b2 / ( (c - 3 * a1) )
+SELECT ename, hiredate, sal * 1.1 new_sal, 
+						(SELECT d.name FROM dept d WhERE d.no = e.deptno ) AS dept
+					FROM emp e 
+					WHERE sal < 10*1000
+						
 
 Testing code parser package
-[Breadcrumb] CONSTRUCTOR invoked at line: 576 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-LEXER_TOKEN_REC Matching symbol: "+"
+alt:DECLARE 
+	vtab_lexer_token lexer_token_col;
+	v_success	BOOLEAN; 
+BEGIN 
+	vtab_lexer_token := plsql_lexer. code_to_lang_tokens
+		( pi_code => :test_code_1
+		 ,pi_grammar_source => :source_key 
+		);
+	--
+	&package_name..parse_main    
+		( p_token_stream => vtab_lexer_token
+		 ,po_success	 => v_success
+		 );
+	:test_compile_status := 'Test compile success: '|| case v_success WHEN TRUE THEN 'YES' ELSE 'NO' END ;
+END;
+
+neu:DECLARE 
+	vtab_lexer_token lexer_token_col;
+	v_success	BOOLEAN; 
+BEGIN 
+	vtab_lexer_token := plsql_lexer. code_to_lang_tokens
+		( pi_code => :test_code_1
+		 ,pi_grammar_source => :source_key 
+		);
+	--
+	PKG_ORA_SELECT_STATEMENT.parse_main    
+		( p_token_stream => vtab_lexer_token
+		 ,po_success	 => v_success
+		 );
+	:test_compile_status := 'Test compile success: '|| case v_success WHEN TRUE THEN 'YES' ELSE 'NO' END ;
+END;
+[Breadcrumb] CONSTRUCTOR invoked at line: 4202 of PKG_ORA_SELECT_STATEMENT.PARSE_MAIN
+[Breadcrumb] CONSTRUCTOR invoked at line: 4208 of PKG_ORA_SELECT_STATEMENT.PARSE_MAIN
+[Breadcrumb] CONSTRUCTOR invoked at line: 4208 of PKG_ORA_SELECT_STATEMENT.PARSE_MAIN
+LEXER_TOKEN_REC Matching symbol: [
 --- lexer_token_rec Details ---
 tok_seq 			: 1
-tok_type			: <identifier>
-tok_char_cnt		: 2
-tok_text_normal	: a1
-tok_value 		: A1
-Current nesting level: 9
+tok_type			: KEYWORD
+tok_char_cnt		: 6
+tok_text_normal	: SELECT
+tok_value 		: "SELECT"
+Current nesting level: 5
 --- Call Stack ---
 -> Ln:10 :__anonymous_block
-  -> Ln:582 :PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-    -> Ln:25 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION
-      -> Ln:45 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION_1
-        -> Ln:486 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM
-          -> Ln:506 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM_1
-            -> Ln:110 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR
-              -> Ln:130 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR_1
-                -> Ln:61 :LEXER_TOKEN_REC.COMPARE_SYMBOL
+  -> Ln:4208 :PKG_ORA_SELECT_STATEMENT.PARSE_MAIN
+    -> Ln:3414 :PKG_ORA_SELECT_STATEMENT.PR_SELECT_STATEMENT
+      -> Ln:3426 :PKG_ORA_SELECT_STATEMENT.PR_SELECT_STATEMENT_1
+        -> Ln:61 :LEXER_TOKEN_REC.COMPARE_SYMBOL
 LEXER_TOKEN_REC returning False
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-LEXER_TOKEN_REC Matching symbol: "-"
---- lexer_token_rec Details ---
-tok_seq 			: 1
-tok_type			: <identifier>
-tok_char_cnt		: 2
-tok_text_normal	: a1
-tok_value 		: A1
-Current nesting level: 9
---- Call Stack ---
--> Ln:10 :__anonymous_block
-  -> Ln:582 :PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-    -> Ln:25 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION
-      -> Ln:45 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION_1
-        -> Ln:486 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM
-          -> Ln:506 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM_1
-            -> Ln:114 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR
-              -> Ln:152 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR_2
-                -> Ln:61 :LEXER_TOKEN_REC.COMPARE_SYMBOL
-LEXER_TOKEN_REC returning False
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-LEXER_TOKEN_REC Matching symbol: number_literal
---- lexer_token_rec Details ---
-tok_seq 			: 1
-tok_type			: <identifier>
-tok_char_cnt		: 2
-tok_text_normal	: a1
-tok_value 		: A1
-Current nesting level: 11
---- Call Stack ---
--> Ln:10 :__anonymous_block
-  -> Ln:582 :PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-    -> Ln:25 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION
-      -> Ln:45 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION_1
-        -> Ln:486 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM
-          -> Ln:506 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM_1
-            -> Ln:118 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR
-              -> Ln:174 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR_3
-                -> Ln:187 :PKG_TEST_SIMPLE_EXPRESSION.PR_PRIMARY
-                  -> Ln:219 :PKG_TEST_SIMPLE_EXPRESSION.PR_PRIMARY_1
-                    -> Ln:61 :LEXER_TOKEN_REC.COMPARE_SYMBOL
-LEXER_TOKEN_REC returning False
-[Breadcrumb] CONSTRUCTOR invoked at line: 582 of PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-LEXER_TOKEN_REC Matching symbol: identifier
---- lexer_token_rec Details ---
-tok_seq 			: 1
-tok_type			: <identifier>
-tok_char_cnt		: 2
-tok_text_normal	: a1
-tok_value 		: A1
-Current nesting level: 11
---- Call Stack ---
--> Ln:10 :__anonymous_block
-  -> Ln:582 :PKG_TEST_SIMPLE_EXPRESSION.PARSE_MAIN
-    -> Ln:25 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION
-      -> Ln:45 :PKG_TEST_SIMPLE_EXPRESSION.PR_EXPRESSION_1
-        -> Ln:486 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM
-          -> Ln:506 :PKG_TEST_SIMPLE_EXPRESSION.PR_TERM_1
-            -> Ln:118 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR
-              -> Ln:174 :PKG_TEST_SIMPLE_EXPRESSION.PR_FACTOR_3
-                -> Ln:191 :PKG_TEST_SIMPLE_EXPRESSION.PR_PRIMARY
-                  -> Ln:237 :PKG_TEST_SIMPLE_EXPRESSION.PR_PRIMARY_2
-                    -> Ln:61 :LEXER_TOKEN_REC.COMPARE_SYMBOL
-LEXER_TOKEN_REC ********* returning TRUE *****: 
-current_ix incremented to 2
 
 PL/SQL-Prozedur erfolgreich abgeschlossen.

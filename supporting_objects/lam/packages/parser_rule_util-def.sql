@@ -60,6 +60,15 @@ PROCEDURE check_messy_brackets (
 */ 
 ;
 --
+FUNCTION fn_ebnf_clob_to_simple 	-- exposed for debugging ONLY! 
+(   p_clob      IN CLOB
+   ,p_source    IN VARCHAR2
+)
+RETURN parser_grammar_rule_simple_col
+;
+FUNCTION dbx_tokenize_rhs ( p_rhs 	VARCHAR2 ) 
+RETURN sys.odciVarchar2List
+;
 end;
 /
 
