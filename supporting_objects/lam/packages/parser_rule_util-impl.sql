@@ -120,7 +120,8 @@ AS
     -- Recursive procedure to parse bracket blocks out of token arrays
 
     -- PHASE 1 Helper: Recursive extraction of outermost [] and {}* brackets. Old version xxx_process_token_brackets moved to separate file for reference! 
-
+	-- moved to make it a package method! 
+	-- 
     -- PHASE 2: Recursively expand internal alternatives ( | ) and parenthesized groups ( )
     PROCEDURE flatten_alternatives(p_lhs VARCHAR2, pio_tokens token_list) IS
         v_open_group  NUMBER := 0;
@@ -351,7 +352,7 @@ BEGIN
 	RETURN v_return; 
 END fn_ebnf_clob_to_simple;
 --
-FUNCTION fn_grammar_clob_to_rule_tokens
+FUNCTION fn_grammar_clob_to_rule_tokens -- is it used? 
 (   p_clob      IN CLOB
    ,p_source    IN VARCHAR2
    ,p_persist   IN BOOLEAN DEFAULT FALSE -- true forfeits usage in SELECT 
@@ -362,65 +363,65 @@ AS
 	v_return parser_alt_token_col :=  parser_alt_token_col ();
 	v_rule_col parser_grammar_rule_simple_col;
 BEGIN 
-	g_max_nesting := p_max_nesting;
-	v_rule_col := fn_ebnf_clob_to_simple 
-		( p_clob 	=> p_clob 
-		 ,p_source 	=> p_source 
-		 -- ,p_persist => FALSE 
-		 );
-	IF p_persist 
-	THEN 	
-		DELETE parser_alt_token  
-		WHERE source = p_source 
-		;
-	END IF; -- end init for persist 
-	-- 
-	FOR r_rule IN  	( 
-		SELECT * 
-		FROM TABLE( v_rule_col ) 
-	) LOOP 
-		FOR r_tok IN (
-			SELECT t.column_value	AS symbol 
-				,rownum 			AS seq 
-			FROM TABLE ( fn_split_by_whitespaces ( r_rule.rhs ) ) t
-		) LOOP 
-			IF p_persist 
-			THEN 
-				INSERT INTO parser_alt_token  
-				( LHS,			ALT_NO,				POSITION,	SYMBOL,			SOURCE   
-				) VALUES 
-				( r_rule.lhs,	r_rule.subrule_no,	r_tok.seq,  r_tok.symbol,	p_source 
-				);
-			ELSE 
-				v_return.extend ;
-				v_return( v_return.last ) := parser_alt_token_rec 
-					( lhs => r_rule.lhs 
-					 ,alt_no => r_rule.subrule_no 
-					 ,position => r_tok.seq 
-					 ,symbol => r_tok.symbol 
-					 ,source => p_source 
-					 ); 
-			END IF; 
-		END LOOP; -- over sequenced tokens of RHS 
-	END LOOP; -- over simple rules 
-	--
-	IF p_persist 
-	THEN -- indicate to user data is not for view as return value 
-		pr_log_json_result 
-		( p_grammar_name=> p_source 
-		 ,p_grammar_text=> p_clob 
-		);
-		COMMIT;
-		-- 
-		v_return.extend;
-		v_return( v_return.last ) :=parser_alt_token_rec 
-			( lhs => null 
-			 ,alt_no => 0
-			 ,position => null 
-			 ,symbol => 'persisted to table'
-			 ,source => p_source 
-			 );
-	END IF;	-- end finalize for persist 
+--	g_max_nesting := p_max_nesting;
+--	v_rule_col := fn_ebnf_clob_to_simple 
+--		( p_clob 	=> p_clob 
+--		 ,p_source 	=> p_source 
+--		 -- ,p_persist => FALSE 
+--		 );
+--	IF p_persist 
+--	THEN 	
+--		DELETE parser_alt_token  
+--		WHERE source = p_source 
+--		;
+--	END IF; -- end init for persist 
+--	-- 
+--	FOR r_rule IN  	( 
+--		SELECT * 
+--		FROM TABLE( v_rule_col ) 
+--	) LOOP 
+--		FOR r_tok IN (
+--			SELECT t.column_value	AS symbol 
+--				,rownum 			AS seq 
+--			FROM TABLE ( fn_split_by_whitespaces ( r_rule.rhs ) ) t
+--		) LOOP 
+--			IF p_persist 
+--			THEN 
+--				INSERT INTO parser_alt_token  
+--				( LHS,			ALT_NO,				POSITION,	SYMBOL,			SOURCE   
+--				) VALUES 
+--				( r_rule.lhs,	r_rule.subrule_no,	r_tok.seq,  r_tok.symbol,	p_source 
+--				);
+--			ELSE 
+--				v_return.extend ;
+--				v_return( v_return.last ) := parser_alt_token_rec 
+--					( lhs => r_rule.lhs 
+--					 ,alt_no => r_rule.subrule_no 
+--					 ,position => r_tok.seq 
+--					 ,symbol => r_tok.symbol 
+--					 ,source => p_source 
+--					 ); 
+--			END IF; 
+--		END LOOP; -- over sequenced tokens of RHS 
+--	END LOOP; -- over simple rules 
+--	--
+--	IF p_persist 
+--	THEN -- indicate to user data is not for view as return value 
+--		pr_log_json_result 
+--		( p_grammar_name=> p_source 
+--		 ,p_grammar_text=> p_clob 
+--		);
+--		COMMIT;
+--		-- 
+--		v_return.extend;
+--		v_return( v_return.last ) :=parser_alt_token_rec 
+--			( lhs => null 
+--			 ,alt_no => 0
+--			 ,position => null 
+--			 ,symbol => 'persisted to table'
+--			 ,source => p_source 
+--			 );
+--	END IF;	-- end finalize for persist 
 	--
 	RETURN v_return;
 END fn_grammar_clob_to_rule_tokens;
