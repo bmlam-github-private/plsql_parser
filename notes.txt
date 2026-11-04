@@ -512,7 +512,7 @@ With the first sets computed, we can more efficiently parse the alternatives one
   We should use standalone method to implement the code in modular way and test each method separately! 
   
   Tested function f_extract_ebnf_tokens.
-  Coded function  f_extract_rules_from_grammar need to compile/test. 
+  Coded function  f_extract_rules_from_grammar need to compile/test. Note this function is better called split_grammar_to_rules! It does not produce simple rules! 
   
   In the end we want to process a  clob as grammar and see that the rules are nicely expanded and return from a TABLE function 
   
@@ -578,4 +578,9 @@ With the first sets computed, we can more efficiently parse the alternatives one
   After moving the recursive procedure to handle EBNF bracket out of fn_1_ebnf_to_simple into a self-contained version, in fn_1_ebnf_to_simple, the recursive procedure was NEVER envoked.
   The simple expression grammar works because the does not contain the relevant brackets and only alternatives have to be flattened? 
   Now the recursion self-contained version is initially kicked-off. Lets see how it works out
+  
+2026.11.04
+  Started implementing logic for f_1_ebnf_to_simple_rules. No code yet for population of 1st and 2nd gen work rules. 
+  Need to compile and be checked by AI. Any gaps I can find myself ? 
+  
   

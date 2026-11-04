@@ -33,7 +33,7 @@ ALTER TABLE parser_alt_token
 /
 
 ALTER TABLE parser_alt_token 
-	MODIFY lhs		VARCHAR2(50)
+	MODIFY lhs		VARCHAR2(200)
 /
 ALTER TABLE parser_alt_token 
 	MODIFY symbol		VARCHAR2(50)

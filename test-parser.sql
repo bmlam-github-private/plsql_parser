@@ -24,7 +24,7 @@ order by lhs
 select source, count(1)
 from parser_alt_token 
 where 1=1
---  and source =  UPPER( 'test_simple_expression' )
+  and source =  UPPER( 'ora_select_statement' )
 --  and regexp_like ( symbol, '^"[A-Z_]+"$' )
 group by source
 ;
@@ -59,9 +59,9 @@ select
 *--json_arrayagg( json_object (*) ) 
 from parser_alt_token 
 where 1 = 1
-  AND upper(source) = upper( 'variable_declaration' )
+  and source =  UPPER( 'ora_select_statement' )
 --  and lhs like '<parameter_%'
---  and lhs like '<declaration%'
+  and lhs like 'select_st%'
 --  and instr( symbol , 'express' ) > 0
 --  and instr( lhs, 'express' ) > 0
 order by lhs, alt_no, position
@@ -161,19 +161,20 @@ select * from table ( parser_rule_util. fn_1_ebnf_to_simple (
 set serveroutput on 
 
 WITH grama AS ( 
-    SELECT content txt 
---    '<term>::=<factor> { ( "*" | "/" ) <factor> }*'
-    FROM temp_clob 
-    WHERE upper("REMARKS") = upper(:source)
+    SELECT :content txt 
+--    FROM temp_clob     WHERE upper("REMARKS") = upper(:source)
+    FROM dual 
 )
 SELECT t.*
 FROM grama 
 CROSS JOIN 
-    TABLE ( parser_rule_util. fn_ebnf_clob_to_simple ( 
-        grama.txt 
-    , p_source => :source 
-    ) ) t
-    ;
+    --TABLE ( parser_rule_util. fn_ebnf_clob_to_simple (  , p_source => :source 
+--
+--    TABLE ( f_grammar_2_simple_rules    ( p_grammar =>         grama.txt --    , p_source_key => :source 
+    TABLE ( parser_rule_util. fn_1_ebnf_to_simple (p_source => :source , p_lhs => 'ora_select_stmt', p_rhs => '[with_clause] query_block { set_operator  query_block} [ order_by_clause ] [for_update_clause] ' 
+     ) ) t
+order by lhs_root, lhs, subrule_no    
+     ;
 
 set serveroutput on 
 ;
