@@ -582,5 +582,10 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.11.04
   Started implementing logic for f_1_ebnf_to_simple_rules. No code yet for population of 1st and 2nd gen work rules. 
   Need to compile and be checked by AI. Any gaps I can find myself ? 
+
+2026.11.05
+  Unit tested pr_process_1_ebnf_bracket_pair . result seems OK. Should switch on sanity check re open and close indexes .
+  
+
   
   
