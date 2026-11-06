@@ -1,5 +1,13 @@
 SET SERVEROUTPUT ON SIZE UNLIMITED;
 
+
+
+
+
+
+
+
+
 DECLARE
     v_results parser_grammar_rule_simple_col;
     
@@ -40,7 +48,7 @@ DECLARE
             END LOOP;
         END IF;
         dbms_output.put_line(CHR(10));
-    END;
+    END run_test;
 BEGIN
 /*
     -- Test Case 1: Simple binary alternative (A | B)
