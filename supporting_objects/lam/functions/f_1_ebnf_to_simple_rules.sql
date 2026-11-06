@@ -60,7 +60,7 @@ BEGIN
 			-- 
 			v_rhs_tokens := parser_rule_util.dbx_tokenize_rhs ( v_rules_1st_gen (ix_1st_gen).rhs  );
 			v_rule_simple_type :=  f_rule_is_simple ( p_rule_tokens=> v_rhs_tokens );
-			dbms_output.put_line('Ln'||$$plsql_line||' v_rule_simple_type: "' || v_rule_simple_type );
+			dbms_output.put_line('Ln'||$$plsql_line||' v_rule_simple_type: ' || v_rule_simple_type );
 			--
 			CASE v_rule_simple_type
 			WHEN co_brack_type_curly
