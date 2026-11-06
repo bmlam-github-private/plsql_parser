@@ -18,25 +18,6 @@ AS
 	v_nesting_level  	NUMBER := 0;
 	v_bracket_found		BOOLEAN := FALSE;
 	-- 
-	PROCEDURE pr_process_1_bracket_pair 
-		( p_lhs_curr			VARCHAR2 
-		 ,p_bracket_type 		VARCHAR2 
-		 ,p_open_idx 			NUMBER 
-		 ,p_close_idx 			NUMBER 
-		 ,pio_rhs_tokens  IN OUT sys.odciVarchar2List 
-		)
-	AS 
-	/*  Replace content of brackets in list of tokens in place and produce a surrogate rule 
-		produced rules will added to a table in outer scope v_rules_2nd_gen ? 
-	*/ 
-		v_tokens_out 		sys.odciVarchar2List := sys.odciVarchar2List();
-		v_new_rule_lhs 	parser_alt_token.lhs%TYPE;
-		v_bracket_type 		VARCHAR2(100);
-	BEGIN 
-		v_nesting_level :=v_nesting_level + 1;
-		-- 
-	END pr_process_1_bracket_pair;
-	-- 
 BEGIN 
 	IF p_lhs IS NULL THEN 
 		RETURN v_final_rules;
@@ -100,12 +81,17 @@ BEGIN
 					) 
 				THEN 
 					pr_process_1_bracket_pair 
-						( p_lhs_curr			=> v_rules_1st_gen( rule_ix ).lhs 
-						 ,p_bracket_type 		=> v_bracket_type 
-						 ,p_open_idx 			=> v_open_idx 
-						 ,p_close_idx 			=> v_close_idx 
-						 ,pio_rhs_tokens  		=> v_rhs_tokens 
-						)
+					( p_subrule_prefix		=> v_subrule_prefix		
+					 ,p_lhs_root      		=> v_lhs_root      		
+					 ,p_source        		=> v_source        		
+					 ,p_bracket_type 		=> v_bracket_type 			
+					 ,p_open_idx 			=> v_open_idx 				
+					 ,p_close_idx 			=> v_close_idx 			
+					 ,p_sequence 			=> v_sequence 				
+					 ,p_brk_suffix_map_json => v_brk_suffix_map_json 	
+					 ,pio_rhs_tokens  		=> v_rhs_tokens  			
+					 ,pio_work_rules  		=> v_work_rules  			
+					) ;
 				END CASE; 
 			END LOOP; -- v_recursive_expand 
 			--

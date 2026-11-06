@@ -69,7 +69,8 @@ BEGIN
 	v_rhs_tokens  			:= 			sys.odciVarchar2List(
 			'{', 'a'
 			, '[', 'b', '(', 'c', 'DANGLING', ')', ']'
-			, '}'); 
+			, '}'
+			); 
 	v_open_idx 				:= 3; 
 	v_close_idx 			:= 9 ; 
 	v_sequence 				:= 9 ; 

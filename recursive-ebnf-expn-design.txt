@@ -14,13 +14,13 @@ RETURN parser_grammar_rule_simple_col
 1. Tokenize p_rhs . Use temporarily temp_get_ebnf_tokens to verify
 2. 
 2.1.A 
-	Check if p_rhs is "simple", i.e. bracketwise
+  Check if p_rhs is "simple", i.e. bracketwise
     a. rhs contains only alternatives separated by pipe tokens
-	b. first token is open square and last is close square with no other brackets 
-	c. first token is open curly and last is close curly with no other brackets 
+    b. first token is open square and last is close square with no other brackets 
+    c. first token is open curly and last is close curly with no other brackets 
 	
 	CASE a. Flatten_alternatives 
-			Replace each alternative in p_rhs with a subrule, add subrule to v_return.
+			Make each alternative in p_rhs a separate rule with the same lhs, alternative 1 has sequence 1, alternative 2 sequence 2 etc.
 	        Add the subrules to v_return 
 	CASE b. expand_occ01 rule 
 			Replace bracket pair with _occ01_<seq> in current rhs , add to v_return 

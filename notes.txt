@@ -586,6 +586,8 @@ With the first sets computed, we can more efficiently parse the alternatives one
 2026.11.05
   Unit tested pr_process_1_ebnf_bracket_pair . result seems OK. Should switch on sanity check re open and close indexes .
   
+2026.11.06
+  Unit tested f_ebnf_flatten_alternatives . result seems OK. 
 
   
   

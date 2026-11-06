@@ -35,7 +35,7 @@ CREATE OR REPLACE PROCEDURE pr_process_1_bracket_pair
   v_new_tokens     sys.odciVarchar2List := sys.odciVarchar2List();
 BEGIN 
   -- sanity checks
-  IF false then 
+  IF TRUE then 
 	  IF 0 = 1
 	   OR ( p_bracket_type  = 'ROUND_BRK' 
 			AND ( pio_rhs_tokens( p_open_idx ) 	<> '(' OR 
@@ -52,13 +52,12 @@ BEGIN
 		THEN 
 			RAISE_APPLICATION_ERROR ( -20001, 'Open or close index does not point to expected symbols according to bracket type '||p_bracket_type );
 		END IF;
-		
-	  -- 1. Extract the subrule suffix from the JSON map based on the bracket type
-	  v_subrule_suffix := JSON_VALUE(p_brk_suffix_map_json, '$."' || p_bracket_type || '"');
-	  IF v_subrule_suffix IS NULL THEN
-		v_subrule_suffix := JSON_VALUE(p_brk_suffix_map_json, '$.' || p_bracket_type);
-	  END IF;
    END IF; -- switch sanity-checks 
+   -- 1. Extract the subrule suffix from the JSON map based on the bracket type
+	v_subrule_suffix := JSON_VALUE(p_brk_suffix_map_json, '$."' || p_bracket_type || '"');
+	IF v_subrule_suffix IS NULL THEN
+	  v_subrule_suffix := JSON_VALUE(p_brk_suffix_map_json, '$.' || p_bracket_type);
+	END IF;
    -- 
   -- 2. Construct the new subrule name
   v_new_subrule := p_subrule_prefix || v_subrule_suffix || '_'||TO_CHAR(p_sequence);
