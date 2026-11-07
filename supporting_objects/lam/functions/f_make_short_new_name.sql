@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION  f_make_short_new_name
   letter characters are suppressed.
   If the string is longer, we split it into elements separated by underscore. 
 	From the first element we retain only consonants
+	  If the first element yields NULL we try to map the element to a word 
 	From all further elements, we retain only the first letter regardless of consonant or vowel.
 */ 
 AS 
@@ -42,6 +43,20 @@ BEGIN
     IF LENGTH(v_str) <= 4 THEN
         -- Rule: Retain all letters, suppress non-letters
         v_short := REGEXP_REPLACE(v_str, '[^A-Za-z]', '');
+		IF v_short IS NULL THEN 
+			DECLARE 
+				v_1st_elem_normed VARCHAR2(100);
+			BEGIN 
+				v_1st_elem_normed := REGEXP_REPLACE( p_tokens(v_start_idx), '"', '' ) ;
+				v_short := 
+					CASE substr( v_1st_elem_normed , 1 , 1 ) 
+					WHEN '+' THEN 'sign'
+					WHEN '-' THEN 'sign'
+					WHEN '*' THEN 'star'
+					ELSE 'qm'
+					END;
+			END;
+		END IF;
     ELSE
         -- Rule: Split into elements separated by underscore
         v_remaining := v_str;
@@ -78,6 +93,6 @@ BEGIN
     END IF;
 
     -- Return prefix combined with the generated short name
-    RETURN p_prefix || v_short;
+    RETURN p_prefix || '_'||v_short;
 END;
 /

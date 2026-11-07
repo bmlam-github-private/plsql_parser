@@ -155,7 +155,8 @@ from dual
 --    ('<factor>', 'identifier | literal | function_call | "(" <column_expression> ")"');
 
 select * from table ( parser_rule_util. fn_1_ebnf_to_simple ( 
-    '<term>', '<factor> { ( "*" | "/" ) <factor> }*'
+      p_lhs=> '<term>'
+    , p_rhs=> '<factor> { ( "*" | "/" ) <factor> }*'
     , p_source => 'manual_test' ) )
 ;
 set serveroutput on 

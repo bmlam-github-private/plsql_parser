@@ -38,8 +38,13 @@ BEGIN
 				,po_open_idx    => v_open_idx 
 				,po_close_idx   => v_close_idx 
 				);
+			IF v_type_dummy <> 'SQUARE_BRK' 
+			THEN 
+				RAISE_APPLICATION_ERROR( -20001, 'No brackets positions given and no square brackets pair found!' );
+			END IF;
 		END;
 	END IF; 
+	dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' v_open_idx: '||v_open_idx ||' v_close_idx: '|| v_close_idx);
 	-- Row 1 with unchanged LHS 
 	WITH ordered AS (
 		SELECT column_value 	AS tok 
@@ -53,6 +58,7 @@ BEGIN
 	WHERE pos between v_open_idx +1 AND v_close_idx - 1 
 	;
 	v_new_rule_name := f_make_short_new_name ( p_prefix => p_lhs, p_tokens=> v_temp_tokens );
+	dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' v_temp_tokens.count: '||v_temp_tokens.count ||' v_new_rule_name: '|| v_new_rule_name);
 	-- 
 	WITH ordered AS (
 		SELECT column_value 	AS tok 
@@ -60,7 +66,7 @@ BEGIN
 		FROM TABLE ( p_rhs_tokens )
 		ORDER BY pos 
 	)
-	SELECT listagg ( tok ) WITHIN GROUP ( ORDER BY rownum )
+	SELECT listagg ( tok, ' ' ) WITHIN GROUP ( ORDER BY rownum )
 	INTO v_head 
 	FROM ordered 
 	WHERE pos < v_open_idx
@@ -71,12 +77,12 @@ BEGIN
 		FROM TABLE ( p_rhs_tokens )
 		ORDER BY pos 
 	)
-	SELECT listagg ( tok ) WITHIN GROUP ( ORDER BY rownum )
+	SELECT listagg ( tok, ' ' ) WITHIN GROUP ( ORDER BY rownum )
 	INTO v_tail 
 	FROM ordered 
 	WHERE pos > v_close_idx
 	;
-	v_new_rhs := v_head ||' '||v_new_rule_name ||v_tail;
+	v_new_rhs := v_head ||' '||v_new_rule_name ||' '||v_tail;
 	v_return.extend ;
 	v_return( v_return.last ) := parser_grammar_rule_simple_rec 
             ( lhs        => p_lhs
@@ -88,7 +94,7 @@ BEGIN
 	--
 	-- row 2 
 	v_return.extend ;
-	SELECT listagg ( column_value ) WITHIN GROUP ( ORDER BY rownum )
+	SELECT listagg ( column_value, ' ' ) WITHIN GROUP ( ORDER BY rownum )
 	INTO v_new_rhs 
 	FROM TABLE ( v_temp_tokens )
 	;
