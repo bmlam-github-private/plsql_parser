@@ -45,7 +45,8 @@ BEGIN
             EXIT; -- Found our outermost opener
         END IF;
     END LOOP;
-
+--dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' xx: '||xx );
+--dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' po_type: '||po_type ||' po_open_idx: '||po_open_idx );
     -- If no opening bracket was found at all, exit
     IF po_open_idx IS NULL THEN
         RETURN;
@@ -55,7 +56,8 @@ BEGIN
     l_depth := 0;
     FOR i IN po_open_idx..p_input_tokens.COUNT LOOP
         v_token := p_input_tokens(i);
-        
+ --dbms_output.put_line ( $$plsql_unit||':'||$$plsql_line||' v_token: '||v_token||' l_depth: '||l_depth );
+       
         -- Check opening of the SAME type
         IF (l_target_type = 'ROUND_BRK' AND v_token = '(') OR
            (l_target_type = 'CURLY_BRK'  AND v_token = '{') OR

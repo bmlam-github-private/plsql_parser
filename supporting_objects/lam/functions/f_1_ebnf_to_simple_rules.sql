@@ -18,6 +18,7 @@ AS
 	v_rhs_tokens		sys.odciVarchar2List;
 	v_rule_simple_type 	VARCHAR2(100);
 	v_bracket_type 		VARCHAR2(100);
+	v_new_rhs 			VARCHAR2(4000);
 	v_expand_complex	BOOLEAN := FALSE;
 	v_outer_loop_cnt  	NUMBER := 0;
 	v_expand_iter  		NUMBER := 0;
@@ -46,7 +47,9 @@ BEGIN
 	
 	WHILE TRUE LOOP 
 		v_outer_loop_cnt := v_outer_loop_cnt + 1;
-		IF v_outer_loop_cnt > 99 
+		dbms_output.put_line('********************** OUTER LOOP ***************************************');
+		dbms_output.put_line('********************** Iteration '|| v_outer_loop_cnt ||' ***************************************');
+		IF v_outer_loop_cnt > 9 
 		THEN 
 			RAISE_APPLICATION_ERROR( -20001, 'Outer loop hass repeated '||v_outer_loop_cnt||' times!' );
 		END IF;
@@ -56,43 +59,78 @@ BEGIN
 		dbms_output.put_line('Ln'||$$plsql_line||' v_rules_1st_gen.count: ' ||  v_rules_1st_gen.count);
 		FOR ix_1st_gen IN 1 .. v_rules_1st_gen.count 
 		LOOP 
+		dbms_output.put_line('********************** 1st-gen rule '||ix_1st_gen ||' ***************************************');
+		dbms_output.put_line('Ln'||$$plsql_line||' lhs: ' ||  v_rules_1st_gen( ix_1st_gen ).lhs );
+		dbms_output.put_line('Ln'||$$plsql_line||' rhs: ' ||  v_rules_1st_gen( ix_1st_gen ).rhs );
+		
 			v_expand_complex := FALSE;
 			-- 
 			v_rhs_tokens := parser_rule_util.dbx_tokenize_rhs ( v_rules_1st_gen (ix_1st_gen).rhs  );
+			--
 			v_rule_simple_type :=  f_rule_is_simple ( p_rule_tokens=> v_rhs_tokens );
 			dbms_output.put_line('Ln'||$$plsql_line||' v_rule_simple_type: ' || v_rule_simple_type );
 			--
 			CASE v_rule_simple_type
+			--
 			WHEN co_brack_type_curly
-			THEN null;		-- procedure rules for iteration 0 to N times 
+			THEN 			-- procedure rules for iteration 0 to N times 
+				v_simple_rules:=  f_ebnf_flatten_repetition 
+					( p_lhs			=>  v_rules_1st_gen(ix_1st_gen).lhs 
+					 ,p_lhs_root	=> p_lhs
+					 ,p_rhs_tokens	=> v_rhs_tokens 
+					 ,p_open_idx	=> NULL 	-- for better performance, we should change f_rule_is_simple to return open and close index! 
+					 ,p_close_idx	=> NULL 
+					 ,p_source  	=> p_source
+					) ;
+        dbms_output.put_line('Ln'||$$plsql_line||' v_simple_rules.count: ' ||  v_simple_rules.count);
+				v_final_rules := v_final_rules MULTISET UNION ALL v_simple_rules;
+			-- 
 			WHEN co_brack_type_square
-			THEN null;		-- produce rules for occurence 0 or 1 
+			THEN       	-- produce rules for occurence 0 or 1 
+				v_simple_rules:=  f_ebnf_flatten_optional 
+					( p_lhs			=>  v_rules_1st_gen(ix_1st_gen).lhs 
+					 ,p_lhs_root	=> p_lhs
+					 ,p_rhs_tokens	=> v_rhs_tokens 
+					 ,p_open_idx	=> NULL 	-- for better performance, we should change f_rule_is_simple to return open and close index! 
+					 ,p_close_idx	=> NULL 
+					 ,p_source  	=> p_source
+					) ;
+        dbms_output.put_line('Ln'||$$plsql_line||' v_simple_rules.count: ' ||  v_simple_rules.count);
+				v_final_rules := v_final_rules MULTISET UNION ALL v_simple_rules;
+			-- 
 			WHEN 'PIPES' 
 			THEN 			-- produces alternativ rules 
 							-- example   access ::= read | write 
 							-- becomes 	 access ::= read  (1) 
 							-- becomes 	 access ::= wirte (2) 
 				v_simple_rules := f_ebnf_flatten_alternatives
-							( p_lhs        => v_rules_1st_gen(ix_1st_gen).lhs
-							 ,p_lhs_root   => p_lhs
-							 ,p_rhs_tokens => v_rhs_tokens
-							);
+						( p_lhs        => v_rules_1st_gen(ix_1st_gen).lhs
+						 ,p_lhs_root   => p_lhs
+						 ,p_rhs_tokens => v_rhs_tokens
+						,p_source  	=> p_source
+						);
+        dbms_output.put_line('Ln'||$$plsql_line||' v_simple_rules.count: ' ||  v_simple_rules.count);
 				v_final_rules := v_final_rules MULTISET UNION ALL v_simple_rules;
 			WHEN 'NOT_SIMPLE' 
 			THEN 	
 				v_expand_complex := TRUE;
+			WHEN 'SIMPLE' 
+			THEN 	
+				v_final_rules.extend;
+				v_final_rules( v_final_rules.last ) := v_rules_1st_gen( ix_1st_gen );
 			ELSE 
 				RAISE_APPLICATION_ERROR( -20001, 'Return value of f_rule_is_simple not expected: '||v_rule_simple_type );
 			END CASE;
 			--
         dbms_output.put_line('Ln'||$$plsql_line||' v_final_rules.count: ' ||  v_final_rules.count);
 			v_sequence := 0;
+			v_expand_iter := 0;
 			WHILE v_expand_complex  
 			LOOP 
 				v_expand_iter := v_expand_iter + 1;
-				IF v_expand_iter > 100 THEN 
+				IF v_expand_iter > 10 THEN 
 					-- 
-					RAISE_APPLICATION_ERROR( -20001, 'expansion of brackets reached '||v_expand_iter||' iterations '||v_expand_iter );
+					RAISE_APPLICATION_ERROR( -20001, 'expansion of brackets reached '||v_expand_iter||' iterations!' );
 				END IF;
 				-- 		
 				pr_locate_first_bracket_pair
@@ -102,6 +140,7 @@ BEGIN
 					 ,po_close_idx		=> v_close_idx
 					);
 				-- 
+        dbms_output.put_line('Ln'||$$plsql_line||' v_bracket_type: ' ||v_bracket_type||' v_open_idx: ' ||v_open_idx||' v_close_idx: ' ||v_close_idx );
 				CASE 		
 				WHEN v_bracket_type IN 
 					( co_brack_type_curly
@@ -122,16 +161,22 @@ BEGIN
 					 ,pio_rhs_tokens  		=> v_rhs_tokens  			
 					 ,pio_work_rules  		=> v_rules_2nd_gen
 					) ;
+					--
+					SELECT listagg ( column_value, ' ' ) INTO v_new_rhs FROM TABLE ( v_rhs_tokens );
+					dbms_output.put_line('Ln'||$$plsql_line||' v_rhs_tokens: ' ||v_new_rhs  );
 				ELSE 
 					-- move the rule to 2nd gen and set loop end flag 
 					v_rules_2nd_gen.extend;
 					v_rules_2nd_gen ( v_rules_2nd_gen.last ) := v_rules_1st_gen( ix_1st_gen );
+					v_rules_2nd_gen ( v_rules_2nd_gen.last ).rhs := v_new_rhs;  	 -- this is the link to the produced rules 
+        dbms_output.put_line('Ln'||$$plsql_line||' curr rule lhs : ' ||v_rules_1st_gen( ix_1st_gen ).lhs ||' new rhs: ' ||v_new_rhs  );
 					v_expand_complex := FALSE;
 				END CASE; 
 			END LOOP; -- v_expand_complex 
 			dbms_output.put_line('Ln'||$$plsql_line||' v_rules_2nd_gen.count: ' ||  v_rules_2nd_gen.count);
 			--
 		END LOOP; -- over v_rules_1st_gen 
+	dbms_output.put_line('Ln'||$$plsql_line||' v_rules_2nd_gen.count: ' ||  v_rules_2nd_gen.count);
 		v_rules_1st_gen := v_rules_2nd_gen;
 		v_rules_2nd_gen := parser_grammar_rule_simple_col(); 
 		-- 

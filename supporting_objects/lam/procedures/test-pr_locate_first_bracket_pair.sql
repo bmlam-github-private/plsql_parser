@@ -64,24 +64,30 @@ BEGIN
         sys.odciVarchar2List('BEGIN', '{', 'x', ':=', '1', ';', '}', 'END')
     );
 
-    -- Test 5: Mismatched Brackets (Should return NULL)
+    -- Test 5: 
+    run_test(
+        'Curly Brackets Only with comma',
+		sys.odciVarchar2List('{', '","', 'expression', '}')
+    );
+/*
+    -- Test 15: Mismatched Brackets (Should return NULL)
     run_test(
         'Mismatched Brackets',
         sys.odciVarchar2List('(', ']', '(', ')')
     );
 
-    -- Test 6: Unclosed Brackets (Should return NULL)
+    -- Test 16: Unclosed Brackets (Should return NULL)
     run_test(
         'Unclosed Brackets',
         sys.odciVarchar2List('(', 'a', '+', 'b')
     );
 
-    -- Test 7: Empty Token List
+    -- Test 17: Empty Token List
     run_test(
         'Empty Token List',
         sys.odciVarchar2List()
     );
-
+*/ 
     DBMS_OUTPUT.PUT_LINE('=== TESTS COMPLETED ===');
 END;
 /

@@ -53,6 +53,9 @@ BEGIN
 					WHEN '+' THEN 'sign'
 					WHEN '-' THEN 'sign'
 					WHEN '*' THEN 'star'
+					WHEN ',' THEN 'cmma'
+					WHEN ';' THEN 'scol'
+					WHEN ':' THEN 'coln'
 					ELSE 'qm'
 					END;
 			END;

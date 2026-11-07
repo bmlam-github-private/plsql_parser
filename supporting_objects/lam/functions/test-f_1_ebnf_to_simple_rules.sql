@@ -44,11 +44,11 @@ DECLARE
 		dbms_output.put_line(CHR(10));
 	END;
 BEGIN
-	-- Test Case 2: Multiple chained alternatives (A | B | C)
+	-- Test Case 1: Integer with optional sign)
 	run_test
 		( p_test_name => '2. Multiple Alternatives (A | B | C)'
-		 ,p_lhs		=> 'statement'
-		 ,p_rhs		=> 'delete | update | insert'
+		 ,p_lhs		=> 'integer'
+		 ,p_rhs		=> '[ "+" | "-" ] digit { digit }'
 		);
 END;
 /

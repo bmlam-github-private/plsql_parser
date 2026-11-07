@@ -80,6 +80,12 @@ BEGIN
         sys.odciVarchar2List()
     );
 
+    -- Test 9: Pipes bracketed by squares
+    run_test(
+        'Pipes bracketed by squares',
+        sys.odciVarchar2List( '[', '"+"' , '|' , '"-"' , ']' )
+    );
+
     DBMS_OUTPUT.PUT_LINE('=== TESTS COMPLETED ===');
 END;
 /

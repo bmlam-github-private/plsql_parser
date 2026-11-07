@@ -588,6 +588,16 @@ With the first sets computed, we can more efficiently parse the alternatives one
   
 2026.11.06
   Unit tested f_ebnf_flatten_alternatives . result seems OK. 
+  Continued post meridiem. Compiled F_EBNF_FLATTEN_OPTIONAL. Need testing.
+  
+2026.11.07 
+  The test case for f_1_ebnf_to_simple_rules produced the following subrules: 
 
+	Row 1: LHS=integer_op__1 | RHS= integer_op__1_sign  | Subrule=1
+	Row 2: LHS=integer_op__1_sign | RHS="+" | "-" | Subrule=1
+	Row 3: LHS=integer_op__1_sign | RHS=epsilon | Subrule=2
+	Row 4: LHS=integer_0n__2 | RHS= integer_0n__2_dgt_lst  | Subrule=1
+	Row 5: LHS=integer_0n__2_dgt_lst | RHS=digit | epsilon | Subrule=1
+	Row 6: LHS=integer | RHS=integer_op__1 digit integer_0n__2 | Subrule=0
   
-  
+    RHS: [ "+" | "-" ] is not resolved properly presumably because f_rule_is_simple returns SQUARE_BRK while it should really returns NOT_SIMPLE! 
