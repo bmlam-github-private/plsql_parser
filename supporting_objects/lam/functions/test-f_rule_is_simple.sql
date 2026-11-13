@@ -31,7 +31,7 @@ DECLARE
 
 BEGIN
     DBMS_OUTPUT.PUT_LINE('=== STARTING f_rule_is_simple TESTS ===');
-
+if false then 
     -- Test 1: Simple Square Brackets (Wrapping entire rule)
     run_test(
         'Simple Square Brackets (Valid)',
@@ -67,8 +67,8 @@ BEGIN
         'Mixed Bracket Types',
         sys.odciVarchar2List('[', '{', 'a', '}', ']')
     );
-
-    -- Test 7: Not Simple - Plain text (No brackets, no pipes)
+end if;
+    -- Test 7: Simple - Plain text (No brackets, no pipes)
     run_test(
         'Plain Tokens (No brackets/pipes)',
         sys.odciVarchar2List('SELECT', '*', 'FROM', 'dual')

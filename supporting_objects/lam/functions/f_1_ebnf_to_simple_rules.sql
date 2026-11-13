@@ -9,7 +9,7 @@ AS
 	co_brack_type_curly 	CONSTANT VARCHAR2( 100 ) := upper('curly_brk');
 	co_brack_type_square 	CONSTANT VARCHAR2( 100 ) := upper('square_brk');
 	co_brk_suffix_map_json	CONSTANT VARCHAR2( 1000 ) := '{ "ROUND_BRK": "_gr_", "CURLY_BRK": "_0n_", "SQUARE_BRK": "_op_" }' ;
-
+	co_nl  			CONSTANT VARCHAR2(2) := chr(10);
 	-- 
 	v_final_rules 		parser_grammar_rule_simple_col :=  parser_grammar_rule_simple_col();
     v_rules_1st_gen 	parser_grammar_rule_simple_col :=  parser_grammar_rule_simple_col();
@@ -51,7 +51,7 @@ BEGIN
 		dbms_output.put_line('********************** Iteration '|| v_outer_loop_cnt ||' ***************************************');
 		IF v_outer_loop_cnt > 9 
 		THEN 
-			RAISE_APPLICATION_ERROR( -20001, 'Outer loop hass repeated '||v_outer_loop_cnt||' times!' );
+			RAISE_APPLICATION_ERROR( -20001, 'Outer loop has repeated '||v_outer_loop_cnt||' times!' );
 		END IF;
 		--
 		EXIT WHEN v_rules_1st_gen.count = 0;
@@ -128,6 +128,7 @@ BEGIN
 			WHILE v_expand_complex  
 			LOOP 
 				v_expand_iter := v_expand_iter + 1;
+        dbms_output.put_line( co_nl||'Ln'||$$plsql_line||' ************** ' ||' v_expand_iter: ' ||v_expand_iter );
 				IF v_expand_iter > 10 THEN 
 					-- 
 					RAISE_APPLICATION_ERROR( -20001, 'expansion of brackets reached '||v_expand_iter||' iterations!' );
@@ -135,7 +136,7 @@ BEGIN
 				-- 		
 				pr_locate_first_bracket_pair
 					( p_input_tokens 	=> v_rhs_tokens 
-					 ,po_type			=> v_bracket_type 
+					 ,po_type			=> v_bracket_type  
 					 ,po_open_idx		=> v_open_idx
 					 ,po_close_idx		=> v_close_idx
 					);
@@ -164,6 +165,10 @@ BEGIN
 					--
 					SELECT listagg ( column_value, ' ' ) INTO v_new_rhs FROM TABLE ( v_rhs_tokens );
 					dbms_output.put_line('Ln'||$$plsql_line||' v_rhs_tokens: ' ||v_new_rhs  );
+					dbms_output.put_line('Ln'||$$plsql_line||' last 2nd work rule : ' 
+							||co_nl||'   lhs:'||  v_rules_2nd_gen( v_rules_2nd_gen.last ).lhs 
+							||co_nl||'   rhs:'||  v_rules_2nd_gen( v_rules_2nd_gen.last ).rhs
+							);
 				ELSE 
 					-- move the rule to 2nd gen and set loop end flag 
 					v_rules_2nd_gen.extend;

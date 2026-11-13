@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION f_rule_is_simple
 -- PIPES      if no brackets are present and only pipes (for alternatives) are present 
 -- SIMPLE     if no brackets and no pipes (for alternatives) are present 
 -- NOT_SIMPLE if none of the above condition is true 
-/* Gemini added logic:
+/* Gemini added logic: 		WHICH I OBJECTED! 
 Outer Boundary Verification: For SQUARE_BRK and CURLY_BRK, it checks that the opening and closing brackets 
 cleanly wrap the rule (p_rule_tokens(1) and p_rule_tokens(COUNT)), which is standard 
 for identifying simple optional or repetition rules in EBNF simplification.
@@ -29,32 +29,39 @@ BEGIN
     -- Count occurrences of brackets and pipes
     FOR i IN 1..p_rule_tokens.COUNT LOOP
         v_token := p_rule_tokens(i);
-        IF    v_token = '(' THEN v_round_open   := v_round_open + 1;
-        ELSIF v_token = ')' THEN v_round_close  := v_round_close + 1;
-        ELSIF v_token = '{' THEN v_curly_open   := v_curly_open + 1;
-        ELSIF v_token = '}' THEN v_curly_close  := v_curly_close + 1;
-        ELSIF v_token = '[' THEN v_square_open  := v_square_open + 1;
-        ELSIF v_token = ']' THEN v_square_close := v_square_close + 1;
-        ELSIF v_token = '|' THEN v_pipe_count   := v_pipe_count + 1;
+        IF    v_token = '(' THEN v_round_open   := v_round_open 	+ 1;
+        ELSIF v_token = ')' THEN v_round_close  := v_round_close	+ 1;
+        ELSIF v_token = '{' THEN v_curly_open   := v_curly_open 	+ 1;
+        ELSIF v_token = '}' THEN v_curly_close  := v_curly_close 	+ 1;
+        ELSIF v_token = '[' THEN v_square_open  := v_square_open 	+ 1;
+        ELSIF v_token = ']' THEN v_square_close := v_square_close 	+ 1;
+        ELSIF v_token = '|' THEN v_pipe_count   := v_pipe_count 	+ 1;
         END IF;
     END LOOP;
-
+	/*
+dbms_output.put_line ( $$plsql_unit||':'$$plsql_line
+		||' v_round_open: '||   v_round_open 
+		||' v_round_close: '||  v_round_close
+		||' v_curly_open: '||   v_curly_open 
+		||' v_curly_close: '||  v_curly_close
+		||' v_square_open: '||  v_square_open
+		||' v_square_close: '|| v_square_close
+		||' v_pipe_count: '||   v_pipe_count 
+		);
+*/
     -- 1. Check SQUARE_BRK: Exactly one pair of square brackets, no other brackets, and wraps the rule
     IF v_round_open = 0 AND v_round_close = 0 AND
        v_curly_open = 0 AND v_curly_close = 0 AND
-       v_square_open = 1 AND v_square_close = 1 THEN
-        IF p_rule_tokens(1) = '[' AND p_rule_tokens(p_rule_tokens.COUNT) = ']' THEN
-            RETURN 'SQUARE_BRK';
-        END IF;
+       v_square_open = 1 AND v_square_close = 1 AND 
+       v_pipe_count = 0 	THEN
+	RETURN 'SQUARE_BRK';
     END IF;
-
     -- 2. Check CURLY_BRK: Exactly one pair of curly brackets, no other brackets, and wraps the rule
     IF v_round_open = 0 AND v_round_close = 0 AND
        v_square_open = 0 AND v_square_close = 0 AND
-       v_curly_open = 1 AND v_curly_close = 1 THEN
-        IF p_rule_tokens(1) = '{' AND p_rule_tokens(p_rule_tokens.COUNT) = '}' THEN
-            RETURN 'CURLY_BRK';
-        END IF;
+       v_curly_open = 1 AND v_curly_close = 1 AND 
+       v_pipe_count = 0 	THEN
+			RETURN 'CURLY_BRK';
     END IF;
 
     -- 3. Check PIPES: Zero brackets anywhere, but contains at least one alternative pipe

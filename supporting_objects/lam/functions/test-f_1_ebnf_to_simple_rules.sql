@@ -3,11 +3,11 @@ SET SERVEROUTPUT ON SIZE UNLIMITED;
 
 
 
+column spool_file new_value spool_file 
+SELECT '"c:\Users\Bon-Minh Lam\tmp\test-f_1_ebnf_to_simple_rules.lst"'  as spool_file
+FROM dual;
 
-
-
-
-
+spool &spool_file 
 DECLARE
 	v_results parser_grammar_rule_simple_col;
 	
@@ -46,9 +46,12 @@ DECLARE
 BEGIN
 	-- Test Case 1: Integer with optional sign)
 	run_test
-		( p_test_name => '2. Multiple Alternatives (A | B | C)'
+		( p_test_name => '1: Integer with optional sign'
 		 ,p_lhs		=> 'integer'
 		 ,p_rhs		=> '[ "+" | "-" ] digit { digit }'
 		);
 END;
 /
+spool off 
+
+prompt spool_file : &spool_file

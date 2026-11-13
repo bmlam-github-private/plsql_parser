@@ -601,3 +601,6 @@ With the first sets computed, we can more efficiently parse the alternatives one
 	Row 6: LHS=integer | RHS=integer_op__1 digit integer_0n__2 | Subrule=0
   
     RHS: [ "+" | "-" ] is not resolved properly presumably because f_rule_is_simple returns SQUARE_BRK while it should really returns NOT_SIMPLE! 
+	
+2026.11.13:
+	Debugging f_1_ebnf_to_simple_rules	: it seems that the 2nd gen rule return by pr_process_1_bracket_pair is not correct. Anyway  rhs: [ "+" | "-" ] does not get resolved and ran into infinite loop 
